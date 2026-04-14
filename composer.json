@@ -1,0 +1,37 @@
+{
+  "name": "webifycms/domain",
+  "description": "The domain layer of the WebifyCMS",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Mohammed Shifreen",
+      "email": "mshifreen@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.4"
+  },
+  "require-dev": {
+    "webifycms/dev-tools": "^1.1",
+    "phpunit/phpunit": "^13.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Webifycms\\Domain\\": "src/"
+    }
+  },
+  "scripts": {
+    "code-sniff": [
+      "php-cs-fixer fix --show-progress=dots --diff --dry-run"
+    ],
+    "code-format": [
+      "php-cs-fixer fix --show-progress=dots"
+    ],
+    "code-analyse": [
+      "phpstan"
+    ],
+    "test": [
+      "phpunit --testdox test"
+    ]
+  }
+}
