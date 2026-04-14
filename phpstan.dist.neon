@@ -1,0 +1,9 @@
+includes:
+	- vendor/webifycms/dev-tools/phpstan-default.neon
+
+parameters:
+	paths:
+		- src
+		- test
+	excludePaths:
+		- vendor
