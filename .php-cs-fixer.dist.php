@@ -37,11 +37,14 @@ $header = <<<'HEADER'
 	@author Mohammed Shifreen <mshifreen@gmail.com>
 	HEADER;
 $rules = [
-	'header_comment' => [
+	'header_comment'             => [
 		'header'       => $header,
 		'location'     => 'after_open',
 		'comment_type' => 'PHPDoc',
 		'separate'     => 'top',
+	],
+	'no_superfluous_phpdoc_tags' => [
+		'remove_inheritdoc' => false,
 	],
 ];
 
