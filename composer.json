@@ -8,6 +8,8 @@
       "email": "mshifreen@gmail.com"
     }
   ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": ">=8.4"
   },
@@ -20,6 +22,12 @@
       "Webifycms\\Domain\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Webifycms\\Domain\\Test\\": "test/"
+    }
+  },
+  "optimize-autoloader": true,
   "scripts": {
     "code-sniff": [
       "php-cs-fixer fix --show-progress=dots --diff --dry-run"

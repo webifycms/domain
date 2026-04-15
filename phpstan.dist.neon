@@ -7,3 +7,5 @@ parameters:
 		- test
 	excludePaths:
 		- vendor
+	ignoreErrors:
+		- identifier: attribute.notFound
