@@ -11,9 +11,9 @@
  */
 declare(strict_types=1);
 
-namespace Webifycms\Domain\Base\Domain\Entity;
+namespace Webify\Base\Domain\Entity;
 
-use Webifycms\Domain\Base\Domain\Event\DomainEventInterface;
+use Webify\Base\Domain\Event\DomainEventInterface;
 
 /**
  * The aggregate root base class.
@@ -52,9 +52,9 @@ abstract class AggregateRoot
 	 */
 	public function releaseDomainEvents(): array
 	{
-		$domainEvents       = $this->domainEvents;
-		$this->domainEvents = [];
+		$events               = $this->domainEvents;
+		$this->domainEvents   = [];
 
-		return $domainEvents;
+		return $events;
 	}
 }

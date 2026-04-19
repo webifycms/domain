@@ -37,15 +37,16 @@ $header = <<<'HEADER'
 	@author Mohammed Shifreen <mshifreen@gmail.com>
 	HEADER;
 $rules = [
-	'header_comment'             => [
+	'header_comment'                      => [
 		'header'       => $header,
 		'location'     => 'after_open',
 		'comment_type' => 'PHPDoc',
 		'separate'     => 'top',
 	],
-	'no_superfluous_phpdoc_tags' => [
+	'no_superfluous_phpdoc_tags'          => [
 		'remove_inheritdoc' => false,
 	],
+	'php_unit_test_class_requires_covers' => false,
 ];
 
 return new Fixer($finder, $rules)

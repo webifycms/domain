@@ -11,12 +11,12 @@
  */
 declare(strict_types=1);
 
-namespace Webifycms\Domain\Test\Base\Domain\Entity;
+namespace Webify\Test\Base\Domain\Entity;
 
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
-use Webifycms\Domain\Base\Domain\Entity\AggregateRoot;
-use Webifycms\Domain\Base\Domain\Event\DomainEventInterface;
+use Webify\Base\Domain\Entity\AggregateRoot;
+use Webify\Base\Domain\Event\DomainEventInterface;
 
 /**
  * AggregateRootTest tests the functionality of the AggregateRoot class.
@@ -24,14 +24,15 @@ use Webifycms\Domain\Base\Domain\Event\DomainEventInterface;
  * @internal
  */
 #[CoversClass(AggregateRoot::class)]
+#[CoversMethod(AggregateRoot::class, 'recordDomainEvent')]
+#[CoversMethod(AggregateRoot::class, 'getDomainEvents')]
+#[CoversMethod(AggregateRoot::class, 'releaseDomainEvents')]
 final class AggregateRootTest extends TestCase
 {
 	/**
 	 * Test record domain events.
 	 */
 	#[Test]
-	#[CoversMethod(AggregateRoot::class, 'recordDomainEvent')]
-	#[CoversMethod(AggregateRoot::class, 'getDomainEvents')]
 	public function testRecordEvents(): void
 	{
 		$aggregateRoot = new class extends AggregateRoot {};
@@ -53,8 +54,6 @@ final class AggregateRootTest extends TestCase
 	 * Test clear domain events.
 	 */
 	#[Test]
-	#[CoversMethod(AggregateRoot::class, 'getDomainEvents')]
-	#[CoversMethod(AggregateRoot::class, 'releaseDomainEvents')]
 	public function testReleaseEvents(): void
 	{
 		$aggregateRoot = new class extends AggregateRoot {};
@@ -79,7 +78,6 @@ final class AggregateRootTest extends TestCase
 	 * Test release events returns empty when no events were recorded.
 	 */
 	#[Test]
-	#[CoversMethod(AggregateRoot::class, 'releaseDomainEvents')]
 	public function testReleaseEventsReturnsEmptyArrayWhenNoEventsRecorded(): void
 	{
 		$aggregateRoot = new class extends AggregateRoot {};
