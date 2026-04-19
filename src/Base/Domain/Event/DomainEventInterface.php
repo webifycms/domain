@@ -13,7 +13,20 @@ declare(strict_types=1);
 
 namespace Webify\Base\Domain\Event;
 
+use DateTimeImmutable;
+
 /**
- * Contract for domain events.
+ * DomainEventInterface defines the contract for domain events in the system.
  */
-interface DomainEventInterface {}
+interface DomainEventInterface
+{
+	/**
+	 * Get the date and time when the event occurred.
+	 */
+	public function occurredOn(): DateTimeImmutable;
+
+	/**
+	 * Get the name of the event.
+	 */
+	public function eventName(): string;
+}
