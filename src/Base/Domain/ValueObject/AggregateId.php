@@ -56,7 +56,7 @@ abstract readonly class AggregateId
 	/**
 	 * Equality check based on the value.
 	 */
-	public function equals(self $other): bool
+	public function equals(AggregateId $other): bool
 	{
 		return $this->toNative() === $other->toNative();
 	}
