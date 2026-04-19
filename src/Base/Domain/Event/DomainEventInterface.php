@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webifycms\Domain\Base\Domain\Event;
+namespace Webify\Base\Domain\Event;
 
 /**
  * Contract for domain events.

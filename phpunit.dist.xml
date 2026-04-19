@@ -1,10 +1,41 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.1/phpunit.xsd"
+        bootstrap="vendor/autoload.php"
         colors="true"
         stopOnError="true"
         stopOnFailure="false"
         stopOnIncomplete="false"
         stopOnSkipped="false"
         stopOnRisky="false"
+        displayDetailsOnTestsThatTriggerErrors="true"
+        displayDetailsOnTestsThatTriggerNotices="true"
+        displayDetailsOnTestsThatTriggerWarnings="true"
 >
+    <testsuites>
+        <testsuite name="base">
+            <directory>test/Base</directory>
+        </testsuite>
+
+        <testsuite name="content">
+            <directory>test/Content</directory>
+        </testsuite>
+        
+        <testsuite name="marketplace">
+            <directory>test/Marketplace</directory>
+        </testsuite>
+        
+        <testsuite name="media">
+            <directory>test/Media</directory>
+        </testsuite>
+        
+        <testsuite name="site">
+            <directory>test/Site</directory>
+        </testsuite>
+        
+        <testsuite name="user">
+            <directory>test/User</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>
