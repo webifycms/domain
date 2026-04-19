@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\Base\Domain\Service;
 
 /**
- * Contract for generating unique IDs.
+ * UniqueIdGeneratorInterface defines the contract for generating unique IDs.
  */
 interface UniqueIdGeneratorInterface
 {
