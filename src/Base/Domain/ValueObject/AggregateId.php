@@ -33,7 +33,7 @@ abstract readonly class AggregateId
 		private string $value
 	) {
 		if (!$this->isValid()) {
-			$this->throwException(['value' => $this->value]);
+			$this->throwException($this->value);
 		}
 	}
 
@@ -70,11 +70,9 @@ abstract readonly class AggregateId
 	}
 
 	/**
-	 * Throws a domain specific exception when validation fails.
-	 *
-	 * @param array<string, string> $params
+	 * Throws a domain-specific exception when validation fails.
 	 */
-	abstract public function throwException(array $params): void;
+	abstract public function throwException(string $value): void;
 
 	/**
 	 * Validates if the value perfectly matches the ULID specification.

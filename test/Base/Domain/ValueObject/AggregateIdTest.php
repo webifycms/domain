@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\Test\Base\Domain\ValueObject;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
+use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test, UsesClass};
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\ValueObject\AggregateId;
 
@@ -29,6 +29,7 @@ use Webify\Base\Domain\ValueObject\AggregateId;
 #[CoversMethod(AggregateId::class, 'toNative')]
 #[CoversMethod(AggregateId::class, 'equals')]
 #[CoversMethod(AggregateId::class, 'fromString')]
+#[UsesClass(ExampleAggregateId::class)]
 final class AggregateIdTest extends TestCase
 {
 	/**
@@ -49,18 +50,16 @@ final class AggregateIdTest extends TestCase
 	public function testInvalidAggregateIdThrowsException(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-
 		$this->createConcreteAggregateId('invalid-id-format');
 	}
 
 	/**
-	 * Test aggregate ID with invalid first character (must be 0-7).
+	 * Test aggregate ID with an invalid first character (must be 0-7).
 	 */
 	#[Test]
 	public function testInvalidFirstCharacterThrowsException(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-
 		$this->createConcreteAggregateId('81ARZ3NDEKTSV4RRFFQ69G5FAV');
 	}
 
@@ -114,7 +113,7 @@ final class AggregateIdTest extends TestCase
 	}
 
 	/**
-	 * Test from string factory method.
+	 * Test from a string factory method.
 	 */
 	#[Test]
 	public function testFromStringFactoryMethod(): void
@@ -133,8 +132,7 @@ final class AggregateIdTest extends TestCase
 	{
 		$lowercaseValue = '01arz3ndektsv4rrffq69g5fav';
 		$expectedValue  = '01ARZ3NDEKTSV4RRFFQ69G5FAV';
-
-		$aggregateId = $this->createConcreteAggregateIdFromString($lowercaseValue);
+		$aggregateId    = $this->createConcreteAggregateIdFromString($lowercaseValue);
 
 		$this->assertSame($expectedValue, $aggregateId->toNative());
 	}
@@ -147,8 +145,7 @@ final class AggregateIdTest extends TestCase
 	{
 		$mixedCaseValue = '01ArZ3nDeKtSv4RrFfQ69g5FaV';
 		$expectedValue  = '01ARZ3NDEKTSV4RRFFQ69G5FAV';
-
-		$aggregateId = $this->createConcreteAggregateIdFromString($mixedCaseValue);
+		$aggregateId    = $this->createConcreteAggregateIdFromString($mixedCaseValue);
 
 		$this->assertSame($expectedValue, $aggregateId->toNative());
 	}

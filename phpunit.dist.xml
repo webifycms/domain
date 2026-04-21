@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.1/phpunit.xsd"
-        bootstrap="vendor/autoload.php"
-        colors="true"
-        stopOnError="true"
-        stopOnFailure="false"
-        stopOnIncomplete="false"
-        stopOnSkipped="false"
-        stopOnRisky="false"
-        displayDetailsOnTestsThatTriggerErrors="true"
-        displayDetailsOnTestsThatTriggerNotices="true"
-        displayDetailsOnTestsThatTriggerWarnings="true"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         cacheDirectory=".phpunit.cache"
+         executionOrder="depends,defects"
+         requireCoverageMetadata="true"
+         beStrictAboutCoverageMetadata="true"
+         beStrictAboutOutputDuringTests="true"
+         displayDetailsOnPhpunitDeprecations="true"
+         failOnPhpunitDeprecation="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         colors="true"
+         testdox="true"
 >
     <testsuites>
         <testsuite name="base">
@@ -21,21 +22,27 @@
         <testsuite name="content">
             <directory>test/Content</directory>
         </testsuite>
-        
+
         <testsuite name="marketplace">
             <directory>test/Marketplace</directory>
         </testsuite>
-        
+
         <testsuite name="media">
             <directory>test/Media</directory>
         </testsuite>
-        
+
         <testsuite name="site">
             <directory>test/Site</directory>
         </testsuite>
-        
+
         <testsuite name="user">
             <directory>test/User</directory>
         </testsuite>
     </testsuites>
+
+    <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
 </phpunit>
