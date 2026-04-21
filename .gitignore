@@ -16,4 +16,4 @@ composer.phar
 
 # ignores the cache files
 .php-cs-fixer.cache
-.phpunit.result.cache
+/.phpunit.cache

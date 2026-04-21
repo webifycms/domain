@@ -11,25 +11,23 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Test\Base\Domain\ValueObject;
+namespace Webify\User\Identity\Domain\ValueObject;
 
-use InvalidArgumentException;
 use Webify\Base\Domain\ValueObject\AggregateId;
+use Webify\User\Identity\Domain\Exception\InvalidUserIdException;
 
 /**
- * ExampleAggregateId is a concrete implementation of the AggregateId for testing purposes.
- *
- * It provides a simple implementation of the throwException method required by the abstract class.
- *
- * @internal
+ * The user ID value object.
  */
-final readonly class ExampleAggregateId extends AggregateId
+final readonly class UserId extends AggregateId
 {
 	/**
-	 * {@inheritDoc}
+	 * Will throw an exception if the user id value is not valid.
+	 *
+	 * @throws InvalidUserIdException
 	 */
 	public function throwException(string $value): void
 	{
-		throw new InvalidArgumentException('Invalid aggregate ID: ' . $value);
+		throw InvalidUserIdException::fromDefault($value);
 	}
 }

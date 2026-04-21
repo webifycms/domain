@@ -30,17 +30,18 @@
   },
   "optimize-autoloader": true,
   "scripts": {
-    "code-sniff": [
-      "php-cs-fixer fix --show-progress=dots --diff --dry-run"
-    ],
-    "code-format": [
-      "php-cs-fixer fix --show-progress=dots"
-    ],
-    "code-analyse": [
+    "analyse": [
       "phpstan"
     ],
+    "sniff": [
+      "php-cs-fixer fix --show-progress=dots --diff --dry-run"
+    ],
     "test": [
-      "phpunit --testdox test"
+      "phpunit"
+    ],
+    "code-check": ["@analyse", "@sniff"],
+    "code-format": [
+      "php-cs-fixer fix --show-progress=dots"
     ]
   }
 }
