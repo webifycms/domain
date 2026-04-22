@@ -56,7 +56,7 @@ final readonly class DateTime
 				)
 			);
 		} catch (DateInvalidTimeZoneException|DateMalformedStringException $throwable) {
-			throw DateTimeException::fromDefault(previous: $throwable);
+			throw DateTimeException::withDefault(previous: $throwable);
 		}
 	}
 
@@ -125,7 +125,7 @@ final readonly class DateTime
 	/**
 	 * Converts the DateTime to a different timezone.
 	 * Will re-normalize to the default timezone internally
-	 * and returns a new instance (immutability preserved) in the given timezone.
+	 * and return a new instance (immutability preserved) in the given timezone.
 	 *
 	 * @param string $timezone the target timezone (e.g., 'Asia/Colombo')
 	 *

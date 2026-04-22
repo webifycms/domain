@@ -17,9 +17,9 @@ use InvalidArgumentException;
 use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Exception thrown when an invalid user id value is encountered.
+ * Exception thrown when an invalid password hash value is encountered.
  */
-final class InvalidUserIdException extends InvalidArgumentException implements TranslatableExceptionInterface
+final class InvalidPasswordHashException extends InvalidArgumentException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
@@ -35,19 +35,19 @@ final class InvalidUserIdException extends InvalidArgumentException implements T
 	}
 
 	/**
-	 * Factory method to initiate an InvalidUserIdException with a default message.
+	 * Factory method to initiate an InvalidPasswordHashException with a default message.
 	 *
-	 * @param string $value the invalid user id value
+	 * @param string $value the invalid password hash value
 	 */
-	public static function fromInvalidId(string $value): self
+	public static function fromInvalidPasswordHash(string $value): self
 	{
 		return new self(
 			new ExceptionTranslation(
 				'user.identity',
-				'invalid_user_id',
+				'invalid_password_hash',
 				['value' => $value]
 			),
-			sprintf('Invalid user id "%s"', $value)
+			sprintf('Invalid password hash "%s"', $value)
 		);
 	}
 }

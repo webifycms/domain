@@ -33,6 +33,6 @@ final readonly class UserEmail extends Email
 	 */
 	protected function throwException(string $value): never
 	{
-		throw InvalidUserEmailException::fromDefault($value);
+		throw InvalidUserEmailException::fromInvalidEmail($value);
 	}
 }
