@@ -28,6 +28,6 @@ final readonly class UserId extends AggregateId
 	 */
 	protected function throwException(string $value): void
 	{
-		throw InvalidUserIdException::fromDefault($value);
+		throw InvalidUserIdException::fromInvalidId($value);
 	}
 }

@@ -19,9 +19,9 @@ namespace Webify\Base\Domain\Exception;
 interface TranslatableExceptionInterface
 {
 	/**
-	 * Get the translation information for this exception.
-	 *
-	 * @return ExceptionTranslation an object containing the translation group, key, and parameters
+	 * The translation object DTO for this exception.
 	 */
-	public function getTranslation(): ExceptionTranslation;
+	public ExceptionTranslation $translation {
+		get;
+	}
 }

@@ -28,18 +28,10 @@ final class InvalidUserEmailException extends InvalidArgumentException implement
 	 * @param string               $message     the exception message (optional)
 	 */
 	private function __construct(
-		private readonly ExceptionTranslation $translation,
+		public readonly ExceptionTranslation $translation,
 		string $message = ''
 	) {
 		parent::__construct($message);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getTranslation(): ExceptionTranslation
-	{
-		return $this->translation;
 	}
 
 	/**
@@ -47,7 +39,7 @@ final class InvalidUserEmailException extends InvalidArgumentException implement
 	 *
 	 * @param string $value the invalid user email value
 	 */
-	public static function fromDefault(string $value): InvalidUserEmailException
+	public static function fromInvalidEmail(string $value): self
 	{
 		return new self(
 			new ExceptionTranslation(

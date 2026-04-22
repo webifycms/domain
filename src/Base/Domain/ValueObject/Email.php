@@ -61,6 +61,14 @@ abstract readonly class Email
 	}
 
 	/**
+	 * Equality check based on the value.
+	 */
+	public function equals(Email $other): bool
+	{
+		return $this->toNative() === $other->toNative();
+	}
+
+	/**
 	 * Optional domain-specific validation can be applied in the implementing class.
 	 * If the validation fails, it should throw an exception.
 	 */

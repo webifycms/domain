@@ -30,7 +30,7 @@ final class DateTimeException extends InvalidArgumentException implements Transl
 	 * @param null|Throwable       $previous    the previous throwable used for the exception chaining (optional)
 	 */
 	private function __construct(
-		private readonly ExceptionTranslation $translation,
+		public readonly ExceptionTranslation $translation,
 		string $message = '',
 		int $code = 0,
 		?Throwable $previous = null
@@ -46,7 +46,7 @@ final class DateTimeException extends InvalidArgumentException implements Transl
 	 *
 	 * @return static a new instance of `DateTimeException`
 	 */
-	public static function fromDefault(int $code = 0, ?Throwable $previous = null): static
+	public static function withDefault(int $code = 0, ?Throwable $previous = null): static
 	{
 		return new self(
 			new ExceptionTranslation(
@@ -110,13 +110,5 @@ final class DateTimeException extends InvalidArgumentException implements Transl
 			$code,
 			$previous
 		);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getTranslation(): ExceptionTranslation
-	{
-		return $this->translation;
 	}
 }

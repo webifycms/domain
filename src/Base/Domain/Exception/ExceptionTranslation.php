@@ -21,13 +21,13 @@ final readonly class ExceptionTranslation
 	/**
 	 * ExceptionTranslation constructor.
 	 *
-	 * @param string               $group  the translation group or domain
-	 * @param string               $key    the translation key
-	 * @param array<string, mixed> $params an associative array of parameters for the translation message
+	 * @param string                       $group  the translation group or domain
+	 * @param string                       $key    the translation key
+	 * @param array<string, mixed>|array{} $params an associative array of parameters for the translation message
 	 */
 	public function __construct(
 		public string $group,
 		public string $key,
-		public array $params
+		public array $params = []
 	) {}
 }
