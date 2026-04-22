@@ -15,7 +15,7 @@ namespace Webify\Test\User\Identity\Domain\Service;
 
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
-use Webify\User\Identity\Domain\Service\PasswordHash;
+use Webify\User\Identity\Domain\Service\PasswordHasher;
 use Webify\User\Identity\Domain\ValueObject\HashedPassword;
 
 /**
@@ -25,22 +25,22 @@ use Webify\User\Identity\Domain\ValueObject\HashedPassword;
  *
  * @todo Should find out how to test the password_hash failure to test expected exception.
  */
-#[CoversClass(PasswordHash::class)]
-#[CoversMethod(PasswordHash::class, 'hash')]
-#[CoversMethod(PasswordHash::class, 'verify')]
-final class PasswordHashTest extends TestCase
+#[CoversClass(PasswordHasher::class)]
+#[CoversMethod(PasswordHasher::class, 'hash')]
+#[CoversMethod(PasswordHasher::class, 'verify')]
+final class PasswordHasherTest extends TestCase
 {
 	/**
 	 * Password hash service instance.
 	 */
-	private PasswordHash $passwordHash;
+	private PasswordHasher $passwordHash;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function setUp(): void
 	{
-		$this->passwordHash = new PasswordHash();
+		$this->passwordHash = new PasswordHasher();
 	}
 
 	#[Test]
