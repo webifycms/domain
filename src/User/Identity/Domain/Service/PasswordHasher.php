@@ -19,7 +19,7 @@ use Webify\User\Identity\Domain\ValueObject\HashedPassword;
 /**
  * Password hash domain service.
  */
-final readonly class PasswordHash
+final readonly class PasswordHasher
 {
 	/**
 	 * Generates a hashed string from the provided text password.
