@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Webify\User\Identity\Domain\Exception;
 
-use RuntimeException;
+use LogicException;
 use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Thrown when the password hashing process fails.
+ * Thrown when a user was already deactivated and trying to deactivate again.
  */
-final class FailedToHashPasswordException extends RuntimeException implements TranslatableExceptionInterface
+final class UserAlreadyDeactivatedException extends LogicException implements TranslatableExceptionInterface
 {
 	/**
 	 * {@inheritDoc}
@@ -33,13 +33,13 @@ final class FailedToHashPasswordException extends RuntimeException implements Tr
 	/**
 	 * The constructor.
 	 */
-	public function __construct(string $message = 'Failed to hash password')
+	public function __construct(string $message = 'User is already deactivated')
 	{
 		parent::__construct($message);
 
 		$this->translation = new ExceptionTranslation(
 			'user.identity',
-			'failed_to_hash_password'
+			'user_already_deactivated'
 		);
 	}
 }
