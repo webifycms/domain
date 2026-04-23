@@ -15,7 +15,7 @@ namespace Webify\User\Identity\Domain\Entity;
 
 use Webify\Base\Domain\Entity\AggregateRoot;
 use Webify\Base\Domain\ValueObject\DateTime;
-use Webify\User\Identity\Domain\Event\{
+use Webify\User\Identity\Domain\Event\{UserDisplayNameWasChanged,
 	UserEmailWasChanged,
 	UserPasswordWasChanged,
 	UserWasActivated,
@@ -23,7 +23,7 @@ use Webify\User\Identity\Domain\Event\{
 	UserWasRegistered
 };
 use Webify\User\Identity\Domain\Exception\{UserAlreadyActivateException, UserAlreadyDeactivatedException};
-use Webify\User\Identity\Domain\ValueObject\{HashedPassword, UserEmail, UserId, UserStatus};
+use Webify\User\Identity\Domain\ValueObject\{PasswordHash, UserEmail, UserId, UserStatus};
 
 /**
  * User aggregate root.
@@ -33,22 +33,22 @@ final class User extends AggregateRoot
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this aggregate root.
 	 *
-	 * @param UserId         $id          the unique identifier for the user
-	 * @param UserEmail      $email       the email address of the user
-	 * @param HashedPassword $password    the hashed password of the user
-	 * @param string         $displayName the display name of the user
-	 * @param DateTime       $createdAt   the datetime when the user was created
-	 * @param DateTime       $updatedAt   the datetime when the user was last updated
-	 * @param UserStatus     $status      the status indicating the user state
+	 * @param UserId       $id           the unique identifier for the user
+	 * @param UserEmail    $email        the email address of the user
+	 * @param PasswordHash $passwordHash the hashed password of the user
+	 * @param string       $displayName  the display name of the user
+	 * @param DateTime     $createdAt    the datetime when the user was created
+	 * @param DateTime     $updatedAt    the datetime when the user was last updated
+	 * @param UserStatus   $status       the status indicating the user state
 	 */
 	private function __construct(
-		private UserId $id,
+		private readonly UserId $id,
 		private UserEmail $email,
-		private HashedPassword $password,
+		private PasswordHash $passwordHash,
 		private string $displayName,
-		private DateTime $createdAt,
+		private readonly DateTime $createdAt,
 		private DateTime $updatedAt,
-		private UserStatus $status
+		private UserStatus $status = UserStatus::Inactive
 	) {}
 
 	/**
@@ -70,9 +70,9 @@ final class User extends AggregateRoot
 	/**
 	 * Get the password hash.
 	 */
-	public function getPassword(): HashedPassword
+	public function getPasswordHash(): PasswordHash
 	{
-		return $this->password;
+		return $this->passwordHash;
 	}
 
 	/**
@@ -125,7 +125,7 @@ final class User extends AggregateRoot
 			new UserWasActivated(
 				$this->id->toNative(),
 				$this->email->toNative(),
-				$this->updatedAt
+				$this->updatedAt->toNative()
 			)
 		);
 	}
@@ -148,7 +148,7 @@ final class User extends AggregateRoot
 			new UserWasDeactivated(
 				$this->id->toNative(),
 				$this->email->toNative(),
-				$this->updatedAt
+				$this->updatedAt->toNative()
 			)
 		);
 	}
@@ -167,7 +167,7 @@ final class User extends AggregateRoot
 				$this->id->toNative(),
 				$oldEmail->toNative(),
 				$email->toNative(),
-				$this->updatedAt
+				$this->updatedAt->toNative()
 			)
 		);
 	}
@@ -175,18 +175,34 @@ final class User extends AggregateRoot
 	/**
 	 * Change the password of the user.
 	 */
-	public function changePassword(HashedPassword $password): void
+	public function changePassword(PasswordHash $password): void
 	{
-		$oldPassword     = $this->password;
-		$this->password  = $password;
-		$this->updatedAt = DateTime::now();
+		$this->passwordHash  = $password;
+		$this->updatedAt     = DateTime::now();
 
 		$this->recordDomainEvent(
 			new UserPasswordWasChanged(
 				$this->id->toNative(),
-				$oldPassword->toNative(),
-				$password->toNative(),
-				$this->updatedAt
+				$this->updatedAt->toNative()
+			)
+		);
+	}
+
+	/**
+	 * Change the display name of the user.
+	 */
+	public function changeDisplayName(string $displayName): void
+	{
+		$oldDisplayName    = $this->displayName;
+		$this->displayName = $displayName;
+		$this->updatedAt   = DateTime::now();
+
+		$this->recordDomainEvent(
+			new UserDisplayNameWasChanged(
+				$this->id->toNative(),
+				$oldDisplayName,
+				$displayName,
+				$this->updatedAt->toNative()
 			)
 		);
 	}
@@ -197,7 +213,7 @@ final class User extends AggregateRoot
 	public static function register(
 		UserId $id,
 		UserEmail $email,
-		HashedPassword $password,
+		PasswordHash $password,
 		string $displayName
 	): self {
 		$user = new self(
@@ -214,7 +230,7 @@ final class User extends AggregateRoot
 			new UserWasRegistered(
 				$user->getId()->toNative(),
 				$user->getEmail()->toNative(),
-				$user->getCreatedAt()
+				$user->getCreatedAt()->toNative()
 			)
 		);
 

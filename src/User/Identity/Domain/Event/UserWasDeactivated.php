@@ -15,7 +15,6 @@ namespace Webify\User\Identity\Domain\Event;
 
 use DateTimeImmutable;
 use Webify\Base\Domain\Event\DomainEventInterface;
-use Webify\Base\Domain\ValueObject\DateTime;
 
 /**
  * The event that is triggered when a user was deactivated.
@@ -28,7 +27,7 @@ final readonly class UserWasDeactivated implements DomainEventInterface
 	public function __construct(
 		public string $userId,
 		public string $email,
-		private DateTime $createdAt
+		private DateTimeImmutable $createdAt
 	) {}
 
 	/**
@@ -36,7 +35,7 @@ final readonly class UserWasDeactivated implements DomainEventInterface
 	 */
 	public function occurredOn(): DateTimeImmutable
 	{
-		return $this->createdAt->toNative();
+		return $this->createdAt;
 	}
 
 	/**
@@ -44,6 +43,6 @@ final readonly class UserWasDeactivated implements DomainEventInterface
 	 */
 	public function eventName(): string
 	{
-		return 'user.identity.deactivated';
+		return 'user.identity.was_deactivated';
 	}
 }

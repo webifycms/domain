@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Identity\Domain\Service;
 
 use Webify\User\Identity\Domain\Exception\FailedToHashPasswordException;
-use Webify\User\Identity\Domain\ValueObject\HashedPassword;
+use Webify\User\Identity\Domain\ValueObject\PasswordHash;
 
 /**
  * Password hash domain service.
@@ -26,9 +26,9 @@ final readonly class PasswordHasher
 	 *
 	 * @param string $password the password to hash
 	 *
-	 * @return HashedPassword the resulting hashed string
+	 * @return PasswordHash the resulting hashed string
 	 */
-	public function hash(string $password): HashedPassword
+	public function hash(string $password): PasswordHash
 	{
 		$hash = password_hash($password, PASSWORD_DEFAULT);
 
@@ -36,7 +36,7 @@ final readonly class PasswordHasher
 			throw new FailedToHashPasswordException();
 		}
 
-		return HashedPassword::fromHash($hash);
+		return PasswordHash::fromHash($hash);
 	}
 
 	/**
@@ -49,7 +49,7 @@ final readonly class PasswordHasher
 	 */
 	public function verify(string $password, string $hash): bool
 	{
-		$hashed = HashedPassword::fromHash($hash);
+		$hashed = PasswordHash::fromHash($hash);
 
 		return password_verify($password, $hashed->toNative());
 	}

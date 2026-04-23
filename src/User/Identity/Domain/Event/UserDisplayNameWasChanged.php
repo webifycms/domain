@@ -17,17 +17,17 @@ use DateTimeImmutable;
 use Webify\Base\Domain\Event\DomainEventInterface;
 
 /**
- * The event that is triggered when a user was activated.
+ * The event that is triggered when a user's display name was changed.
  */
-final readonly class UserEmailWasChanged implements DomainEventInterface
+final readonly class UserDisplayNameWasChanged implements DomainEventInterface
 {
 	/**
 	 * The constructor.
 	 */
 	public function __construct(
 		public string $userId,
-		public string $oldEmail,
-		public string $newEmail,
+		public string $oldDisplayName,
+		public string $newDisplayName,
 		private DateTimeImmutable $createdAt
 	) {}
 
@@ -44,6 +44,6 @@ final readonly class UserEmailWasChanged implements DomainEventInterface
 	 */
 	public function eventName(): string
 	{
-		return 'user.identity.email_was_changed';
+		return 'user.identity.display_name_was_changed';
 	}
 }

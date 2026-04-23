@@ -22,7 +22,7 @@ abstract readonly class AggregateId
 	 * ID specification regex pattern:
 	 * - Must be exactly 26 characters.
 	 * - First character must be 0-7 (to prevent overflow).
-	 * - Uses Crockford's Base32 (excludes I, L, O, U to avoid ambiguity and accidental profanity).
+	 * - Uses Base32 (excludes I, L, O, U to avoid ambiguity and accidental profanity).
 	 */
 	private const string REGEX_PATTERN = '/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/i';
 
