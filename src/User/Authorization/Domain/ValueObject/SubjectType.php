@@ -11,26 +11,22 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Identity\Domain\ValueObject;
+namespace Webify\User\Authorization\Domain\ValueObject;
 
-use Webify\User\Identity\Domain\Exception\InvalidPasswordHashException;
+use Webify\User\Authorization\Domain\Exception\InvalidSubjectTypeException;
 
 /**
- * Hashed password value object.
+ * Subject type value object.
  */
-final readonly class HashedPassword
+final readonly class SubjectType
 {
 	/**
-	 * Private constructor enforces the use of the factory method.
-	 *
-	 * @param string $value the password hash value
-	 *
-	 * @throws InvalidPasswordHashException
+	 * The constructor.
 	 */
-	private function __construct(private string $value)
+	public function __construct(private string $value)
 	{
 		if (!$this->isValid()) {
-			throw InvalidPasswordHashException::fromInvalidPasswordHash($this->value);
+			throw InvalidSubjectTypeException::fromInvalidType($this->value);
 		}
 	}
 
@@ -51,14 +47,6 @@ final readonly class HashedPassword
 	}
 
 	/**
-	 * Factory method to create a password hash object from a hash.
-	 */
-	public static function fromHash(string $value): self
-	{
-		return new self($value);
-	}
-
-	/**
 	 * Checks if the password hash is equal to another password hash.
 	 */
 	public function equals(self $other): bool
@@ -67,11 +55,13 @@ final readonly class HashedPassword
 	}
 
 	/**
-	 * Validates the password hash value.
+	 * Checks whether the current value meets the validation criteria.
+	 *
+	 * @return bool true if the value is valid, false otherwise
 	 */
 	private function isValid(): bool
 	{
-		if (empty($this->value)) {
+		if ('' === $this->value) {
 			return false;
 		}
 

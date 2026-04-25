@@ -15,7 +15,6 @@ namespace Webify\User\Identity\Domain\Event;
 
 use DateTimeImmutable;
 use Webify\Base\Domain\Event\DomainEventInterface;
-use Webify\Base\Domain\ValueObject\DateTime;
 
 /**
  * The event that is triggered when a user was activated.
@@ -27,9 +26,7 @@ final readonly class UserPasswordWasChanged implements DomainEventInterface
 	 */
 	public function __construct(
 		public string $userId,
-		public string $oldPasswordHash,
-		public string $newPasswordHash,
-		private DateTime $createdAt
+		private DateTimeImmutable $createdAt
 	) {}
 
 	/**
@@ -37,7 +34,7 @@ final readonly class UserPasswordWasChanged implements DomainEventInterface
 	 */
 	public function occurredOn(): DateTimeImmutable
 	{
-		return $this->createdAt->toNative();
+		return $this->createdAt;
 	}
 
 	/**
@@ -45,6 +42,6 @@ final readonly class UserPasswordWasChanged implements DomainEventInterface
 	 */
 	public function eventName(): string
 	{
-		return 'user.identity.password_changed';
+		return 'user.identity.password_was_changed';
 	}
 }

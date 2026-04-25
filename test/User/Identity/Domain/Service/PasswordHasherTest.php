@@ -16,7 +16,7 @@ namespace Webify\Test\User\Identity\Domain\Service;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\User\Identity\Domain\Service\PasswordHasher;
-use Webify\User\Identity\Domain\ValueObject\HashedPassword;
+use Webify\User\Identity\Domain\ValueObject\PasswordHash;
 
 /**
  * PasswordHashTest tests the functionality of the PasswordHash service.
@@ -49,7 +49,7 @@ final class PasswordHasherTest extends TestCase
 		$password       = 'test_password_123';
 		$hashedPassword = $this->passwordHash->hash($password);
 
-		$this->assertInstanceOf(HashedPassword::class, $hashedPassword);
+		$this->assertInstanceOf(PasswordHash::class, $hashedPassword);
 		$this->assertNotEmpty($hashedPassword->toNative());
 	}
 

@@ -164,7 +164,7 @@ final class UserTest extends TestCase
 		$newPassword = $this->passwordHasher->hash('new_password');
 
 		$this->user->changePassword($newPassword);
-		$this->assertTrue($this->user->getPassword()->equals($newPassword));
+		$this->assertTrue($this->user->getPasswordHash()->equals($newPassword));
 
 		$events = $this->user->getDomainEvents();
 

@@ -16,27 +16,27 @@ namespace Webify\Test\User\Identity\Domain\ValueObject;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\User\Identity\Domain\Exception\InvalidPasswordHashException;
-use Webify\User\Identity\Domain\ValueObject\HashedPassword;
+use Webify\User\Identity\Domain\ValueObject\PasswordHash;
 
 /**
- * HashedPasswordTest tests the functionality of the HashedPassword value object.
+ * PasswordHashTest tests the functionality of the HashedPassword value object.
  *
  * @internal
  */
-#[CoversClass(HashedPassword::class)]
-#[CoversMethod(HashedPassword::class, 'fromHash')]
-#[CoversMethod(HashedPassword::class, 'equals')]
-#[CoversMethod(HashedPassword::class, '__toString')]
-#[CoversMethod(HashedPassword::class, 'toNative')]
-final class HashedPasswordTest extends TestCase
+#[CoversClass(PasswordHash::class)]
+#[CoversMethod(PasswordHash::class, 'fromHash')]
+#[CoversMethod(PasswordHash::class, 'equals')]
+#[CoversMethod(PasswordHash::class, '__toString')]
+#[CoversMethod(PasswordHash::class, 'toNative')]
+final class PasswordHashTest extends TestCase
 {
 	#[Test]
 	public function testCreateValidHashedPassword(): void
 	{
 		$hash           = password_hash('test_password', PASSWORD_DEFAULT);
-		$hashedPassword = HashedPassword::fromHash($hash);
+		$hashedPassword = PasswordHash::fromHash($hash);
 
-		$this->assertInstanceOf(HashedPassword::class, $hashedPassword);
+		$this->assertInstanceOf(PasswordHash::class, $hashedPassword);
 		$this->assertSame($hash, $hashedPassword->toNative());
 	}
 
@@ -44,14 +44,14 @@ final class HashedPasswordTest extends TestCase
 	public function testEmptyHashThrowsException(): void
 	{
 		$this->expectException(InvalidPasswordHashException::class);
-		HashedPassword::fromHash('');
+		PasswordHash::fromHash('');
 	}
 
 	#[Test]
 	public function testToNativeReturnsStringValue(): void
 	{
 		$hash           = password_hash('test_password', PASSWORD_DEFAULT);
-		$hashedPassword = HashedPassword::fromHash($hash);
+		$hashedPassword = PasswordHash::fromHash($hash);
 
 		$this->assertSame($hash, $hashedPassword->toNative());
 	}
@@ -60,7 +60,7 @@ final class HashedPasswordTest extends TestCase
 	public function testStringRepresentation(): void
 	{
 		$hash           = password_hash('test_password', PASSWORD_DEFAULT);
-		$hashedPassword = HashedPassword::fromHash($hash);
+		$hashedPassword = PasswordHash::fromHash($hash);
 
 		$this->assertSame($hash, (string) $hashedPassword);
 	}
@@ -69,8 +69,8 @@ final class HashedPasswordTest extends TestCase
 	public function testEqualsReturnsTrueForSameHash(): void
 	{
 		$hash            = password_hash('test_password', PASSWORD_DEFAULT);
-		$hashedPassword1 = HashedPassword::fromHash($hash);
-		$hashedPassword2 = HashedPassword::fromHash($hash);
+		$hashedPassword1 = PasswordHash::fromHash($hash);
+		$hashedPassword2 = PasswordHash::fromHash($hash);
 
 		$this->assertTrue($hashedPassword1->equals($hashedPassword2));
 	}
@@ -78,8 +78,8 @@ final class HashedPasswordTest extends TestCase
 	#[Test]
 	public function testEqualsReturnsFalseForDifferentHash(): void
 	{
-		$hashedPassword1 = HashedPassword::fromHash('hash1');
-		$hashedPassword2 = HashedPassword::fromHash('hash2');
+		$hashedPassword1 = PasswordHash::fromHash('hash1');
+		$hashedPassword2 = PasswordHash::fromHash('hash2');
 
 		$this->assertFalse($hashedPassword1->equals($hashedPassword2));
 	}
