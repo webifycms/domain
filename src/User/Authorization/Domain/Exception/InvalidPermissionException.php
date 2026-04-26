@@ -17,9 +17,9 @@ use InvalidArgumentException;
 use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Exception thrown when an invalid subject id value is encountered.
+ * Exception thrown when invalid permission properties are encountered.
  */
-final class InvalidSubjectAttributesException extends InvalidArgumentException implements TranslatableExceptionInterface
+final class InvalidPermissionException extends InvalidArgumentException implements TranslatableExceptionInterface
 {
 	/**
 	 * {@inheritDoc}
@@ -36,14 +36,13 @@ final class InvalidSubjectAttributesException extends InvalidArgumentException i
 	 * @param string $message the exception message (optional)
 	 */
 	public function __construct(
-		string $message = 'Invalid subject attributes, the attribute must be of strings of key and value.'
+		string $message = 'Invalid permission properties.'
 	) {
 		parent::__construct($message);
 
 		$this->translation = new ExceptionTranslation(
 			'user.authorization',
-			'invalid_subject_attributes',
-			[]
+			'invalid_permission'
 		);
 	}
 }
