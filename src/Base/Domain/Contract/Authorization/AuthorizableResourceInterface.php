@@ -21,12 +21,12 @@ interface AuthorizableResourceInterface
 	/**
 	 * Retrieves the type as a string. The type defines the category of the resource.
 	 */
-	public function type(): string;
+	public function resourceType(): string;
 
 	/**
 	 * Retrieves the identifier as a string.
 	 */
-	public function id(): string;
+	public function resourceId(): string;
 
 	/**
 	 * Retrieves the owner ID associated with the resource.
