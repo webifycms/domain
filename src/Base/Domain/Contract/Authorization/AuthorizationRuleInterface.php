@@ -15,6 +15,7 @@ namespace Webify\Base\Domain\Contract\Authorization;
 
 /**
  * AuthorizationRuleInterface defines the contract of authorization rule.
+ *
  * This is the primary extension point for conditional access logic.
  * A Rule answers the question "even though the role permits this action, are the surrounding conditions satisfied?"
  * Rules are additive — all active rules registered on the authorization service must return true

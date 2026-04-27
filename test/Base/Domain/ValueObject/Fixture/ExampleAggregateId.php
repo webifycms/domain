@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Test\Base\Domain\ValueObject;
+namespace Webify\Test\Base\Domain\ValueObject\Fixture;
 
 use InvalidArgumentException;
 use Webify\Base\Domain\ValueObject\AggregateId;

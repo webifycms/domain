@@ -11,15 +11,15 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Identity\Domain\Exception;
+namespace Webify\User\Authorization\Domain\Exception;
 
 use RuntimeException;
 use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Thrown when the user is not found.
+ * Thrown when the role is not found.
  */
-final class UserNotFoundException extends RuntimeException implements TranslatableExceptionInterface
+final class RoleNotFoundException extends RuntimeException implements TranslatableExceptionInterface
 {
 	/**
 	 * {@inheritDoc}
@@ -33,13 +33,13 @@ final class UserNotFoundException extends RuntimeException implements Translatab
 	/**
 	 * The constructor.
 	 */
-	public function __construct(string $message = 'User not found.')
+	public function __construct(string $message = 'Role not found.')
 	{
 		parent::__construct($message);
 
 		$this->translation = new ExceptionTranslation(
-			'user.identity',
-			'user_not_found'
+			'user.authorization',
+			'role_not_found'
 		);
 	}
 }
