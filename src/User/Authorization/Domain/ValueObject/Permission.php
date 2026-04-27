@@ -45,6 +45,29 @@ final readonly class Permission
 	}
 
 	/**
+	 * Returns a string representation of the Permission object.
+	 */
+	public function __toString(): string
+	{
+		return 'scope: ' . $this->scope
+			. ', action: ' . $this->action
+			. ', resource: ' . $this->resource;
+	}
+
+	/**
+	 * Checks if the permission matches the provided scope, action, and resource.
+	 * A permission matches if the scope, action, and resource are equal to the provided values,
+	 * or if the provided values are wildcards.
+	 */
+	public function matches(string $scope, string $action, string $resource): bool
+	{
+		$match = '*' === $this->scope || $this->scope === $scope;
+		$match = $match && ('*' === $this->action || $this->action === $action);
+
+		return $match && ('*' === $this->resource || $this->resource === $resource);
+	}
+
+	/**
 	 * Converts the current object state into a native array representation.
 	 *
 	 * @return array<string, string> an associative array containing the action and resource

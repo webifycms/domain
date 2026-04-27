@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test, UsesClass};
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\ValueObject\AggregateId;
+use Webify\Test\Base\Domain\ValueObject\Fixture\ExampleAggregateId;
 
 /**
  * AggregateIdTest tests the functionality of the AggregateId class.

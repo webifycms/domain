@@ -27,11 +27,11 @@ use Webify\Base\Domain\Exception\{InvalidTypeOfCollectionException, NotExistInCo
  *
  * Example concrete collection:
  *
- *   final class PermissionCollection extends Collection
+ *   final class SampleCollection extends Collection
  *   {
  *       protected function type(): string
  *       {
- *           return Permission::class;
+ *           return Sample::class;
  *       }
  *   }
  *

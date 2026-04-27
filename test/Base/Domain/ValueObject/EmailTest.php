@@ -17,6 +17,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\ValueObject\Email;
+use Webify\Test\Base\Domain\ValueObject\Fixture\ExampleEmail;
 
 /**
  * EmailTest tests the functionality of the Email class.
