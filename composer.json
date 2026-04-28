@@ -12,7 +12,8 @@
   "prefer-stable": true,
   "require": {
     "php": ">=8.4",
-    "symfony/uid": "^8.0"
+    "symfony/uid": "^8.0",
+    "symfony/string": "^8.0"
   },
   "require-dev": {
     "webifycms/dev-tools": "^1.1",
