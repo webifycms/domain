@@ -17,7 +17,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
-use Webify\Base\Domain\Service\UniqueIdGeneratorInterface;
+use Webify\Base\Domain\Service\UlidGeneratorInterface;
 use Webify\Base\Infrastructure\Service\SymfonyUlidGenerator;
 
 /**
@@ -56,7 +56,7 @@ final class SymfonyUlidGeneratorTest extends TestCase
 	#[Test]
 	public function testImplementsUniqueIdGeneratorInterface(): void
 	{
-		$this->assertInstanceOf(UniqueIdGeneratorInterface::class, $this->generator);
+		$this->assertInstanceOf(UlidGeneratorInterface::class, $this->generator);
 	}
 
 	/**
