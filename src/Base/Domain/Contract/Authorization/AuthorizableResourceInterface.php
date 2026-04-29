@@ -19,6 +19,11 @@ namespace Webify\Base\Domain\Contract\Authorization;
 interface AuthorizableResourceInterface
 {
 	/**
+	 * Retrieves the scope as a string. The scope defines the level of access to the resource.
+	 */
+	public function resourceScope(): string;
+
+	/**
 	 * Retrieves the type as a string. The type defines the category of the resource.
 	 */
 	public function resourceType(): string;

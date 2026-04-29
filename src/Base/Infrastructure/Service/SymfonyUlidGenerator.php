@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Webify\Base\Infrastructure\Service;
 
 use Symfony\Component\Uid\Ulid;
-use Webify\Base\Domain\Service\UniqueIdGeneratorInterface;
+use Webify\Base\Domain\Service\UlidGeneratorInterface;
 
 /**
- * Implementation of unique ID generator using Symfony's ULID.
+ * Implementation of a unique ID generator using Symfony's ULID.
  * ULID stands for Universally Unique Lexicographically Sortable Identifier,
  * which is a 128-bit identifier designed to be unique and sortable based on the time of creation.
  */
-final readonly class SymfonyUlidGenerator implements UniqueIdGeneratorInterface
+final readonly class SymfonyUlidGenerator implements UlidGeneratorInterface
 {
 	/**
 	 * {@inheritDoc}

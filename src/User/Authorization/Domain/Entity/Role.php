@@ -17,6 +17,8 @@ use Webify\Base\Domain\Entity\AggregateRoot;
 use Webify\Base\Domain\ValueObject\DateTime;
 use Webify\User\Authorization\Domain\Collection\PermissionCollection;
 use Webify\User\Authorization\Domain\Event\{PermissionGranted, PermissionRevoked, RoleCreated};
+use Webify\User\Authorization\Domain\Exception\CannotModifySystemRoleException;
+use Webify\User\Authorization\Domain\ReadModel\Role as RoleReadModel;
 use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleId, RoleName, RoleSlug};
 
 /**
@@ -85,6 +87,8 @@ final class Role extends AggregateRoot
 	 */
 	public function grant(Permission $permission): void
 	{
+		$this->guardSystemRole();
+
 		$this->permissions = $this->permissions->with($permission);
 
 		$this->recordDomainEvent(
@@ -103,6 +107,8 @@ final class Role extends AggregateRoot
 	 */
 	public function revoke(Permission $permission): void
 	{
+		$this->guardSystemRole();
+
 		$this->permissions = $this->permissions->without(
 			fn (Permission $existingPermission): bool => $existingPermission->equals($permission)
 		);
@@ -162,5 +168,35 @@ final class Role extends AggregateRoot
 		);
 
 		return $role;
+	}
+
+	/**
+	 * Reconstitute a role aggregate from a read model.
+	 *
+	 * @param RoleReadModel $role the read model containing role data
+	 *
+	 * @return self an instance of the role aggregate reconstructed from the provided data
+	 */
+	public static function reconstitute(RoleReadModel $role): self
+	{
+		return new self(
+			RoleId::fromString($role->id),
+			RoleName::fromString($role->name),
+			RoleSlug::fromString($role->slug),
+			$role->permissions,
+			$role->isSystemRole
+		);
+	}
+
+	/**
+	 * Guards against modifying a system role.
+	 *
+	 * @throws CannotModifySystemRoleException if the role is a system role
+	 */
+	private function guardSystemRole(): void
+	{
+		if ($this->isSystemRole) {
+			throw CannotModifySystemRoleException::fromSystemRole($this->name->toNative());
+		}
 	}
 }

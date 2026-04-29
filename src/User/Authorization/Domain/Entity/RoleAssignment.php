@@ -16,6 +16,7 @@ namespace Webify\User\Authorization\Domain\Entity;
 use Webify\Base\Domain\Entity\AggregateRoot;
 use Webify\Base\Domain\ValueObject\DateTime;
 use Webify\User\Authorization\Domain\Event\RoleAssigned;
+use Webify\User\Authorization\Domain\ReadModel\RoleAssignment as RoleAssignmentReadModel;
 use Webify\User\Authorization\Domain\ValueObject\{RoleAssignmentId, RoleId, SubjectId, TenantId};
 
 /**
@@ -141,5 +142,25 @@ final class RoleAssignment extends AggregateRoot
 		);
 
 		return $roleAssignment;
+	}
+
+	/**
+	 * Reconstitutes a RoleAssignment from a read model.
+	 * This method is useful for reconstructing RoleAssignment instances from read models which queries use.
+	 *
+	 * @param RoleAssignmentReadModel $readModel the data structure containing the necessary
+	 *                                           attributes to recreate the RoleAssignment instance
+	 *
+	 * @return self returns an instance of the RoleAssignment class based on the provided data
+	 */
+	public static function reconstitute(RoleAssignmentReadModel $readModel): self
+	{
+		return new self(
+			RoleAssignmentId::fromString($readModel->id),
+			RoleId::fromString($readModel->roleId),
+			SubjectId::fromString($readModel->subjectId),
+			$readModel->tenantId ? TenantId::fromString($readModel->tenantId) : null,
+			$readModel->expiresAt ? DateTime::fromNative($readModel->expiresAt) : null
+		);
 	}
 }

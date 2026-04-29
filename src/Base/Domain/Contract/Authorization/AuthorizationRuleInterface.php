@@ -24,6 +24,11 @@ namespace Webify\Base\Domain\Contract\Authorization;
 interface AuthorizationRuleInterface
 {
 	/**
+	 * Determines whether the rule supports the given resource.
+	 */
+	public function supports(AuthorizableResourceInterface $resource): bool;
+
+	/**
 	 * Determines whether the given subject is satisfied with the provided resource.
 	 *
 	 * @param AuthorizableSubjectInterface  $subject  the subject being evaluated

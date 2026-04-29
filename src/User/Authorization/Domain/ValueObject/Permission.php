@@ -130,7 +130,7 @@ final readonly class Permission
 	 */
 	private function isValid(): bool
 	{
-		if ('' === $this->scope || '' === $this->action || '' === $this->resource) {
+		if ('' === trim($this->scope) || '' === trim($this->action) || '' === trim($this->resource)) {
 			return false;
 		}
 

@@ -15,11 +15,16 @@ namespace Webify\Base\Domain\ValueObject;
 
 /**
  * The aggregate ID value object base class.
+ *
+ * This only accepts ULIDs that stand for Universally Unique Lexicographically Sortable Identifier,
+ * which is a 128-bit identifier designed to be unique and sortable based on the time of creation.
+ * It combines a timestamp with a random component, allowing for efficient indexing and retrieval
+ * in databases and distributed systems.
  */
 abstract readonly class AggregateId
 {
 	/**
-	 * ID specification regex pattern:
+	 * The Ulid specification regex pattern:
 	 * - Must be exactly 26 characters.
 	 * - First character must be 0-7 (to prevent overflow).
 	 * - Uses Base32 (excludes I, L, O, U to avoid ambiguity and accidental profanity).
