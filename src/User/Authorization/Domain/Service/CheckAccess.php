@@ -18,11 +18,14 @@ use Webify\Base\Domain\Exception\AccessDeniedException;
 use Webify\Base\Domain\Service\{AuthorizationInterface, CheckAccessInterface};
 
 /**
- * CheckAccess is the implementation of the CheckAccessInterface that uses the
+ * CheckAccess is the implementation of the `CheckAccessInterface` that uses the
  * `AuthorizationInterface` to check access permissions.
  */
 final readonly class CheckAccess implements CheckAccessInterface
 {
+	/**
+	 * The constructor.
+	 */
 	public function __construct(
 		private AuthorizationInterface $authorization
 	) {}

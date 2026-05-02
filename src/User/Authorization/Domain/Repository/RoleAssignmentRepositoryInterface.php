@@ -15,7 +15,7 @@ namespace Webify\User\Authorization\Domain\Repository;
 
 use Webify\User\Authorization\Domain\Entity\RoleAssignment;
 use Webify\User\Authorization\Domain\Exception\RoleAssignmentNotFoundException;
-use Webify\User\Authorization\Domain\ValueObject\RoleAssignmentId;
+use Webify\User\Authorization\Domain\ValueObject\{RoleAssignmentId, RoleId, SubjectId};
 
 /**
  * RoleAssignmentRepositoryInterface defines the contract for a role assignment repository.
@@ -32,6 +32,16 @@ interface RoleAssignmentRepositoryInterface
 	 * @throws RoleAssignmentNotFoundException if the RoleAssignment with the given identifier is not found
 	 */
 	public function getById(RoleAssignmentId $id): RoleAssignment;
+
+	/**
+	 * Checks if a role assignment exists for the given role ID and subject ID.
+	 *
+	 * @param RoleId    $roleId    the ID of the role
+	 * @param SubjectId $subjectId the ID of the subject
+	 *
+	 * @return bool true if a role assignment exists, false otherwise
+	 */
+	public function isExists(RoleId $roleId, SubjectId $subjectId): bool;
 
 	/**
 	 * Persists the given RoleAssignment object to the data store.
