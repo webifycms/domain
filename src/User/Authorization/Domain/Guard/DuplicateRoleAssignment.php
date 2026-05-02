@@ -15,7 +15,7 @@ namespace Webify\User\Authorization\Domain\Guard;
 
 use Webify\User\Authorization\Domain\Exception\DuplicateRoleAssignmentException;
 use Webify\User\Authorization\Domain\Repository\RoleAssignmentRepositoryInterface;
-use Webify\User\Authorization\Domain\ValueObject\{RoleId, SubjectId};
+use Webify\User\Authorization\Domain\ValueObject\{RoleId, SubjectId, TenantId};
 
 /**
  * Guard class to prevent duplicate role assignments.
@@ -32,15 +32,20 @@ final readonly class DuplicateRoleAssignment
 	/**
 	 * Ensures that a role-subject assignment does not already exist.
 	 *
-	 * @param RoleId    $roleId    the identifier for the role
-	 * @param SubjectId $subjectId the identifier for the subject
+	 * @param RoleId        $roleId    the identifier for the role
+	 * @param SubjectId     $subjectId the identifier for the subject
+	 * @param null|TenantId $tenantId  the identifier for the tenant, if applicable
 	 *
 	 * @throws DuplicateRoleAssignmentException if the role-subject assignment already exists
 	 */
-	public function guard(RoleId $roleId, SubjectId $subjectId): void
+	public function guard(RoleId $roleId, SubjectId $subjectId, ?TenantId $tenantId = null): void
 	{
-		if ($this->repository->isExists($roleId, $subjectId)) {
-			throw DuplicateRoleAssignmentException::forRoleAndSubject($roleId->toNative(), $subjectId->toNative());
+		if ($this->repository->isExists($roleId, $subjectId, $tenantId)) {
+			throw DuplicateRoleAssignmentException::forRoleAndSubject(
+				$roleId->toNative(),
+				$subjectId->toNative(),
+				$tenantId?->toNative()
+			);
 		}
 	}
 }

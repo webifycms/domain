@@ -15,19 +15,20 @@ namespace Webify\User\Authorization\Domain\Service;
 
 use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizableSubjectInterface};
 use Webify\Base\Domain\Exception\AccessDeniedException;
-use Webify\Base\Domain\Service\{AuthorizationInterface, CheckAccessInterface};
+use Webify\Base\Domain\Service\{Webify\Base\Domain\Service\Authorization\AuthorizationInterface,
+	Webify\Base\Domain\Service\Authorization\CheckAccessInterface};
 
 /**
  * CheckAccess is the implementation of the `CheckAccessInterface` that uses the
  * `AuthorizationInterface` to check access permissions.
  */
-final readonly class CheckAccess implements CheckAccessInterface
+final readonly class CheckAccess implements \Webify\Base\Domain\Service\Authorization\CheckAccessInterface
 {
 	/**
 	 * The constructor.
 	 */
 	public function __construct(
-		private AuthorizationInterface $authorization
+		private \Webify\Base\Domain\Service\Authorization\AuthorizationInterface $authorization
 	) {}
 
 	/**

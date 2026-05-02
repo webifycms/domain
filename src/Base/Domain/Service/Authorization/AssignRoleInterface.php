@@ -11,21 +11,18 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Base\Domain\Service;
+namespace Webify\Base\Domain\Service\Authorization;
 
 use DateTimeImmutable;
 
 /**
- * RoleAssignInterface defines the contract for assigning roles to subjects.
+ * AssignRoleInterface defines the contract for assigning roles to subjects.
  *
  * Encapsulate the use case of giving a subject a role, optionally scoped to a tenant and with optional expiry.
  * It validates that the role exists before creating the assignment, produces a clear
  * domain exception if it does not, and persists the assignment through the repository.
- *
- * Extension developers call this service when their extension needs to bootstrap
- * default role assignments (e.g. during installation).
  */
-interface RoleAssignInterface
+interface AssignRoleInterface
 {
 	/**
 	 * Assign the role to the given subject.

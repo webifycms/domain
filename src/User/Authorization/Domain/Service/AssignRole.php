@@ -15,7 +15,8 @@ namespace Webify\User\Authorization\Domain\Service;
 
 use DateTimeImmutable;
 use Webify\Base\Domain\Event\DomainEventPublisherInterface;
-use Webify\Base\Domain\Service\{RoleAssignInterface, UlidGeneratorInterface};
+use Webify\Base\Domain\Service\Authorization\AssignRoleInterface;
+use Webify\Base\Domain\Service\UlidGeneratorInterface;
 use Webify\Base\Domain\ValueObject\DateTime;
 use Webify\User\Authorization\Domain\Entity\{Role, RoleAssignment};
 use Webify\User\Authorization\Domain\Guard\DuplicateRoleAssignment;
@@ -23,9 +24,9 @@ use Webify\User\Authorization\Domain\Repository\{RoleAssignmentRepositoryInterfa
 use Webify\User\Authorization\Domain\ValueObject\{RoleAssignmentId, RoleSlug, SubjectId, TenantId};
 
 /**
- * RoleAssign service is implements of RoleAssignInterface.
+ * RoleAssign service class is a concrete implementation of the AssignRoleInterface.
  */
-final readonly class RoleAssign implements RoleAssignInterface
+final readonly class AssignRole implements AssignRoleInterface
 {
 	/**
 	 * The constructor.
@@ -49,11 +50,11 @@ final readonly class RoleAssign implements RoleAssignInterface
 	): void {
 		$subjectId  = SubjectId::fromString($subjectId);
 		$role       = $this->getRole($roleSlug);
+		$tenantId   = null !== $tenantId ? TenantId::fromString($tenantId) : null;
 
 		// Guard against duplicate role assignments
-		$this->duplicateRoleAssignment->guard($role->getId(), $subjectId);
+		$this->duplicateRoleAssignment->guard($role->getId(), $subjectId, $tenantId);
 
-		$tenantId   = null !== $tenantId ? TenantId::fromString($tenantId) : null;
 		$expireAt   = null !== $expireAt ? DateTime::fromNative($expireAt) : null;
 		$assignment = RoleAssignment::assign(
 			RoleAssignmentId::fromString($this->idGenerator->generate()),
