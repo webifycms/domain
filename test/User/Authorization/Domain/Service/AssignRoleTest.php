@@ -23,7 +23,7 @@ use Webify\User\Authorization\Domain\Entity\Role;
 use Webify\User\Authorization\Domain\Exception\DuplicateRoleAssignmentException;
 use Webify\User\Authorization\Domain\Guard\DuplicateRoleAssignment;
 use Webify\User\Authorization\Domain\Repository\{RoleAssignmentRepositoryInterface, RoleRepositoryInterface};
-use Webify\User\Authorization\Domain\Service\RoleAssign;
+use Webify\User\Authorization\Domain\Service\AssignRole;
 use Webify\User\Authorization\Domain\ValueObject\{RoleId, RoleName, RoleSlug, SubjectId, TenantId};
 
 /**
@@ -31,9 +31,9 @@ use Webify\User\Authorization\Domain\ValueObject\{RoleId, RoleName, RoleSlug, Su
  *
  * @internal
  */
-#[CoversClass(RoleAssign::class)]
-#[CoversMethod(RoleAssign::class, 'assign')]
-final class RoleAssignTest extends TestCase
+#[CoversClass(AssignRole::class)]
+#[CoversMethod(AssignRole::class, 'assign')]
+final class AssignRoleTest extends TestCase
 {
 	/**
 	 * Identifier for the role.
@@ -109,7 +109,7 @@ final class RoleAssignTest extends TestCase
 			->method('publish')
 		;
 
-		$service = new RoleAssign(
+		$service = new AssignRole(
 			$roleRepository,
 			$roleAssignmentRepository,
 			$idGenerator,
@@ -163,7 +163,7 @@ final class RoleAssignTest extends TestCase
 			->method('publish')
 		;
 
-		$service = new RoleAssign(
+		$service = new AssignRole(
 			$roleRepository,
 			$roleAssignmentRepository,
 			$idGenerator,
@@ -221,7 +221,7 @@ final class RoleAssignTest extends TestCase
 			->method('publish')
 		;
 
-		$service = new RoleAssign(
+		$service = new AssignRole(
 			$roleRepository,
 			$roleAssignmentRepository,
 			$idGenerator,
@@ -277,7 +277,7 @@ final class RoleAssignTest extends TestCase
 			->method('publish')
 		;
 
-		$service = new RoleAssign(
+		$service = new AssignRole(
 			$roleRepository,
 			$roleAssignmentRepository,
 			$idGenerator,

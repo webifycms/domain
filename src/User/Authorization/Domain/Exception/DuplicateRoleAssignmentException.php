@@ -37,7 +37,7 @@ final class DuplicateRoleAssignmentException extends DomainException implements 
 	/**
 	 * Factory method to initiate this with a default message.
 	 */
-	public static function forRoleAndSubject(string $roleId, string $subjetId): self
+	public static function forRoleAndSubject(string $roleId, string $subjetId, ?string $tenantId = null): self
 	{
 		return new self(
 			new ExceptionTranslation(
@@ -46,6 +46,7 @@ final class DuplicateRoleAssignmentException extends DomainException implements 
 				[
 					'roleId'    => $roleId,
 					'subjectId' => $subjetId,
+					'tenantId'  => $tenantId,
 				]
 			),
 			sprintf(

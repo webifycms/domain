@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Authorization\Domain\Service;
 
 use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizableSubjectInterface};
-use Webify\Base\Domain\Service\{AuthorizationInterface, AuthorizationRuleRegistryInterface};
+use Webify\Base\Domain\Service\Authorization\{AuthorizationInterface, AuthorizationRuleRegistryInterface};
 use Webify\User\Authorization\Domain\Entity\{Role as RoleEntity, RoleAssignment as RoleAssignmentEntity};
 use Webify\User\Authorization\Domain\Query\{RoleAssignmentQueryInterface, RoleQueryInterface};
 use Webify\User\Authorization\Domain\ReadModel\{Role as RoleReadModel, RoleAssignment as RoleAssignmentReadModel};

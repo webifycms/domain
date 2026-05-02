@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Base\Domain\Service;
+namespace Webify\Base\Domain\Service\Authorization;
 
 use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizationRuleInterface};
 
