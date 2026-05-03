@@ -37,8 +37,8 @@ final class AggregateRootTest extends TestCase
 	{
 		$aggregateRoot = new class extends AggregateRoot {};
 
-		$event1 = $this->createMock(DomainEventInterface::class);
-		$event2 = $this->createMock(DomainEventInterface::class);
+		$event1 = $this->createStub(DomainEventInterface::class);
+		$event2 = $this->createStub(DomainEventInterface::class);
 
 		$aggregateRoot->recordDomainEvent($event1);
 		$aggregateRoot->recordDomainEvent($event2);
@@ -58,8 +58,8 @@ final class AggregateRootTest extends TestCase
 	{
 		$aggregateRoot = new class extends AggregateRoot {};
 
-		$event1 = $this->createMock(DomainEventInterface::class);
-		$event2 = $this->createMock(DomainEventInterface::class);
+		$event1 = $this->createStub(DomainEventInterface::class);
+		$event2 = $this->createStub(DomainEventInterface::class);
 
 		$aggregateRoot->recordDomainEvent($event1);
 		$aggregateRoot->recordDomainEvent($event2);
@@ -75,7 +75,7 @@ final class AggregateRootTest extends TestCase
 	}
 
 	/**
-	 * Test release events returns empty when no events were recorded.
+	 * Test release events return empty when no events were recorded.
 	 */
 	#[Test]
 	public function testReleaseEventsReturnsEmptyArrayWhenNoEventsRecorded(): void

@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\Exception;
 
-use InvalidArgumentException;
+use DomainException;
 use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Exception thrown when an invalid role slug value is encountered.
+ * Exception thrown when a role already exists.
  */
-final class InvalidRoleSlugException extends InvalidArgumentException implements TranslatableExceptionInterface
+final class RoleAlreadyExistsException extends DomainException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
@@ -37,34 +37,19 @@ final class InvalidRoleSlugException extends InvalidArgumentException implements
 	/**
 	 * Factory method to initiate this with a default message.
 	 *
-	 * @param string $value the invalid role slug value
+	 * @param string $slug the role slug
 	 */
-	public static function forInvalidSlug(string $value): self
+	public static function forSlug(string $slug): self
 	{
 		return new self(
 			new ExceptionTranslation(
 				'user.authorization',
-				'invalid_role_slug',
-				['value' => $value]
+				'role_already_exists',
+				[
+					'slug'    => $slug,
+				]
 			),
-			sprintf('Invalid role slug "%s"', $value)
-		);
-	}
-
-	/**
-	 * Creates an instance of the exception for an invalid role slug separator.
-	 *
-	 * @param string $value the slug with separator that is considered invalid
-	 */
-	public static function forInvalidSeparator(string $value): self
-	{
-		return new self(
-			new ExceptionTranslation(
-				'user.authorization',
-				'invalid_role_slug',
-				['value' => $value]
-			),
-			sprintf('Invalid role slug separator "%s"', $value)
+			sprintf('Role is already exists for the given role slug "%s".', $slug)
 		);
 	}
 }

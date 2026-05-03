@@ -15,7 +15,6 @@ namespace Webify\User\Authorization\Domain\Service;
 
 use DateTimeImmutable;
 use Webify\Base\Domain\Event\DomainEventPublisherInterface;
-use Webify\Base\Domain\Service\Authorization\AssignRoleInterface;
 use Webify\Base\Domain\Service\UlidGeneratorInterface;
 use Webify\Base\Domain\ValueObject\DateTime;
 use Webify\User\Authorization\Domain\Entity\{Role, RoleAssignment};
@@ -24,9 +23,13 @@ use Webify\User\Authorization\Domain\Repository\{RoleAssignmentRepositoryInterfa
 use Webify\User\Authorization\Domain\ValueObject\{RoleAssignmentId, RoleSlug, SubjectId, TenantId};
 
 /**
- * RoleAssign service class is a concrete implementation of the AssignRoleInterface.
+ * AssignRole service handles the assigning roles to subjects.
+ *
+ * Encapsulate the use case of giving a subject a role, optionally scoped to a tenant and with optional expiry.
+ * It validates that the role exists before creating the assignment, produces a clear
+ * domain exception if it does not, and persists the assignment through the repository.
  */
-final readonly class AssignRole implements AssignRoleInterface
+final readonly class AssignRole
 {
 	/**
 	 * The constructor.
@@ -40,7 +43,12 @@ final readonly class AssignRole implements AssignRoleInterface
 	) {}
 
 	/**
-	 * {@inheritDoc}
+	 * Assign the role to the given subject.
+	 *
+	 * @param string                 $subjectId the ID of the subject to whom the role is assigned
+	 * @param string                 $roleSlug  the slug of the role to be assigned
+	 * @param null|string            $tenantId  the optional tenant ID for scoping the assignment
+	 * @param null|DateTimeImmutable $expireAt  the optional expiration date and time for the assignment
 	 */
 	public function assign(
 		string $subjectId,

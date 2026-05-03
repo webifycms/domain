@@ -28,113 +28,235 @@ use Webify\User\Authorization\Domain\ValueObject\RoleSlug;
 #[CoversMethod(RoleSlug::class, 'toNative')]
 #[CoversMethod(RoleSlug::class, 'equals')]
 #[CoversMethod(RoleSlug::class, '__toString')]
+#[CoversMethod(RoleSlug::class, 'getVendor')]
+#[CoversMethod(RoleSlug::class, 'getSlug')]
 final class RoleSlugTest extends TestCase
 {
 	/**
-	 * Tests creating a valid RoleSlug from string.
+	 * Tests the creation of a valid RoleSlug instance from a string.
+	 *
+	 * @return void
 	 */
 	#[Test]
 	public function testCreateValidRoleSlugFromString(): void
 	{
-		$roleSlug = RoleSlug::fromString('admin');
+		$roleSlug = RoleSlug::fromString('webify.admin');
 
 		$this->assertInstanceOf(RoleSlug::class, $roleSlug);
-		$this->assertSame('admin', $roleSlug->toNative());
+		$this->assertSame(['vendor' => 'webify', 'slug' => 'admin'], $roleSlug->toNative());
 	}
 
 	/**
-	 * Tests creating RoleSlug with multiple hyphens.
+	 * Tests that the getVendor method correctly returns the vendor part of a role slug.
+	 *
+	 * @return void
+	 */
+	#[Test]
+	public function testGetVendorReturnsVendorPart(): void
+	{
+		$roleSlug = RoleSlug::fromString('webify.admin');
+
+		$this->assertSame('webify', $roleSlug->getVendor());
+	}
+
+	/**
+	 * Tests that the getSlug method correctly returns the slug part of a role slug.
+	 *
+	 * @return void
+	 */
+	#[Test]
+	public function testGetSlugReturnsSlugPart(): void
+	{
+		$roleSlug = RoleSlug::fromString('webify.admin');
+
+		$this->assertSame('admin', $roleSlug->getSlug());
+	}
+
+	/**
+	 * Tests that a role slug with multiple hyphens is correctly created and its native representation is returned.
+	 *
+	 * @return void
 	 */
 	#[Test]
 	public function testCreateRoleSlugWithMultipleHyphens(): void
 	{
-		$roleSlug = RoleSlug::fromString('super-admin-user');
+		$roleSlug = RoleSlug::fromString('webify.super-admin-user');
 
-		$this->assertSame('super-admin-user', $roleSlug->toNative());
+		$this->assertSame(['vendor' => 'webify', 'slug' => 'super-admin-user'], $roleSlug->toNative());
 	}
 
 	/**
-	 * Tests that an exception is thrown when creating RoleSlug with uppercase letters.
+	 * Tests that an exception is thrown when creating a role slug without a vendor separator.
+	 *
+	 * @return void
 	 */
 	#[Test]
-	public function testUppercaseRoleSlugThrowsException(): void
+	public function testMissingSeparatorThrowsException(): void
 	{
 		$this->expectException(InvalidRoleSlugException::class);
-		RoleSlug::fromString('Admin');
+		RoleSlug::fromString('admin');
 	}
 
 	/**
-	 * Tests that an exception is thrown when creating RoleSlug starting with hyphen.
+	 * Tests that an exception is thrown when the vendor part of a role slug is in uppercase.
+	 *
+	 * @return void
 	 */
 	#[Test]
-	public function testRoleSlugStartingWithHyphenThrowsException(): void
+	public function testUppercaseVendorThrowsException(): void
 	{
 		$this->expectException(InvalidRoleSlugException::class);
-		RoleSlug::fromString('-admin');
+		RoleSlug::fromString('WEBIFY.admin');
 	}
 
 	/**
-	 * Tests that an exception is thrown when creating RoleSlug ending with hyphen.
+	 * Tests that an exception is thrown when attempting to create a role slug with uppercase characters.
+	 *
+	 * @return void
 	 */
 	#[Test]
-	public function testRoleSlugEndingWithHyphenThrowsException(): void
+	public function testUppercaseSlugThrowsException(): void
 	{
 		$this->expectException(InvalidRoleSlugException::class);
-		RoleSlug::fromString('admin-');
+		RoleSlug::fromString('webify.Admin');
 	}
 
 	/**
-	 * Tests that an exception is thrown when creating RoleSlug with consecutive hyphens.
+	 * Tests that creating a RoleSlug with a vendor starting with a hyphen throws an InvalidRoleSlugException.
+	 *
+	 * @return void
 	 */
 	#[Test]
-	public function testRoleSlugWithConsecutiveHyphensThrowsException(): void
+	public function testVendorStartingWithHyphenThrowsException(): void
 	{
 		$this->expectException(InvalidRoleSlugException::class);
-		RoleSlug::fromString('admin--user');
+		RoleSlug::fromString('-webify.admin');
 	}
 
 	/**
-	 * Tests that an exception is thrown when creating RoleSlug with empty string.
+	 * Tests that creating a role slug starting with a hyphen throws an InvalidRoleSlugException.
+	 *
+	 * @return void
 	 */
 	#[Test]
-	public function testEmptyRoleSlugThrowsException(): void
+	public function testSlugStartingWithHyphenThrowsException(): void
+	{
+		$this->expectException(InvalidRoleSlugException::class);
+		RoleSlug::fromString('webify.-admin');
+	}
+
+	/**
+	 * Tests that an exception is thrown when the vendor part of a role slug ends with a hyphen.
+	 *
+	 * @return void
+	 */
+	#[Test]
+	public function testVendorEndingWithHyphenThrowsException(): void
+	{
+		$this->expectException(InvalidRoleSlugException::class);
+		RoleSlug::fromString('webify-.admin');
+	}
+
+	/**
+	 * Tests that an exception is thrown when a role slug ends with a hyphen.
+	 *
+	 * @return void
+	 */
+	#[Test]
+	public function testSlugEndingWithHyphenThrowsException(): void
+	{
+		$this->expectException(InvalidRoleSlugException::class);
+		RoleSlug::fromString('webify.admin-');
+	}
+
+	/**
+	 * Tests that attempting to create a role slug with consecutive hyphens in the vendor part throws an exception.
+	 *
+	 * @return void
+	 */
+	#[Test]
+	public function testVendorWithConsecutiveHyphensThrowsException(): void
+	{
+		$this->expectException(InvalidRoleSlugException::class);
+		RoleSlug::fromString('ac--me.admin');
+	}
+
+	/**
+	 * Tests that an exception is thrown when a role slug contains consecutive hyphens.
+	 *
+	 * @return void
+	 */
+	#[Test]
+	public function testSlugWithConsecutiveHyphensThrowsException(): void
+	{
+		$this->expectException(InvalidRoleSlugException::class);
+		RoleSlug::fromString('webify.admin--user');
+	}
+
+	/**
+	 * Tests that an empty string passed to the fromString method throws an InvalidRoleSlugException.
+	 *
+	 * @return void
+	 */
+	#[Test]
+	public function testEmptyStringThrowsException(): void
 	{
 		$this->expectException(InvalidRoleSlugException::class);
 		RoleSlug::fromString('');
 	}
 
 	/**
-	 * Tests equals method returns true for same values.
+	 * Tests that the equals method returns true when comparing two RoleSlug instances with the same value.
+	 *
+	 * @return void
 	 */
 	#[Test]
 	public function testEqualsReturnsTrueForSameValues(): void
 	{
-		$roleSlug1 = RoleSlug::fromString('admin');
-		$roleSlug2 = RoleSlug::fromString('admin');
+		$roleSlug1 = RoleSlug::fromString('webify.admin');
+		$roleSlug2 = RoleSlug::fromString('webify.admin');
 
 		$this->assertTrue($roleSlug1->equals($roleSlug2));
 	}
 
 	/**
-	 * Tests equals method returns false for different values.
+	 * Tests that the equals method returns false when comparing role slugs with different vendors.
+	 *
+	 * @return void
 	 */
 	#[Test]
-	public function testEqualsReturnsFalseForDifferentValues(): void
+	public function testEqualsReturnsFalseForDifferentVendors(): void
 	{
-		$roleSlug1 = RoleSlug::fromString('admin');
-		$roleSlug2 = RoleSlug::fromString('editor');
+		$roleSlug1 = RoleSlug::fromString('webify.admin');
+		$roleSlug2 = RoleSlug::fromString('corp.admin');
 
 		$this->assertFalse($roleSlug1->equals($roleSlug2));
 	}
 
 	/**
-	 * Tests string representation.
+	 * Tests that the equals method returns false when comparing two role slugs with different values.
+	 *
+	 * @return void
+	 */
+	#[Test]
+	public function testEqualsReturnsFalseForDifferentSlugs(): void
+	{
+		$roleSlug1 = RoleSlug::fromString('webify.admin');
+		$roleSlug2 = RoleSlug::fromString('webify.editor');
+
+		$this->assertFalse($roleSlug1->equals($roleSlug2));
+	}
+
+	/**
+	 * Tests that the __toString method correctly returns the string representation of a role slug.
+	 *
+	 * @return void
 	 */
 	#[Test]
 	public function testToStringReturnsStringValue(): void
 	{
-		$roleSlug = RoleSlug::fromString('super-admin');
+		$roleSlug = RoleSlug::fromString('webify.super-admin');
 
-		$this->assertSame('super-admin', (string) $roleSlug);
+		$this->assertSame('webify.super-admin', (string) $roleSlug);
 	}
 }

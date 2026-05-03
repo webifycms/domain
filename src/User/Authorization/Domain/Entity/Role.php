@@ -95,7 +95,7 @@ final class Role extends AggregateRoot
 			new PermissionGranted(
 				$this->id->toNative(),
 				$this->name->toNative(),
-				$this->slug->toNative(),
+				(string) $this->slug,
 				(string) $permission,
 				DateTime::now()->toNative()
 			)
@@ -117,7 +117,7 @@ final class Role extends AggregateRoot
 			new PermissionRevoked(
 				$this->id->toNative(),
 				$this->name->toNative(),
-				$this->slug->toNative(),
+				(string) $this->slug,
 				(string) $permission,
 				DateTime::now()->toNative()
 			)
@@ -154,7 +154,7 @@ final class Role extends AggregateRoot
 			new RoleCreated(
 				$role->getId()->toNative(),
 				$role->getName()->toNative(),
-				$role->getSlug()->toNative(),
+				(string) $role->getSlug(),
 				implode(
 					';' . PHP_EOL,
 					array_map(
