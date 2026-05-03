@@ -37,6 +37,11 @@ interface RoleRepositoryInterface
 	public function getBySlug(RoleSlug $slug): Role;
 
 	/**
+	 * Checks if a role with the given slug exists.
+	 */
+	public function isExist(RoleSlug $slug): bool;
+
+	/**
 	 * Persists the given Role entity to the data store.
 	 */
 	public function persist(Role $role): void;

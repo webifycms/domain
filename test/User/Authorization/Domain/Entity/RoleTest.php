@@ -50,7 +50,7 @@ final class RoleTest extends TestCase
 		$this->role = Role::create(
 			RoleId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
 			RoleName::fromString('Admin'),
-			RoleSlug::fromString('admin'),
+			RoleSlug::fromString('system.admin'),
 			new PermissionCollection()
 		);
 	}
@@ -75,7 +75,7 @@ final class RoleTest extends TestCase
 	{
 		$this->assertSame('01ARZ3NDEKTSV4RRFFQ69G5FAV', $this->role->getId()->toNative());
 		$this->assertSame('Admin', $this->role->getName()->toNative());
-		$this->assertSame('admin', $this->role->getSlug()->toNative());
+		$this->assertSame(['vendor' => 'system', 'slug' => 'admin'], $this->role->getSlug()->toNative());
 		$this->assertFalse($this->role->isSystemRole());
 		$this->assertCount(0, $this->role->getPermissions());
 	}
@@ -89,7 +89,7 @@ final class RoleTest extends TestCase
 		$systemRole = Role::create(
 			RoleId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
 			RoleName::fromString('Super Admin'),
-			RoleSlug::fromString('super-admin'),
+			RoleSlug::fromString('system.super-admin'),
 			new PermissionCollection(),
 			true
 		);
@@ -98,7 +98,7 @@ final class RoleTest extends TestCase
 	}
 
 	/**
-	 * Tests granting permission to a role.
+	 * Tests granting permission for a role.
 	 */
 	#[Test]
 	public function testGrantPermission(): void
@@ -134,7 +134,6 @@ final class RoleTest extends TestCase
 
 		$this->role->grant($permission);
 		$this->role->revoke($permission);
-
 		$this->assertCount(0, $this->role->getPermissions());
 		$this->assertFalse($this->role->allows('post', 'create', 'article'));
 
@@ -157,7 +156,6 @@ final class RoleTest extends TestCase
 		]);
 
 		$this->role->grant($permission);
-
 		$this->assertTrue($this->role->allows('user', 'read', 'profile'));
 	}
 
@@ -174,7 +172,6 @@ final class RoleTest extends TestCase
 		]);
 
 		$this->role->grant($permission);
-
 		$this->assertFalse($this->role->allows('user', 'delete', 'profile'));
 	}
 }

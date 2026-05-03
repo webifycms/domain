@@ -63,7 +63,7 @@ final class AssignRoleTest extends TestCase
 		$this->roleId    = RoleId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FAV');
 		$this->subjectId = SubjectId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FBW');
 		$this->tenantId  = TenantId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FCX');
-		$this->roleSlug  = RoleSlug::fromString('admin');
+		$this->roleSlug  = RoleSlug::fromString('system.admin');
 	}
 
 	/**
@@ -78,7 +78,7 @@ final class AssignRoleTest extends TestCase
 			$this->roleSlug,
 			new PermissionCollection()
 		);
-		$roleRepository = $this->createMock(RoleRepositoryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
 		$roleRepository->method('getBySlug')
 			->willReturn($role)
@@ -90,13 +90,13 @@ final class AssignRoleTest extends TestCase
 			->method('persist')
 		;
 
-		$idGenerator = $this->createMock(UlidGeneratorInterface::class);
+		$idGenerator = $this->createStub(UlidGeneratorInterface::class);
 
 		$idGenerator->method('generate')
 			->willReturn('01ARZ3NDEKTSV4RRFFQ69G5FDY')
 		;
 
-		$duplicateRoleAssignmentRepo = $this->createMock(RoleAssignmentRepositoryInterface::class);
+		$duplicateRoleAssignmentRepo = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
 		$duplicateRoleAssignmentRepo->method('isExists')
 			->willReturn(false)
@@ -117,7 +117,7 @@ final class AssignRoleTest extends TestCase
 			$eventPublisher
 		);
 
-		$service->assign($this->subjectId->toNative(), $this->roleSlug->toNative());
+		$service->assign($this->subjectId->toNative(), (string) $this->roleSlug);
 	}
 
 	/**
@@ -132,7 +132,7 @@ final class AssignRoleTest extends TestCase
 			$this->roleSlug,
 			new PermissionCollection()
 		);
-		$roleRepository = $this->createMock(RoleRepositoryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
 		$roleRepository->method('getBySlug')
 			->willReturn($role)
@@ -144,13 +144,13 @@ final class AssignRoleTest extends TestCase
 			->method('persist')
 		;
 
-		$idGenerator = $this->createMock(UlidGeneratorInterface::class);
+		$idGenerator = $this->createStub(UlidGeneratorInterface::class);
 
 		$idGenerator->method('generate')
 			->willReturn('01ARZ3NDEKTSV4RRFFQ69G5FDY')
 		;
 
-		$duplicateRoleAssignmentRepo = $this->createMock(RoleAssignmentRepositoryInterface::class);
+		$duplicateRoleAssignmentRepo = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
 		$duplicateRoleAssignmentRepo->method('isExists')
 			->willReturn(false)
@@ -173,7 +173,7 @@ final class AssignRoleTest extends TestCase
 
 		$service->assign(
 			$this->subjectId->toNative(),
-			$this->roleSlug->toNative(),
+			(string) $this->roleSlug,
 			$this->tenantId->toNative()
 		);
 	}
@@ -190,7 +190,7 @@ final class AssignRoleTest extends TestCase
 			$this->roleSlug,
 			new PermissionCollection()
 		);
-		$roleRepository = $this->createMock(RoleRepositoryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
 		$roleRepository->method('getBySlug')
 			->willReturn($role)
@@ -202,13 +202,13 @@ final class AssignRoleTest extends TestCase
 			->method('persist')
 		;
 
-		$idGenerator = $this->createMock(UlidGeneratorInterface::class);
+		$idGenerator = $this->createStub(UlidGeneratorInterface::class);
 
 		$idGenerator->method('generate')
 			->willReturn('01ARZ3NDEKTSV4RRFFQ69G5FDY')
 		;
 
-		$duplicateRoleAssignmentRepo = $this->createMock(RoleAssignmentRepositoryInterface::class);
+		$duplicateRoleAssignmentRepo = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
 		$duplicateRoleAssignmentRepo->method('isExists')
 			->willReturn(false)
@@ -233,7 +233,7 @@ final class AssignRoleTest extends TestCase
 
 		$service->assign(
 			$this->subjectId->toNative(),
-			$this->roleSlug->toNative(),
+			(string) $this->roleSlug,
 			null,
 			$expireAt
 		);
@@ -251,13 +251,13 @@ final class AssignRoleTest extends TestCase
 			$this->roleSlug,
 			new PermissionCollection()
 		);
-		$roleRepository = $this->createMock(RoleRepositoryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
 		$roleRepository->method('getBySlug')
 			->willReturn($role)
 		;
 
-		$duplicateRoleAssignmentRepo = $this->createMock(RoleAssignmentRepositoryInterface::class);
+		$duplicateRoleAssignmentRepo = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
 		$duplicateRoleAssignmentRepo->method('isExists')
 			->willReturn(true)
@@ -270,7 +270,7 @@ final class AssignRoleTest extends TestCase
 			->method('persist')
 		;
 
-		$idGenerator    = $this->createMock(UlidGeneratorInterface::class);
+		$idGenerator    = $this->createStub(UlidGeneratorInterface::class);
 		$eventPublisher = $this->createMock(DomainEventPublisherInterface::class);
 
 		$eventPublisher->expects($this->never())
@@ -286,6 +286,6 @@ final class AssignRoleTest extends TestCase
 		);
 
 		$this->expectException(DuplicateRoleAssignmentException::class);
-		$service->assign($this->subjectId->toNative(), $this->roleSlug->toNative());
+		$service->assign($this->subjectId->toNative(), (string) $this->roleSlug);
 	}
 }

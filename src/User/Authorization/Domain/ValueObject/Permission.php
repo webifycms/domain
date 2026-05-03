@@ -92,7 +92,11 @@ final readonly class Permission
 	/**
 	 * Creates a new instance of the class from a native array structure.
 	 *
-	 * @param array<string, string> $permission an associative array containing 'action' and 'resource' keys
+	 * @param array{
+	 *     scope: string,
+	 *     action: string,
+	 *     resource: string,
+	 * } $permission an associative array containing 'action' and 'resource' keys
 	 *
 	 * @return self a new instance of the class initialized with the provided data
 	 */
