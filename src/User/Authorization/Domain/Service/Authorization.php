@@ -155,6 +155,7 @@ final class Authorization implements AuthorizationInterface
 				$subject->subjectId(),
 				$resource->resourceScope(),
 				$resource->resourceType(),
+				$resource->resourceId(),
 				$subject->tenantId() ?? 'global',
 			]
 		);
