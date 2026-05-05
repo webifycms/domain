@@ -34,8 +34,6 @@ final class RoleSlugTest extends TestCase
 {
 	/**
 	 * Tests the creation of a valid RoleSlug instance from a string.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testCreateValidRoleSlugFromString(): void
@@ -48,8 +46,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that the getVendor method correctly returns the vendor part of a role slug.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testGetVendorReturnsVendorPart(): void
@@ -61,8 +57,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that the getSlug method correctly returns the slug part of a role slug.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testGetSlugReturnsSlugPart(): void
@@ -74,8 +68,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that a role slug with multiple hyphens is correctly created and its native representation is returned.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testCreateRoleSlugWithMultipleHyphens(): void
@@ -87,8 +79,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that an exception is thrown when creating a role slug without a vendor separator.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testMissingSeparatorThrowsException(): void
@@ -99,8 +89,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that an exception is thrown when the vendor part of a role slug is in uppercase.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testUppercaseVendorThrowsException(): void
@@ -111,8 +99,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that an exception is thrown when attempting to create a role slug with uppercase characters.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testUppercaseSlugThrowsException(): void
@@ -123,8 +109,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that creating a RoleSlug with a vendor starting with a hyphen throws an InvalidRoleSlugException.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testVendorStartingWithHyphenThrowsException(): void
@@ -135,8 +119,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that creating a role slug starting with a hyphen throws an InvalidRoleSlugException.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testSlugStartingWithHyphenThrowsException(): void
@@ -147,8 +129,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that an exception is thrown when the vendor part of a role slug ends with a hyphen.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testVendorEndingWithHyphenThrowsException(): void
@@ -159,8 +139,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that an exception is thrown when a role slug ends with a hyphen.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testSlugEndingWithHyphenThrowsException(): void
@@ -171,8 +149,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that attempting to create a role slug with consecutive hyphens in the vendor part throws an exception.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testVendorWithConsecutiveHyphensThrowsException(): void
@@ -183,8 +159,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that an exception is thrown when a role slug contains consecutive hyphens.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testSlugWithConsecutiveHyphensThrowsException(): void
@@ -195,8 +169,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that an empty string passed to the fromString method throws an InvalidRoleSlugException.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testEmptyStringThrowsException(): void
@@ -207,8 +179,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that the equals method returns true when comparing two RoleSlug instances with the same value.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testEqualsReturnsTrueForSameValues(): void
@@ -221,8 +191,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that the equals method returns false when comparing role slugs with different vendors.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testEqualsReturnsFalseForDifferentVendors(): void
@@ -235,8 +203,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that the equals method returns false when comparing two role slugs with different values.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testEqualsReturnsFalseForDifferentSlugs(): void
@@ -249,8 +215,6 @@ final class RoleSlugTest extends TestCase
 
 	/**
 	 * Tests that the __toString method correctly returns the string representation of a role slug.
-	 *
-	 * @return void
 	 */
 	#[Test]
 	public function testToStringReturnsStringValue(): void

@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\Entity\AggregateRoot;
 use Webify\Base\Domain\Event\DomainEventInterface;
+use Webify\Test\Base\Domain\Entity\Fixture\TestableAggregateRoot;
 
 /**
  * AggregateRootTest tests the functionality of the AggregateRoot class.
@@ -35,7 +36,7 @@ final class AggregateRootTest extends TestCase
 	#[Test]
 	public function testRecordEvents(): void
 	{
-		$aggregateRoot = new class extends AggregateRoot {};
+		$aggregateRoot = new TestableAggregateRoot();
 
 		$event1 = $this->createStub(DomainEventInterface::class);
 		$event2 = $this->createStub(DomainEventInterface::class);
@@ -56,7 +57,7 @@ final class AggregateRootTest extends TestCase
 	#[Test]
 	public function testReleaseEvents(): void
 	{
-		$aggregateRoot = new class extends AggregateRoot {};
+		$aggregateRoot = new TestableAggregateRoot();
 
 		$event1 = $this->createStub(DomainEventInterface::class);
 		$event2 = $this->createStub(DomainEventInterface::class);
@@ -80,9 +81,8 @@ final class AggregateRootTest extends TestCase
 	#[Test]
 	public function testReleaseEventsReturnsEmptyArrayWhenNoEventsRecorded(): void
 	{
-		$aggregateRoot = new class extends AggregateRoot {};
-
-		$events = $aggregateRoot->releaseDomainEvents();
+		$aggregateRoot = new TestableAggregateRoot();
+		$events        = $aggregateRoot->releaseDomainEvents();
 
 		$this->assertEmpty($events);
 	}
