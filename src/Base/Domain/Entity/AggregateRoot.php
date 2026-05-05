@@ -28,14 +28,6 @@ abstract class AggregateRoot
 	private array $domainEvents = [];
 
 	/**
-	 * Record an event.
-	 */
-	public function recordDomainEvent(DomainEventInterface $event): void
-	{
-		$this->domainEvents[] = $event;
-	}
-
-	/**
 	 * Get domain events.
 	 *
 	 * @return DomainEventInterface[]
@@ -56,5 +48,13 @@ abstract class AggregateRoot
 		$this->domainEvents   = [];
 
 		return $events;
+	}
+
+	/**
+	 * Record an event.
+	 */
+	protected function recordDomainEvent(DomainEventInterface $event): void
+	{
+		$this->domainEvents[] = $event;
 	}
 }
