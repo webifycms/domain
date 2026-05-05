@@ -115,7 +115,7 @@ final class RoleAssignment extends AggregateRoot
 			return false;
 		}
 
-		return $this->expiresAt->isAfter(DateTime::now());
+		return $this->expiresAt->isBefore(DateTime::now());
 	}
 
 	/**

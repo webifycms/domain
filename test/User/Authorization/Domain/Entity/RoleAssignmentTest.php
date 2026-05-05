@@ -98,6 +98,17 @@ final class RoleAssignmentTest extends TestCase
 	}
 
 	/**
+	 * Tests that the isExpired method returns false when no expiration is set on the role assignment.
+	 */
+	#[Test]
+	public function testIsExpiredReturnsFalseWhenNoExpiration(): void
+	{
+		$assignment = RoleAssignment::assign($this->assignmentId, $this->roleId, $this->subjectId);
+
+		$this->assertFalse($assignment->isExpired());
+	}
+
+	/**
 	 * Tests that a role assignment with an expiration time is correctly created and the expiration time is set.
 	 */
 	#[Test]
@@ -113,6 +124,40 @@ final class RoleAssignmentTest extends TestCase
 		);
 
 		$this->assertNotNull($assignment->getExpiresAt());
+	}
+
+	/**
+	 * Tests that the isExpiresAt method returns true when the role assignment has expired.
+	 */
+	#[Test]
+	public function testIsExpiresAtReturnTrueForExpired(): void
+	{
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId,
+			$this->tenantId,
+			DateTime::fromTimestamp(time() - 3600)
+		);
+
+		$this->assertTrue($assignment->isExpired());
+	}
+
+	/**
+	 * Tests that the isExpiresAt method returns false when the role assignment has not expired.
+	 */
+	#[Test]
+	public function testIsExpiresAtReturnFalseForNotExpired(): void
+	{
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId,
+			$this->tenantId,
+			DateTime::fromTimestamp(time() + 3600)
+		);
+
+		$this->assertFalse($assignment->isExpired());
 	}
 
 	/**
@@ -149,17 +194,6 @@ final class RoleAssignmentTest extends TestCase
 		$assignment  = RoleAssignment::assign($this->assignmentId, $this->roleId, $this->subjectId, $this->tenantId);
 
 		$this->assertFalse($assignment->isApplicableFor($otherTenant));
-	}
-
-	/**
-	 * Tests that the isExpired method returns false when no expiration is set on the role assignment.
-	 */
-	#[Test]
-	public function testIsExpiredReturnsFalseWhenNoExpiration(): void
-	{
-		$assignment = RoleAssignment::assign($this->assignmentId, $this->roleId, $this->subjectId);
-
-		$this->assertFalse($assignment->isExpired());
 	}
 
 	/**
