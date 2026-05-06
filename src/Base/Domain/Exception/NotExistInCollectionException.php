@@ -46,7 +46,7 @@ final class NotExistInCollectionException extends OutOfBoundsException implement
 
 		$this->translation = new ExceptionTranslation(
 			'base.domain',
-			'invalid_type_of_collection',
+			'not_exist_in_collection',
 			$parameters
 		);
 	}
