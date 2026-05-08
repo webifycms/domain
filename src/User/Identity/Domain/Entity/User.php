@@ -22,7 +22,9 @@ use Webify\User\Identity\Domain\Event\{UserDisplayNameWasChanged,
 	UserWasDeactivated,
 	UserWasRegistered
 };
-use Webify\User\Identity\Domain\Exception\{UserAlreadyActivatedException, UserAlreadyDeactivatedException};
+use Webify\User\Identity\Domain\Exception\{UserAlreadyActivatedException,
+	UserAlreadyDeactivatedException,
+	UserCannotBeDeactivatedException};
 use Webify\User\Identity\Domain\ValueObject\{PasswordHash, UserEmail, UserId, UserStatus};
 
 /**
@@ -133,12 +135,17 @@ final class User extends AggregateRoot
 	/**
 	 * Deactivate the user.
 	 *
-	 * @throws UserAlreadyDeactivatedException if the user is already deactivated
+	 * @throws UserAlreadyDeactivatedException  if the user is already deactivated
+	 * @throws UserCannotBeDeactivatedException if the user is not in activate state
 	 */
 	public function deactivate(): void
 	{
 		if ($this->status->isDeactivated()) {
 			throw UserAlreadyDeactivatedException::create();
+		}
+
+		if (!$this->status->isActive()) {
+			throw UserCannotBeDeactivatedException::create();
 		}
 
 		$this->status    = UserStatus::Deactivated;

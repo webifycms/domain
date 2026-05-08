@@ -23,7 +23,9 @@ use Webify\User\Identity\Domain\Event\{
 	UserWasDeactivated,
 	UserWasRegistered
 };
-use Webify\User\Identity\Domain\Exception\{UserAlreadyActivatedException, UserAlreadyDeactivatedException};
+use Webify\User\Identity\Domain\Exception\{UserAlreadyActivatedException,
+	UserAlreadyDeactivatedException,
+	UserCannotBeDeactivatedException};
 use Webify\User\Identity\Domain\Service\PasswordHasher;
 use Webify\User\Identity\Domain\ValueObject\{UserEmail, UserId};
 
@@ -117,14 +119,15 @@ final class UserTest extends TestCase
 	#[Test]
 	public function testDeactivateUser(): void
 	{
+		$this->user->activate();
 		$this->user->deactivate();
 
 		$this->assertTrue($this->user->getStatus()->isDeactivated());
 
 		$events = $this->user->getDomainEvents();
 
-		$this->assertCount(2, $events);
-		$this->assertInstanceOf(UserWasDeactivated::class, $events[1]);
+		$this->assertCount(3, $events);
+		$this->assertInstanceOf(UserWasDeactivated::class, $events[2]);
 	}
 
 	/**
@@ -133,8 +136,19 @@ final class UserTest extends TestCase
 	#[Test]
 	public function testDeactivateAlreadyDeactivatedUserThrowsException(): void
 	{
+		$this->user->activate();
 		$this->user->deactivate();
 		$this->expectException(UserAlreadyDeactivatedException::class);
+		$this->user->deactivate();
+	}
+
+	/**
+	 * Tests deactivating a non-active user will throw an exception.
+	 */
+	#[Test]
+	public function testDeactivateNonActiveUserThrowsException(): void
+	{
+		$this->expectException(UserCannotBeDeactivatedException::class);
 		$this->user->deactivate();
 	}
 
