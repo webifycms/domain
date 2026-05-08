@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Authorization\Domain\Exception;
 
 use InvalidArgumentException;
-use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when an invalid role name value is encountered.
@@ -39,7 +39,7 @@ final class InvalidRoleNameException extends InvalidArgumentException implements
 	 *
 	 * @param string $value the invalid role name value
 	 */
-	public static function fromInvalidName(string $value): self
+	public static function forInvalidName(string $value): self
 	{
 		return new self(
 			new ExceptionTranslation(

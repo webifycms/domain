@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Authorization\Domain\Exception;
 
 use InvalidArgumentException;
-use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when an invalid tenant id value is encountered.
@@ -39,7 +39,7 @@ final class InvalidTenantIdException extends InvalidArgumentException implements
 	 *
 	 * @param string $value the invalid tenant id value
 	 */
-	public static function fromInvalidId(string $value): self
+	public static function forInvalidId(string $value): self
 	{
 		return new self(
 			new ExceptionTranslation(

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Webify\Base\Domain\Exception;
 
 use DomainException;
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when an access denied error occurs in the authorization domain.
@@ -40,7 +41,7 @@ final class AccessDeniedException extends DomainException implements Translatabl
 	 * @param string $subjectId  the ID of the subject
 	 * @param string $resourceId the ID of the resource
 	 */
-	public static function for(string $action, string $subjectId, string $resourceId): self
+	public static function deniedFor(string $action, string $subjectId, string $resourceId): self
 	{
 		return new self(
 			new ExceptionTranslation(

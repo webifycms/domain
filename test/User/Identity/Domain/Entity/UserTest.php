@@ -23,7 +23,7 @@ use Webify\User\Identity\Domain\Event\{
 	UserWasDeactivated,
 	UserWasRegistered
 };
-use Webify\User\Identity\Domain\Exception\{UserAlreadyActivateException, UserAlreadyDeactivatedException};
+use Webify\User\Identity\Domain\Exception\{UserAlreadyActivatedException, UserAlreadyDeactivatedException};
 use Webify\User\Identity\Domain\Service\PasswordHasher;
 use Webify\User\Identity\Domain\ValueObject\{UserEmail, UserId};
 
@@ -107,7 +107,7 @@ final class UserTest extends TestCase
 	public function testActivateAlreadyActivatedUserThrowsException(): void
 	{
 		$this->user->activate();
-		$this->expectException(UserAlreadyActivateException::class);
+		$this->expectException(UserAlreadyActivatedException::class);
 		$this->user->activate();
 	}
 

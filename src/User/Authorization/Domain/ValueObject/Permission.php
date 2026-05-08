@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\ValueObject;
 
-use Webify\User\Authorization\Domain\Exception\InvalidPermissionException;
+use Webify\User\Authorization\Domain\Exception\PermissionValidationException;
 
 /**
  * Permission value object - Represent the atomic unit of access
@@ -32,7 +32,7 @@ final readonly class Permission
 	 * @param string $action   the action to be performed
 	 * @param string $resource the resource associated with the action
 	 *
-	 * @throws InvalidPermissionException if the one of the property is empty
+	 * @throws PermissionValidationException if the one of the property is empty
 	 */
 	private function __construct(
 		private string $scope,
@@ -40,7 +40,7 @@ final readonly class Permission
 		private string $resource,
 	) {
 		if (!$this->isValid()) {
-			throw new InvalidPermissionException();
+			throw PermissionValidationException::fromInvalidProperties();
 		}
 	}
 

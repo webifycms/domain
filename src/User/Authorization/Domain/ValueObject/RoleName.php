@@ -30,7 +30,7 @@ final readonly class RoleName
 	private function __construct(private string $name)
 	{
 		if (!$this->isValid()) {
-			throw InvalidRoleNameException::fromInvalidName($this->name);
+			throw InvalidRoleNameException::forInvalidName($this->name);
 		}
 	}
 

@@ -17,7 +17,7 @@ use Webify\Base\Domain\Entity\AggregateRoot;
 use Webify\Base\Domain\ValueObject\DateTime;
 use Webify\User\Authorization\Domain\Collection\PermissionCollection;
 use Webify\User\Authorization\Domain\Event\{PermissionGranted, PermissionRevoked, RoleCreated};
-use Webify\User\Authorization\Domain\Exception\CannotModifySystemRoleException;
+use Webify\User\Authorization\Domain\Exception\SystemRoleModificationException;
 use Webify\User\Authorization\Domain\ReadModel\Role as RoleReadModel;
 use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleId, RoleName, RoleSlug};
 
@@ -191,12 +191,12 @@ final class Role extends AggregateRoot
 	/**
 	 * Guards against modifying a system role.
 	 *
-	 * @throws CannotModifySystemRoleException if the role is a system role
+	 * @throws SystemRoleModificationException if the role is a system role
 	 */
 	private function guardSystemRole(): void
 	{
 		if ($this->isSystemRole) {
-			throw CannotModifySystemRoleException::fromSystemRole($this->name->toNative());
+			throw SystemRoleModificationException::forSystemRole($this->name->toNative());
 		}
 	}
 }

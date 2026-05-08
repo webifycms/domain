@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Identity\Domain\Exception;
 
 use InvalidArgumentException;
-use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when an invalid user id value is encountered.
@@ -37,17 +37,17 @@ final class InvalidUserIdException extends InvalidArgumentException implements T
 	/**
 	 * Factory method to initiate an InvalidUserIdException with a default message.
 	 *
-	 * @param string $value the invalid user id value
+	 * @param string $id the invalid user id value
 	 */
-	public static function fromInvalidId(string $value): self
+	public static function fromInvalidId(string $id): self
 	{
 		return new self(
 			new ExceptionTranslation(
 				'user.identity',
 				'invalid_user_id',
-				['value' => $value]
+				['id' => $id]
 			),
-			sprintf('Invalid user id "%s"', $value)
+			sprintf('Invalid user id: "%s"', $id)
 		);
 	}
 }

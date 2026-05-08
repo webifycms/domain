@@ -15,7 +15,7 @@ namespace Webify\Test\User\Authorization\Domain\ValueObject;
 
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
-use Webify\User\Authorization\Domain\Exception\InvalidPermissionException;
+use Webify\User\Authorization\Domain\Exception\PermissionValidationException;
 use Webify\User\Authorization\Domain\ValueObject\Permission;
 
 /**
@@ -57,7 +57,7 @@ final class PermissionTest extends TestCase
 	#[Test]
 	public function testEmptyScopeThrowsException(): void
 	{
-		$this->expectException(InvalidPermissionException::class);
+		$this->expectException(PermissionValidationException::class);
 		Permission::fromNative([
 			'scope'    => '',
 			'action'   => 'create',
@@ -71,7 +71,7 @@ final class PermissionTest extends TestCase
 	#[Test]
 	public function testEmptyActionThrowsException(): void
 	{
-		$this->expectException(InvalidPermissionException::class);
+		$this->expectException(PermissionValidationException::class);
 		Permission::fromNative([
 			'scope'    => 'post',
 			'action'   => '',
@@ -85,7 +85,7 @@ final class PermissionTest extends TestCase
 	#[Test]
 	public function testEmptyResourceThrowsException(): void
 	{
-		$this->expectException(InvalidPermissionException::class);
+		$this->expectException(PermissionValidationException::class);
 		Permission::fromNative([
 			'scope'    => 'post',
 			'action'   => 'create',

@@ -15,7 +15,7 @@ namespace Webify\Base\Domain\Collection;
 
 use Countable;
 use Iterator;
-use Webify\Base\Domain\Exception\{InvalidTypeOfCollectionException, NotExistInCollectionException};
+use Webify\Base\Domain\Exception\{InvalidCollectionIndexException, InvalidCollectionItemTypeException};
 
 /**
  * Base type-safe collection class.
@@ -129,18 +129,12 @@ abstract class Collection implements Countable, Iterator
 	 *
 	 * @return T
 	 *
-	 * @throws NotExistInCollectionException
+	 * @throws InvalidCollectionIndexException
 	 */
 	final public function get(int $index): mixed
 	{
 		if (!array_key_exists($index, $this->items)) {
-			throw new NotExistInCollectionException(
-				sprintf('Index %d does not exist in %s.', $index, static::class),
-				[
-					'index' => $index,
-					'class' => static::class,
-				]
-			);
+			throw InvalidCollectionIndexException::forMissingIndex(static::class, $index);
 		}
 
 		return $this->items[$index];
@@ -277,25 +271,17 @@ abstract class Collection implements Countable, Iterator
 	 *
 	 * @param T $item
 	 *
-	 * @throws InvalidTypeOfCollectionException
+	 * @throws InvalidCollectionItemTypeException
 	 */
 	private function add(mixed $item): void
 	{
 		$type = $this->type();
 
 		if (!$item instanceof $type) {
-			throw new InvalidTypeOfCollectionException(
-				sprintf(
-					'%s only accepts items of type %s, got %s.',
-					static::class,
-					$type,
-					get_debug_type($item)
-				),
-				[
-					'class'        => static::class,
-					'expectedType' => $type,
-					'givenType'    => get_debug_type($item),
-				]
+			throw InvalidCollectionItemTypeException::forInvalidItemType(
+				static::class,
+				$type,
+				get_debug_type($item)
 			);
 		}
 

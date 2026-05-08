@@ -50,7 +50,7 @@ final readonly class CheckAccess implements CheckAccessInterface
 		AuthorizableResourceInterface $resource
 	): void {
 		if (!$this->authorization->check($action, $subject, $resource)) {
-			throw AccessDeniedException::for($action, $subject->subjectId(), $resource->resourceId());
+			throw AccessDeniedException::deniedFor($action, $subject->subjectId(), $resource->resourceId());
 		}
 	}
 }
