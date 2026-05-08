@@ -29,6 +29,7 @@ use Webify\User\Authorization\Domain\ValueObject\Permission;
 #[CoversMethod(Permission::class, 'toNative')]
 #[CoversMethod(Permission::class, 'wildcard')]
 #[CoversMethod(Permission::class, 'scopedWildcard')]
+#[CoversMethod(Permission::class, 'jsonSerialize')]
 final class PermissionTest extends TestCase
 {
 	/**
@@ -110,6 +111,45 @@ final class PermissionTest extends TestCase
 			'action'   => 'read',
 			'resource' => 'profile',
 		], $permission->toNative());
+	}
+
+	/**
+	 * Tests that jsonSerialize returns the same value as toNative.
+	 */
+	#[Test]
+	public function testJsonSerializeReturnsNativeArray(): void
+	{
+		$permission = Permission::fromNative([
+			'scope'    => 'post',
+			'action'   => 'create',
+			'resource' => 'article',
+		]);
+
+		$this->assertSame($permission->toNative(), $permission->jsonSerialize());
+	}
+
+	/**
+	 * Tests that json_encode produces the expected structured JSON for a Permission.
+	 */
+	#[Test]
+	public function testJsonEncodeProducesStructuredObject(): void
+	{
+		$permission = Permission::fromNative([
+			'scope'    => 'post',
+			'action'   => 'create',
+			'resource' => 'article',
+		]);
+		$encoded = json_encode($permission);
+
+		$this->assertNotFalse($encoded);
+
+		$decoded = json_decode($encoded, true);
+
+		$this->assertIsArray($decoded);
+
+		$this->assertSame('post', $decoded['scope']);
+		$this->assertSame('create', $decoded['action']);
+		$this->assertSame('article', $decoded['resource']);
 	}
 
 	/**

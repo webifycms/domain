@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\ValueObject;
 
+use JsonSerializable;
 use Webify\User\Authorization\Domain\Exception\PermissionValidationException;
 
 /**
@@ -23,7 +24,7 @@ use Webify\User\Authorization\Domain\Exception\PermissionValidationException;
  * can be expressed as a single Permission("*", "*") rather than an exhaustive matrix.
  * The wildcard logic must live inside this value object, so it is never reimplemented across the codebase.
  */
-final readonly class Permission
+final readonly class Permission implements JsonSerializable
 {
 	/**
 	 * Constructs a new instance of the class.
@@ -70,7 +71,11 @@ final readonly class Permission
 	/**
 	 * Converts the current object state into a native array representation.
 	 *
-	 * @return array<string, string> an associative array containing the action and resource
+	 * @return array{
+	 *     scope: string,
+	 *     action: string,
+	 *     resource: string,
+	 * } an associative array containing the action and resource
 	 */
 	public function toNative(): array
 	{
@@ -79,6 +84,20 @@ final readonly class Permission
 			'action'   => $this->action,
 			'resource' => $this->resource,
 		];
+	}
+
+	/**
+	 * Converts the current object into a JSON-serializable format.
+	 *
+	 * @return array{
+	 *      scope: string,
+	 *      action: string,
+	 *      resource: string,
+	 *  } an associative array containing the action and resource
+	 */
+	public function jsonSerialize(): array
+	{
+		return $this->toNative();
 	}
 
 	/**

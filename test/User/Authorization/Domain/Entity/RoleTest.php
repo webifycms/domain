@@ -61,10 +61,50 @@ final class RoleTest extends TestCase
 	#[Test]
 	public function testRoleCreatedEvent(): void
 	{
-		$events = $this->role->getDomainEvents();
+		$events   = $this->role->getDomainEvents();
+		/** @var RoleCreated $event */
+		$event    = $events[0];
 
 		$this->assertCount(1, $events);
-		$this->assertInstanceOf(RoleCreated::class, $events[0]);
+		$this->assertInstanceOf(RoleCreated::class, $event);
+		$this->assertCount(0, $event->permissions);
+	}
+
+	/**
+	 * Tests that role-created event payload can reconstruct permissions.
+	 */
+	#[Test]
+	public function testRoleCreatedEventPermissionsAreReconstructable(): void
+	{
+		$permissions = PermissionCollection::from([
+			Permission::fromNative([
+				'scope'    => 'post',
+				'action'   => 'create',
+				'resource' => 'article',
+			]),
+			Permission::fromNative([
+				'scope'    => 'user',
+				'action'   => 'read',
+				'resource' => 'profile',
+			]),
+		]);
+
+		$role = Role::create(
+			RoleId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('system.editor'),
+			$permissions
+		);
+
+		/** @var RoleCreated $event */
+		$event = $role->getDomainEvents()[0];
+
+		$this->assertCount(2, $event->permissions);
+
+		foreach ($event->permissions as $index => $permissionData) {
+			$reconstructed = Permission::fromNative($permissionData);
+			$this->assertTrue($reconstructed->equals($permissions->get($index)));
+		}
 	}
 
 	/**

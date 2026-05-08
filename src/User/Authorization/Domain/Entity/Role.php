@@ -155,12 +155,9 @@ final class Role extends AggregateRoot
 				$role->getId()->toNative(),
 				$role->getName()->toNative(),
 				(string) $role->getSlug(),
-				implode(
-					';' . PHP_EOL,
-					array_map(
-						fn (Permission $permission): string => (string) $permission,
-						$role->getPermissions()->toArray()
-					)
+				array_map(
+					static fn (Permission $permission): array => $permission->toNative(),
+					$role->getPermissions()->toArray()
 				),
 				$role->isSystemRole(),
 				DateTime::now()->toNative()

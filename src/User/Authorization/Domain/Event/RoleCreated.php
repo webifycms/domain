@@ -24,10 +24,14 @@ final readonly class RoleCreated implements DomainEventInterface
 	/**
 	 * The constructor.
 	 *
-	 * @param string            $roleId       the role ID
-	 * @param string            $roleName     the role name
-	 * @param string            $roleSlug     the role slug
-	 * @param string            $permissions  the permissions associated with the role
+	 * @param string $roleId   the role ID
+	 * @param string $roleName the role name
+	 * @param string $roleSlug the role slug
+	 * @param array<int, array{
+	 *     scope: string,
+	 *     action: string,
+	 *     resource: string
+	 * }> $permissions  the permissions associated with the role
 	 * @param bool              $isSystemRole whether the role is a system role
 	 * @param DateTimeImmutable $createdAt    the date and time when the role was created
 	 */
@@ -35,7 +39,7 @@ final readonly class RoleCreated implements DomainEventInterface
 		public string $roleId,
 		public string $roleName,
 		public string $roleSlug,
-		public string $permissions,
+		public array $permissions,
 		public bool $isSystemRole,
 		private DateTimeImmutable $createdAt
 	) {}
