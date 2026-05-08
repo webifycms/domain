@@ -84,7 +84,7 @@ abstract readonly class AggregateId
 	/**
 	 * Throws a domain-specific exception when validation fails.
 	 */
-	abstract protected function throwException(string $value): void;
+	abstract protected function throwException(string $value): never;
 
 	/**
 	 * Validates if the value perfectly matches the ULID specification.

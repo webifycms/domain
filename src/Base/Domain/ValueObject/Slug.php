@@ -76,7 +76,7 @@ abstract readonly class Slug
 	/**
 	 * Throws an exception as part of the implementation detail in derived classes.
 	 */
-	abstract protected function throwException(string $value): void;
+	abstract protected function throwException(string $value): never;
 
 	/**
 	 * Validates the value against a predefined format pattern.

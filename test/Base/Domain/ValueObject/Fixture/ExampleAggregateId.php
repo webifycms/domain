@@ -28,7 +28,7 @@ final readonly class ExampleAggregateId extends AggregateId
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function throwException(string $value): void
+	protected function throwException(string $value): never
 	{
 		throw new InvalidArgumentException('Invalid aggregate ID: ' . $value);
 	}

@@ -62,6 +62,7 @@ final class RoleTest extends TestCase
 	public function testRoleCreatedEvent(): void
 	{
 		$events   = $this->role->getDomainEvents();
+
 		/** @var RoleCreated $event */
 		$event    = $events[0];
 

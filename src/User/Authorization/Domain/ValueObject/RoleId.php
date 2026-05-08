@@ -26,7 +26,7 @@ final readonly class RoleId extends AggregateId
 	 *
 	 * @throws InvalidRoleIdException
 	 */
-	protected function throwException(string $value): void
+	protected function throwException(string $value): never
 	{
 		throw InvalidRoleIdException::forInvalidId($value);
 	}
