@@ -24,7 +24,7 @@ namespace Webify\Base\Domain\ValueObject;
 abstract readonly class AggregateId
 {
 	/**
-	 * The Ulid specification regex pattern:
+	 * The ULID specification regex pattern:
 	 * - Must be exactly 26 characters.
 	 * - First character must be 0-7 (to prevent overflow).
 	 * - Uses Base32 (excludes I, L, O, U to avoid ambiguity and accidental profanity).
@@ -32,14 +32,21 @@ abstract readonly class AggregateId
 	private const string REGEX_PATTERN = '/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/i';
 
 	/**
+	 * The native string value of the aggregate ID.
+	 */
+	private string $value;
+
+	/**
 	 * The constructor.
 	 */
 	final public function __construct(
-		private string $value
+		string $value
 	) {
-		if (!$this->isValid()) {
-			$this->throwException($this->value);
+		if (!$this->isValid($value)) {
+			$this->throwException($value);
 		}
+
+		$this->value = strtoupper($value);
 	}
 
 	/**
@@ -71,7 +78,7 @@ abstract readonly class AggregateId
 	 */
 	public static function fromString(string $value): static
 	{
-		return new static(strtoupper($value));
+		return new static($value);
 	}
 
 	/**
@@ -82,8 +89,8 @@ abstract readonly class AggregateId
 	/**
 	 * Validates if the value perfectly matches the ULID specification.
 	 */
-	private function isValid(): bool
+	private function isValid(string $value): bool
 	{
-		return preg_match(self::REGEX_PATTERN, $this->value) === 1;
+		return preg_match(self::REGEX_PATTERN, $value) === 1;
 	}
 }
