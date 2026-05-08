@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Base\Domain\Exception;
+namespace Webify\Base\Domain\Contract\Translation;
 
 /**
  * Contract for exceptions that can be translated.

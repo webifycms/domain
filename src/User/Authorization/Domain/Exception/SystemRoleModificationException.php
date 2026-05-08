@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Webify\User\Authorization\Domain\Exception;
 
 use RuntimeException;
-use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when system roles try to be modified.
  */
-final class CannotModifySystemRoleException extends RuntimeException implements TranslatableExceptionInterface
+final class SystemRoleModificationException extends RuntimeException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
@@ -39,7 +39,7 @@ final class CannotModifySystemRoleException extends RuntimeException implements 
 	 *
 	 * @param string $value the system role value
 	 */
-	public static function fromSystemRole(string $value): self
+	public static function forSystemRole(string $value): self
 	{
 		return new self(
 			new ExceptionTranslation(

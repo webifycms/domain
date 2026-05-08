@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Webify\Base\Domain\Collection\Collection;
-use Webify\Base\Domain\Exception\{InvalidTypeOfCollectionException, NotExistInCollectionException};
+use Webify\Base\Domain\Exception\{InvalidCollectionIndexException, InvalidCollectionItemTypeException};
 use Webify\Test\Base\Domain\Collection\Fixture\{Item, ItemCollection};
 
 /**
@@ -66,7 +66,7 @@ final class CollectionTest extends TestCase
 	#[Test]
 	public function fromShouldValidateItemType(): void
 	{
-		$this->expectException(InvalidTypeOfCollectionException::class);
+		$this->expectException(InvalidCollectionItemTypeException::class);
 		// @phpstan-ignore-next-line
 		ItemCollection::from(self::createInvalidItemArray());
 	}
@@ -92,7 +92,7 @@ final class CollectionTest extends TestCase
 	#[Test]
 	public function withShouldRejectInvalidItemType(): void
 	{
-		$this->expectException(InvalidTypeOfCollectionException::class);
+		$this->expectException(InvalidCollectionItemTypeException::class);
 
 		$collection = ItemCollection::from([new Item('one')]);
 
@@ -188,7 +188,7 @@ final class CollectionTest extends TestCase
 	#[Test]
 	public function getShouldThrowExceptionForInvalidIndex(): void
 	{
-		$this->expectException(NotExistInCollectionException::class);
+		$this->expectException(InvalidCollectionIndexException::class);
 
 		$collection = ItemCollection::from([new Item('one')]);
 		$collection->get(5);

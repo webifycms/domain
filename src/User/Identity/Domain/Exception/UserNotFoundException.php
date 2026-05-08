@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Identity\Domain\Exception;
 
 use RuntimeException;
-use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Thrown when the user is not found.
@@ -22,24 +22,45 @@ use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInt
 final class UserNotFoundException extends RuntimeException implements TranslatableExceptionInterface
 {
 	/**
-	 * {@inheritDoc}
+	 * Private constructor enforces the use of the factory methods to initiate this exception.
+	 *
+	 * @param ExceptionTranslation $translation the translation object for this exception
+	 * @param string               $message     the exception message (optional)
 	 */
-	public ExceptionTranslation $translation {
-		get {
-			return $this->translation;
-		}
+	private function __construct(
+		public readonly ExceptionTranslation $translation,
+		string $message = ''
+	) {
+		parent::__construct($message);
 	}
 
 	/**
-	 * The constructor.
+	 * Factory method to create a UserNotFoundException for a specific user ID.
 	 */
-	public function __construct(string $message = 'User not found.')
+	public static function forId(string $id): UserNotFoundException
 	{
-		parent::__construct($message);
+		return new self(
+			new ExceptionTranslation(
+				'user.identity',
+				'user_not_found',
+				['id' => $id]
+			),
+			sprintf('User not found for id: %s.', $id)
+		);
+	}
 
-		$this->translation = new ExceptionTranslation(
-			'user.identity',
-			'user_not_found'
+	/**
+	 * Factory method to create a UserNotFoundException for a specific user email.
+	 */
+	public static function forEmail(string $email): UserNotFoundException
+	{
+		return new self(
+			new ExceptionTranslation(
+				'user.identity',
+				'user_not_found',
+				['email' => $email]
+			),
+			sprintf('User not found for email: %s.', $email)
 		);
 	}
 }

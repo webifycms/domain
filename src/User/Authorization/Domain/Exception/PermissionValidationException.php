@@ -11,15 +11,15 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Identity\Domain\Exception;
+namespace Webify\User\Authorization\Domain\Exception;
 
-use LogicException;
+use InvalidArgumentException;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Thrown when a user was already deactivated and trying to deactivate again.
+ * Exception thrown when invalid permission properties are encountered.
  */
-final class UserAlreadyDeactivatedException extends LogicException implements TranslatableExceptionInterface
+final class PermissionValidationException extends InvalidArgumentException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
@@ -35,16 +35,16 @@ final class UserAlreadyDeactivatedException extends LogicException implements Tr
 	}
 
 	/**
-	 * Factory method to create a new instance of UserAlreadyDeactivatedException.
+	 * Creates a new instance of PermissionValidationException for invalid permission properties.
 	 */
-	public static function create(): UserAlreadyDeactivatedException
+	public static function fromInvalidProperties(): PermissionValidationException
 	{
 		return new self(
 			new ExceptionTranslation(
-				'user.identity',
-				'user_already_deactivated'
+				'user.authorization',
+				'invalid_permission'
 			),
-			'User is already deactivated.'
+			'Invalid permission properties.'
 		);
 	}
 }

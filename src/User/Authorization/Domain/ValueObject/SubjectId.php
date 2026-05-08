@@ -28,6 +28,6 @@ final readonly class SubjectId extends AggregateId
 	 */
 	protected function throwException(string $value): void
 	{
-		throw InvalidSubjectIdException::fromInvalidId($value);
+		throw InvalidSubjectIdException::forInvalidId($value);
 	}
 }

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Authorization\Domain\Exception;
 
 use InvalidArgumentException;
-use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when an invalid role assignment id value is encountered.

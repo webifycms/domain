@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Identity\Domain\Exception;
 
 use InvalidArgumentException;
-use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when an invalid password hash value is encountered.
@@ -37,17 +37,17 @@ final class InvalidPasswordHashException extends InvalidArgumentException implem
 	/**
 	 * Factory method to initiate an InvalidPasswordHashException with a default message.
 	 *
-	 * @param string $value the invalid password hash value
+	 * @param string $hash the invalid password hash value
 	 */
-	public static function fromInvalidPasswordHash(string $value): self
+	public static function fromInvalidPasswordHash(string $hash): self
 	{
 		return new self(
 			new ExceptionTranslation(
 				'user.identity',
 				'invalid_password_hash',
-				['value' => $value]
+				['hash' => $hash]
 			),
-			sprintf('Invalid password hash "%s"', $value)
+			sprintf('Invalid password hash: "%s"', $hash)
 		);
 	}
 }

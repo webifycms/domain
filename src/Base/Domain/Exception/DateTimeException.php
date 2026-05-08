@@ -15,6 +15,7 @@ namespace Webify\Base\Domain\Exception;
 
 use InvalidArgumentException;
 use Throwable;
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when an invalid date and time value is encountered.
@@ -46,7 +47,7 @@ final class DateTimeException extends InvalidArgumentException implements Transl
 	 *
 	 * @return static a new instance of `DateTimeException`
 	 */
-	public static function withDefault(int $code = 0, ?Throwable $previous = null): static
+	public static function withDefault(int $code = 0, ?Throwable $previous = null): DateTimeException
 	{
 		return new self(
 			new ExceptionTranslation(
@@ -67,10 +68,13 @@ final class DateTimeException extends InvalidArgumentException implements Transl
 	 * @param int            $code     the exception code (optional)
 	 * @param null|Throwable $previous the previous throwable used for the exception chaining (optional)
 	 *
-	 * @return static a new instance of DateTimeException
+	 * @return DateTimeException a new instance of DateTimeException
 	 */
-	public static function fromInvalidDatetime(string $value, int $code = 0, ?Throwable $previous = null): static
-	{
+	public static function fromInvalidDatetime(
+		string $value,
+		int $code = 0,
+		?Throwable $previous = null
+	): DateTimeException {
 		return new self(
 			new ExceptionTranslation(
 				'base.datetime',
@@ -93,10 +97,13 @@ final class DateTimeException extends InvalidArgumentException implements Transl
 	 * @param int            $code     the exception code (optional)
 	 * @param null|Throwable $previous the previous throwable used for the exception chaining (optional)
 	 *
-	 * @return static a new instance of DateTimeException
+	 * @return DateTimeException a new instance of DateTimeException
 	 */
-	public static function fromInvalidTimezone(string $value, int $code = 0, ?Throwable $previous = null): static
-	{
+	public static function fromInvalidTimezone(
+		string $value,
+		int $code = 0,
+		?Throwable $previous = null
+	): DateTimeException {
 		return new self(
 			new ExceptionTranslation(
 				'base.datetime',

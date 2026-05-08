@@ -47,6 +47,9 @@ $rules = [
 		'remove_inheritdoc' => false,
 	],
 	'php_unit_test_class_requires_covers' => false,
+	'class_definition'                    => [
+		'multi_line_extends_each_single_line' => true,
+	],
 ];
 
 return new Fixer($finder, $rules)

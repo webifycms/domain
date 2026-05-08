@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Identity\Domain\Exception;
 
 use InvalidArgumentException;
-use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when an invalid user email value is encountered.
@@ -37,17 +37,17 @@ final class InvalidUserEmailException extends InvalidArgumentException implement
 	/**
 	 * Factory method to initiate an InvalidUserEmailException with a default message.
 	 *
-	 * @param string $value the invalid user email value
+	 * @param string $email the invalid user email value
 	 */
-	public static function fromInvalidEmail(string $value): self
+	public static function forInvalidEmail(string $email): self
 	{
 		return new self(
 			new ExceptionTranslation(
 				'user.identity',
 				'invalid_user_email',
-				['value' => $value]
+				['email' => $email]
 			),
-			sprintf('Invalid user email "%s"', $value)
+			sprintf('Invalid user email: "%s"', $email)
 		);
 	}
 }

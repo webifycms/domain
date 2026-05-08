@@ -17,9 +17,9 @@ use LogicException;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Thrown when a user was already deactivated and trying to deactivate again.
+ * Thrown when a user was already activated and trying to activate again.
  */
-final class UserAlreadyDeactivatedException extends LogicException implements TranslatableExceptionInterface
+final class UserAlreadyActivatedException extends LogicException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
@@ -35,16 +35,16 @@ final class UserAlreadyDeactivatedException extends LogicException implements Tr
 	}
 
 	/**
-	 * Factory method to create a new instance of UserAlreadyDeactivatedException.
+	 * Factory method to create a new instance of UserAlreadyActivateException.
 	 */
-	public static function create(): UserAlreadyDeactivatedException
+	public static function create(): UserAlreadyActivatedException
 	{
 		return new self(
 			new ExceptionTranslation(
 				'user.identity',
-				'user_already_deactivated'
+				'user_already_activate'
 			),
-			'User is already deactivated.'
+			'User is already activated.'
 		);
 	}
 }

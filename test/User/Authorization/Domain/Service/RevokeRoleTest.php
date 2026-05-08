@@ -102,7 +102,7 @@ final class RevokeRoleTest extends TestCase
 		$roleAssignmentRepository = $this->createMock(RoleAssignmentRepositoryInterface::class);
 
 		$roleAssignmentRepository->method('getById')
-			->willThrowException(new RoleAssignmentNotFoundException('Role assignment not found'))
+			->willThrowException(RoleAssignmentNotFoundException::forId(''))
 		;
 		$roleAssignmentRepository->expects($this->never())
 			->method('delete')

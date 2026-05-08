@@ -11,15 +11,15 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Identity\Domain\Exception;
+namespace Webify\Base\Domain\Exception;
 
-use LogicException;
+use OutOfBoundsException;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Thrown when a user was already deactivated and trying to deactivate again.
+ * Thrown when trying to access an index that does not exist in the collection.
  */
-final class UserAlreadyDeactivatedException extends LogicException implements TranslatableExceptionInterface
+final class InvalidCollectionIndexException extends OutOfBoundsException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
@@ -35,16 +35,25 @@ final class UserAlreadyDeactivatedException extends LogicException implements Tr
 	}
 
 	/**
-	 * Factory method to create a new instance of UserAlreadyDeactivatedException.
+	 * Factory method to create an instance of the exception with a specific message and context.
+	 *
+	 * @param string $classname the name of the class where the collection exists
+	 * @param int    $index     the index in the collection that does not exist
+	 *
+	 * @return InvalidCollectionIndexException an instance of the exception configured with the provided context
 	 */
-	public static function create(): UserAlreadyDeactivatedException
+	public static function forMissingIndex(string $classname, int $index): InvalidCollectionIndexException
 	{
 		return new self(
 			new ExceptionTranslation(
-				'user.identity',
-				'user_already_deactivated'
+				'base.domain',
+				'not_exist_in_collection',
+				[
+					'index' => $index,
+					'class' => $classname,
+				]
 			),
-			'User is already deactivated.'
+			sprintf('Index %d does not exist in %s.', $index, $classname),
 		);
 	}
 }

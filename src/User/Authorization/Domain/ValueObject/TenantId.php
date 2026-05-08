@@ -28,6 +28,6 @@ final readonly class TenantId extends AggregateId
 	 */
 	protected function throwException(string $value): void
 	{
-		throw InvalidTenantIdException::fromInvalidId($value);
+		throw InvalidTenantIdException::forInvalidId($value);
 	}
 }

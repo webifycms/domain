@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Identity\Domain\Exception;
 
 use RuntimeException;
-use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInterface};
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Thrown when the password hashing process fails.
@@ -22,24 +22,29 @@ use Webify\Base\Domain\Exception\{ExceptionTranslation, TranslatableExceptionInt
 final class FailedToHashPasswordException extends RuntimeException implements TranslatableExceptionInterface
 {
 	/**
-	 * {@inheritDoc}
+	 * Private constructor enforces the use of the factory methods to initiate this exception.
+	 *
+	 * @param ExceptionTranslation $translation the translation object for this exception
+	 * @param string               $message     the exception message (optional)
 	 */
-	public ExceptionTranslation $translation {
-		get {
-			return $this->translation;
-		}
+	private function __construct(
+		public readonly ExceptionTranslation $translation,
+		string $message = ''
+	) {
+		parent::__construct($message);
 	}
 
 	/**
 	 * The constructor.
 	 */
-	public function __construct(string $message = 'Failed to hash password')
+	public static function create(): FailedToHashPasswordException
 	{
-		parent::__construct($message);
-
-		$this->translation = new ExceptionTranslation(
-			'user.identity',
-			'failed_to_hash_password'
+		return new self(
+			new ExceptionTranslation(
+				'user.identity',
+				'failed_to_hash_password'
+			),
+			'Failed to hash password.'
 		);
 	}
 }
