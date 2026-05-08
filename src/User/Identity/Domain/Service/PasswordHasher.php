@@ -33,7 +33,7 @@ final readonly class PasswordHasher
 		$hash = password_hash($password, PASSWORD_DEFAULT);
 
 		if (empty($hash)) {
-			throw new FailedToHashPasswordException();
+			throw FailedToHashPasswordException::create();
 		}
 
 		return PasswordHash::fromHash($hash);
