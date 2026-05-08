@@ -24,7 +24,7 @@ final readonly class ExampleSlug extends Slug
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function throwException(string $value): void
+	protected function throwException(string $value): never
 	{
 		throw new InvalidArgumentException('Invalid example slug: ' . $value);
 	}
