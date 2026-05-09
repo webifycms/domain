@@ -39,7 +39,7 @@ final class InvalidUserIdException extends InvalidArgumentException implements T
 	 *
 	 * @param string $id the invalid user id value
 	 */
-	public static function fromInvalidId(string $id): self
+	public static function forInvalidId(string $id): self
 	{
 		return new self(
 			new ExceptionTranslation(

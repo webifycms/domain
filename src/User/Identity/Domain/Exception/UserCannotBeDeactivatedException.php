@@ -14,8 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Identity\Domain\Exception;
 
 use LogicException;
-use Webify\Base\Domain\Contract\Translation\ExceptionTranslation;
-use Webify\Base\Domain\Contract\Translation\TranslatableExceptionInterface;
+use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Thrown when a user is cannot be deactivated.

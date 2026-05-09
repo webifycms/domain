@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Identity\Domain\Service;
 
+use ValueError;
 use Webify\User\Identity\Domain\Exception\FailedToHashPasswordException;
 use Webify\User\Identity\Domain\ValueObject\PasswordHash;
 
@@ -30,13 +31,13 @@ final readonly class PasswordHasher
 	 */
 	public function hash(string $password): PasswordHash
 	{
-		$hash = password_hash($password, PASSWORD_DEFAULT);
-
-		if (empty($hash)) {
-			throw FailedToHashPasswordException::create();
+		try {
+			return PasswordHash::fromHash(
+				password_hash($password, PASSWORD_DEFAULT)
+			);
+		} catch (ValueError $throwable) {
+			throw FailedToHashPasswordException::create($throwable);
 		}
-
-		return PasswordHash::fromHash($hash);
 	}
 
 	/**

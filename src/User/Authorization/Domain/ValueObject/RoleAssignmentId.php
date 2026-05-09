@@ -28,6 +28,6 @@ final readonly class RoleAssignmentId extends AggregateId
 	 */
 	protected function throwException(string $value): never
 	{
-		throw InvalidRoleAssignmentIdException::fromInvalidId($value);
+		throw InvalidRoleAssignmentIdException::forInvalidId($value);
 	}
 }

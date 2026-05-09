@@ -47,7 +47,7 @@ final class DateTimeException extends InvalidArgumentException implements Transl
 	 *
 	 * @return static a new instance of `DateTimeException`
 	 */
-	public static function withDefault(int $code = 0, ?Throwable $previous = null): DateTimeException
+	public static function forDefault(int $code = 0, ?Throwable $previous = null): DateTimeException
 	{
 		return new self(
 			new ExceptionTranslation(
@@ -70,7 +70,7 @@ final class DateTimeException extends InvalidArgumentException implements Transl
 	 *
 	 * @return DateTimeException a new instance of DateTimeException
 	 */
-	public static function fromInvalidDatetime(
+	public static function forInvalidDatetime(
 		string $value,
 		int $code = 0,
 		?Throwable $previous = null
@@ -99,7 +99,7 @@ final class DateTimeException extends InvalidArgumentException implements Transl
 	 *
 	 * @return DateTimeException a new instance of DateTimeException
 	 */
-	public static function fromInvalidTimezone(
+	public static function forInvalidTimezone(
 		string $value,
 		int $code = 0,
 		?Throwable $previous = null

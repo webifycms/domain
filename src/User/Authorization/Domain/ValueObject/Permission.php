@@ -41,7 +41,7 @@ final readonly class Permission implements JsonSerializable
 		private string $resource,
 	) {
 		if (!$this->isValid()) {
-			throw PermissionValidationException::fromInvalidProperties();
+			throw PermissionValidationException::forInvalidProperties();
 		}
 	}
 

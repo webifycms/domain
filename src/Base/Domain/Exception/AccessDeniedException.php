@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Webify\Base\Domain\Exception;
 
-use DomainException;
+use RuntimeException;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when an access denied error occurs in the authorization domain.
  */
-final class AccessDeniedException extends DomainException implements TranslatableExceptionInterface
+final class AccessDeniedException extends RuntimeException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
