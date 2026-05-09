@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Webify\Base\Infrastructure\Service;
 
 use Symfony\Component\Uid\Ulid;
+use Webify\Base\Domain\Exception\InvalidUlidException;
 use Webify\Base\Domain\Service\UlidGeneratorInterface;
 
 /**
@@ -34,8 +35,12 @@ final readonly class SymfonyUlidGenerator implements UlidGeneratorInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function generateFrom(string $value): string
+	public function normalize(string $value): string
 	{
+		if (!Ulid::isValid($value)) {
+			throw InvalidUlidException::forInvalidUlid($value);
+		}
+
 		return Ulid::fromString($value)->toBase32();
 	}
 }
