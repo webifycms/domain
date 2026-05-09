@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Webify\User\Authorization\Domain\Collection\PermissionCollection;
 use Webify\User\Authorization\Domain\Entity\Role;
 use Webify\User\Authorization\Domain\Event\{PermissionGranted, PermissionRevoked, RoleCreated};
+use Webify\User\Authorization\Domain\ReadModel\Role as RoleReadModel;
 use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleId, RoleName, RoleSlug};
 
 /**
@@ -35,6 +36,7 @@ use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleId, RoleName, 
 #[CoversMethod(Role::class, 'revoke')]
 #[CoversMethod(Role::class, 'allows')]
 #[CoversMethod(Role::class, 'create')]
+#[CoversMethod(Role::class, 'reconstitute')]
 final class RoleTest extends TestCase
 {
 	/**
@@ -214,5 +216,43 @@ final class RoleTest extends TestCase
 
 		$this->role->grant($permission);
 		$this->assertFalse($this->role->allows('user', 'delete', 'profile'));
+	}
+
+	/**
+	 * Tests reconstitute returns a valid Role from a read model.
+	 */
+	#[Test]
+	public function testReconstituteFromReadModel(): void
+	{
+		$permissions = PermissionCollection::from([
+			Permission::fromNative([
+				'scope'    => 'post',
+				'action'   => 'create',
+				'resource' => 'article',
+			]),
+			Permission::fromNative([
+				'scope'    => 'user',
+				'action'   => 'read',
+				'resource' => 'profile',
+			]),
+		]);
+		$readModel = new RoleReadModel(
+			id: '01ARZ3NDEKTSV4RRFFQ69G5FAV',
+			name: 'Editor',
+			slug: 'system.editor',
+			permissions: $permissions,
+			isSystemRole: true
+		);
+		$role = Role::reconstitute($readModel);
+
+		$this->assertSame('01ARZ3NDEKTSV4RRFFQ69G5FAV', $role->getId()->toNative());
+		$this->assertSame('Editor', $role->getName()->toNative());
+		$this->assertSame(['vendor' => 'system', 'slug' => 'editor'], $role->getSlug()->toNative());
+		$this->assertCount(2, $role->getPermissions());
+		$this->assertTrue($role->isSystemRole());
+		$this->assertTrue($role->allows('post', 'create', 'article'));
+		$this->assertTrue($role->allows('user', 'read', 'profile'));
+		$this->assertFalse($role->allows('post', 'delete', 'article'));
+		$this->assertCount(0, $role->getDomainEvents());
 	}
 }
