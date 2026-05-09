@@ -11,15 +11,15 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Exception;
+namespace Webify\User\Authentication\Domain\Exception;
 
-use DomainException;
+use InvalidArgumentException;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Exception thrown when a role assignment already exists.
+ * Exception thrown when an invalid token ID is encountered.
  */
-final class DuplicateRoleAssignmentException extends DomainException implements TranslatableExceptionInterface
+final class InvalidTokenIdException extends InvalidArgumentException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
@@ -37,23 +37,15 @@ final class DuplicateRoleAssignmentException extends DomainException implements 
 	/**
 	 * Factory method to initiate this with a default message.
 	 */
-	public static function forRoleAndSubject(string $roleId, string $subjectId, ?string $tenantId = null): self
+	public static function forInvalidId(string $id): self
 	{
 		return new self(
 			new ExceptionTranslation(
-				'user.authorization',
-				'role_assignment_exists',
-				[
-					'roleId'    => $roleId,
-					'subjectId' => $subjectId,
-					'tenantId'  => $tenantId,
-				]
+				'user.authentication',
+				'invalid_token_id',
+				['id' => $id]
 			),
-			sprintf(
-				'Role assignment is already exists for the given role "%s" and subject "%s".',
-				$roleId,
-				$subjectId
-			)
+			sprintf('The token ID "%s" is invalid.', $id)
 		);
 	}
 }
