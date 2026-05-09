@@ -30,7 +30,7 @@ final readonly class PasswordHash
 	private function __construct(private string $value)
 	{
 		if (!$this->isValid()) {
-			throw InvalidPasswordHashException::fromInvalidPasswordHash($this->value);
+			throw InvalidPasswordHashException::forInvalidPasswordHash($this->value);
 		}
 	}
 

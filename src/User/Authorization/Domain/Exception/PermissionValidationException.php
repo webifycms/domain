@@ -37,7 +37,7 @@ final class PermissionValidationException extends InvalidArgumentException imple
 	/**
 	 * Creates a new instance of PermissionValidationException for invalid permission properties.
 	 */
-	public static function fromInvalidProperties(): PermissionValidationException
+	public static function forInvalidProperties(): PermissionValidationException
 	{
 		return new self(
 			new ExceptionTranslation(

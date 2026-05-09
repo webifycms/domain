@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\Exception;
 
-use RuntimeException;
+use DomainException;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
  * Exception thrown when system roles try to be modified.
  */
-final class SystemRoleModificationException extends RuntimeException implements TranslatableExceptionInterface
+final class SystemRoleModificationException extends DomainException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.

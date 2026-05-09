@@ -39,7 +39,7 @@ final class InvalidPasswordHashException extends InvalidArgumentException implem
 	 *
 	 * @param string $hash the invalid password hash value
 	 */
-	public static function fromInvalidPasswordHash(string $hash): self
+	public static function forInvalidPasswordHash(string $hash): self
 	{
 		return new self(
 			new ExceptionTranslation(

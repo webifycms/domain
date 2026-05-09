@@ -39,7 +39,7 @@ final class InvalidRoleAssignmentIdException extends InvalidArgumentException im
 	 *
 	 * @param string $value the invalid role assignment id value
 	 */
-	public static function fromInvalidId(string $value): self
+	public static function forInvalidId(string $value): self
 	{
 		return new self(
 			new ExceptionTranslation(

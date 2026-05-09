@@ -56,7 +56,7 @@ final readonly class DateTime
 				)
 			);
 		} catch (DateInvalidTimeZoneException|DateMalformedStringException $throwable) {
-			throw DateTimeException::withDefault(previous: $throwable);
+			throw DateTimeException::forDefault(previous: $throwable);
 		}
 	}
 
@@ -90,9 +90,9 @@ final readonly class DateTime
 				)
 			);
 		} catch (DateInvalidTimeZoneException $throwable) {
-			$exception = DateTimeException::fromInvalidTimezone(value: $timezone, previous: $throwable);
+			$exception = DateTimeException::forInvalidTimezone(value: $timezone, previous: $throwable);
 		} catch (DateMalformedStringException $throwable) {
-			$exception = DateTimeException::fromInvalidDatetime(value: $datetime, previous: $throwable);
+			$exception = DateTimeException::forInvalidDatetime(value: $datetime, previous: $throwable);
 		}
 
 		throw $exception;
@@ -138,7 +138,7 @@ final readonly class DateTime
 				$this->value->setTimezone(new DateTimeZone($timezone))
 			);
 		} catch (DateInvalidTimeZoneException $throwable) {
-			throw DateTimeException::fromInvalidTimezone(value: $timezone, previous: $throwable);
+			throw DateTimeException::forInvalidTimezone(value: $timezone, previous: $throwable);
 		}
 	}
 
@@ -158,7 +158,7 @@ final readonly class DateTime
 
 			return $value->format($format);
 		} catch (DateInvalidTimeZoneException $throwable) {
-			throw DateTimeException::fromInvalidTimezone(value: $timezone, previous: $throwable);
+			throw DateTimeException::forInvalidTimezone(value: $timezone, previous: $throwable);
 		}
 	}
 
