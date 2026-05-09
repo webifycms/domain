@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Webify\Test\Base\Infrastructure\Service;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
+use Webify\Base\Domain\Exception\InvalidUlidException;
 use Webify\Base\Domain\Service\UlidGeneratorInterface;
 use Webify\Base\Infrastructure\Service\SymfonyUlidGenerator;
 
@@ -27,7 +27,7 @@ use Webify\Base\Infrastructure\Service\SymfonyUlidGenerator;
  */
 #[CoversClass(SymfonyUlidGenerator::class)]
 #[CoversMethod(SymfonyUlidGenerator::class, 'generate')]
-#[CoversMethod(SymfonyUlidGenerator::class, 'generateFrom')]
+#[CoversMethod(SymfonyUlidGenerator::class, 'normalize')]
 final class SymfonyUlidGeneratorTest extends TestCase
 {
 	/**
@@ -106,14 +106,14 @@ final class SymfonyUlidGeneratorTest extends TestCase
 	}
 
 	/**
-	 * Test generateFrom method converts a valid ULID string.
+	 * Test normalize method converts a valid ULID string.
 	 */
 	#[Test]
 	public function testGenerateFromConvertsValidUlidString(): void
 	{
 		// Create a valid ULID
 		$validUlid = '01ARZ3NDEKTSV4RRFFQ69G5FAV';
-		$result    = $this->generator->generateFrom($validUlid);
+		$result    = $this->generator->normalize($validUlid);
 
 		// Result should be 26 characters
 		$this->assertSame(26, strlen($result));
@@ -122,77 +122,77 @@ final class SymfonyUlidGeneratorTest extends TestCase
 	}
 
 	/**
-	 * Test generateFrom method with lowercase input.
+	 * Test normalize method with lowercase input.
 	 */
 	#[Test]
 	public function testGenerateFromWithLowercaseInput(): void
 	{
 		$lowercaseUlid = '01arz3ndektsv4rrffq69g5fav';
-		$result        = $this->generator->generateFrom($lowercaseUlid);
+		$result        = $this->generator->normalize($lowercaseUlid);
 
 		// Should return a valid ULID string
 		$this->assertMatchesRegularExpression(self::PATTERN_FORMAT, $result);
 	}
 
 	/**
-	 * Test generateFrom method with mixed case input.
+	 * Test normalize method with mixed case input.
 	 */
 	#[Test]
 	public function testGenerateFromWithMixedCaseInput(): void
 	{
 		$mixedCaseUlid = '01ArZ3nDeKtSv4RrFfQ69g5FaV';
-		$result        = $this->generator->generateFrom($mixedCaseUlid);
+		$result        = $this->generator->normalize($mixedCaseUlid);
 
 		// Should return a valid ULID string
 		$this->assertMatchesRegularExpression(self::PATTERN_FORMAT, $result);
 	}
 
 	/**
-	 * Test generateFrom method throws exception for invalid ULID.
+	 * Test normalize method throws an exception for invalid ULID.
 	 */
 	#[Test]
 	public function testGenerateFromThrowsExceptionForInvalidUlid(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(InvalidUlidException::class);
 
-		$this->generator->generateFrom('invalid-ulid-string');
+		$this->generator->normalize('invalid-ulid-string');
 	}
 
 	/**
-	 * Test generateFrom method throws exception for invalid first character.
+	 * Test normalize method throws an exception for an invalid first character.
 	 */
 	#[Test]
 	public function testGenerateFromThrowsExceptionForInvalidFirstCharacter(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(InvalidUlidException::class);
 
 		// First character must be 0-7
-		$this->generator->generateFrom('81ARZ3NDEKTSV4RRFFQ69G5FAV');
+		$this->generator->normalize('81ARZ3NDEKTSV4RRFFQ69G5FAV');
 	}
 
 	/**
-	 * Test generateFrom method with actual Ulid object string representation.
+	 * Test normalize method with actual Ulid object string representation.
 	 */
 	#[Test]
 	public function testGenerateFromWithSymfonyUlidObjectString(): void
 	{
-		// Create a Ulid using Symfony and get its Base32 representation
+		// Create an Ulid using Symfony and get its Base32 representation
 		$symphonyUlid = new Ulid();
 		$ulidString   = $symphonyUlid->toBase32();
-		$result       = $this->generator->generateFrom($ulidString);
+		$result       = $this->generator->normalize($ulidString);
 
 		// Should successfully convert and return a valid ULID
 		$this->assertMatchesRegularExpression(self::PATTERN_FORMAT, $result);
 	}
 
 	/**
-	 * Test that generate and generateFrom both return valid ULID format.
+	 * Test that generate and normalize both return a valid ULID format.
 	 */
 	#[Test]
 	public function testBothMethodsReturnValidFormat(): void
 	{
 		$generated  = $this->generator->generate();
-		$fromString = $this->generator->generateFrom($generated);
+		$fromString = $this->generator->normalize($generated);
 
 		// Both should be valid ULID strings
 		$this->assertMatchesRegularExpression(self::PATTERN_FORMAT, $generated);

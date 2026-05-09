@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Webify\Base\Domain\Service;
 
+use Webify\Base\Domain\Exception\InvalidUlidException;
+
 /**
  * UlidGeneratorInterface defines the contract for generating ULID.
  *
@@ -31,11 +33,13 @@ interface UlidGeneratorInterface
 	public function generate(): string;
 
 	/**
-	 * Generates a ULID based on the provided string value.
+	 * Normalizes a given value into a ULID string.
 	 *
-	 * @param string $value the input value to generate the ULID from
+	 * @param string $value the valid ULID string for normalize
 	 *
 	 * @return string the generated ULID
+	 *
+	 * @throws InvalidUlidException if the provided value is not a valid ULID
 	 */
-	public function generateFrom(string $value): string;
+	public function normalize(string $value): string;
 }
