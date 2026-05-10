@@ -17,9 +17,9 @@ use InvalidArgumentException;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Exception thrown when an invalid token ID is encountered.
+ * Exception thrown when an invalid access token is encountered.
  */
-final class InvalidTokenIdException extends InvalidArgumentException implements TranslatableExceptionInterface
+final class InvalidAccessTokenException extends InvalidArgumentException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
@@ -37,15 +37,15 @@ final class InvalidTokenIdException extends InvalidArgumentException implements 
 	/**
 	 * Factory method to initiate this with a default message.
 	 */
-	public static function forInvalidId(string $id): InvalidTokenIdException
+	public static function forInvalidAccessToken(string $token): InvalidAccessTokenException
 	{
 		return new self(
 			new ExceptionTranslation(
 				'user.authentication',
-				'invalid_token_id',
-				['id' => $id]
+				'invalid_access_token',
+				['token' => $token]
 			),
-			sprintf('The token ID "%s" is invalid.', $id)
+			sprintf('The access token "%s" is invalid.', $token)
 		);
 	}
 }
