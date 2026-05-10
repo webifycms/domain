@@ -11,21 +11,25 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Test\Base\Domain\ValueObject\Fixture;
+namespace Webify\Test\Base\Domain\ValueObject\Example;
 
 use InvalidArgumentException;
-use Webify\Base\Domain\ValueObject\Slug;
+use Webify\Base\Domain\ValueObject\AggregateId;
 
 /**
- * ExampleSlug is a concrete implementation of the Slug value object for testing purposes.
+ * ExampleAggregateId is a concrete implementation of the AggregateId for testing purposes.
+ *
+ * It provides a simple implementation of the throwException method required by the abstract class.
+ *
+ * @internal
  */
-final readonly class ExampleSlug extends Slug
+final readonly class ExampleAggregateId extends AggregateId
 {
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function throwException(string $value): never
 	{
-		throw new InvalidArgumentException('Invalid example slug: ' . $value);
+		throw new InvalidArgumentException('Invalid aggregate ID: ' . $value);
 	}
 }

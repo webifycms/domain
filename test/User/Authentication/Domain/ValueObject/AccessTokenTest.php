@@ -24,15 +24,13 @@ use Webify\User\Authentication\Domain\ValueObject\AccessToken;
  * @internal
  */
 #[CoversClass(AccessToken::class)]
-#[CoversMethod(AccessToken::class, 'fromString')]
-#[CoversMethod(AccessToken::class, 'generate')]
-#[CoversMethod(AccessToken::class, 'toNative')]
-#[CoversMethod(AccessToken::class, 'equals')]
 #[CoversMethod(AccessToken::class, '__toString')]
+#[CoversMethod(AccessToken::class, 'generate')]
+#[CoversMethod(AccessToken::class, 'throwException')]
 final class AccessTokenTest extends TestCase
 {
 	/**
-	 * Test can create from a valid 64-character hex string.
+	 * Test creating a valid access token from a 64-character hex string.
 	 */
 	#[Test]
 	public function testFromStringWithValidToken(): void
@@ -44,7 +42,7 @@ final class AccessTokenTest extends TestCase
 	}
 
 	/**
-	 * Test throws exception for token shorter than 64 characters.
+	 * Test throws InvalidAccessTokenException for a token shorter than 64 characters.
 	 */
 	#[Test]
 	public function testThrowsExceptionForTooShortToken(): void
@@ -56,7 +54,7 @@ final class AccessTokenTest extends TestCase
 	}
 
 	/**
-	 * Test generate always produces a 64+ character token.
+	 * Test generate always produces an access token with at least 64 characters.
 	 */
 	#[Test]
 	public function testGenerateProducesLongEnoughToken(): void
@@ -67,51 +65,25 @@ final class AccessTokenTest extends TestCase
 	}
 
 	/**
-	 * Test generate produces a hex string.
+	 * Test generate returns an AccessToken instance.
 	 */
 	#[Test]
-	public function testGeneratedTokenIsHex(): void
+	public function testGenerateReturnsAccessTokenInstance(): void
 	{
 		$token = AccessToken::generate();
 
-		$this->assertMatchesRegularExpression('/^[a-f0-9]+$/', $token->toNative());
+		$this->assertInstanceOf(AccessToken::class, $token);
 	}
 
 	/**
-	 * Test-generated tokens are unique across calls.
+	 * Test fromString returns an AccessToken instance.
 	 */
 	#[Test]
-	public function testGenerateProducesUniqueTokens(): void
+	public function testFromStringReturnsAccessTokenInstance(): void
 	{
-		$token1 = AccessToken::generate();
-		$token2 = AccessToken::generate();
+		$token = AccessToken::fromString('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
 
-		$this->assertNotSame($token1->toNative(), $token2->toNative());
-	}
-
-	/**
-	 * Test equals returns true for identical values.
-	 */
-	#[Test]
-	public function testEqualsReturnsTrueForSameValue(): void
-	{
-		$value  = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
-		$token1 = AccessToken::fromString($value);
-		$token2 = AccessToken::fromString($value);
-
-		$this->assertTrue($token1->equals($token2));
-	}
-
-	/**
-	 * Test equals returns false for different values.
-	 */
-	#[Test]
-	public function testEqualsReturnsFalseForDifferentValues(): void
-	{
-		$token1 = AccessToken::generate();
-		$token2 = AccessToken::generate();
-
-		$this->assertFalse($token1->equals($token2));
+		$this->assertInstanceOf(AccessToken::class, $token);
 	}
 
 	/**
@@ -124,5 +96,30 @@ final class AccessTokenTest extends TestCase
 		$token = AccessToken::fromString($value);
 
 		$this->assertSame($value, (string) $token);
+	}
+
+	/**
+	 * Test equals returns true for two access tokens with the same value.
+	 */
+	#[Test]
+	public function testEqualsReturnsTrueForSameValue(): void
+	{
+		$value   = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+		$token1  = AccessToken::fromString($value);
+		$token2  = AccessToken::fromString($value);
+
+		$this->assertTrue($token1->equals($token2));
+	}
+
+	/**
+	 * Test equals returns false for two access tokens with different values.
+	 */
+	#[Test]
+	public function testEqualsReturnsFalseForDifferentValues(): void
+	{
+		$token1 = AccessToken::generate();
+		$token2 = AccessToken::generate();
+
+		$this->assertFalse($token1->equals($token2));
 	}
 }

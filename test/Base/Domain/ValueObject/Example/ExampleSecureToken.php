@@ -11,10 +11,10 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Test\Base\Domain\ValueObject\Fixture;
+namespace Webify\Test\Base\Domain\ValueObject\Example;
 
 use InvalidArgumentException;
-use Webify\Base\Domain\ValueObject\AggregateId;
+use Webify\Base\Domain\ValueObject\SecureToken;
 
 /**
  * ExampleAggregateId is a concrete implementation of the AggregateId for testing purposes.
@@ -23,13 +23,13 @@ use Webify\Base\Domain\ValueObject\AggregateId;
  *
  * @internal
  */
-final readonly class ExampleAggregateId extends AggregateId
+final readonly class ExampleSecureToken extends SecureToken
 {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function throwException(string $value): never
+	public function throwException(string $value): never
 	{
-		throw new InvalidArgumentException('Invalid aggregate ID: ' . $value);
+		throw new InvalidArgumentException('Invalid secure token: ' . $value);
 	}
 }

@@ -14,20 +14,20 @@ declare(strict_types=1);
 namespace Webify\User\Authentication\Domain\ValueObject;
 
 use Webify\Base\Domain\ValueObject\SecureToken;
-use Webify\User\Authentication\Domain\Exception\InvalidAccessTokenException;
+use Webify\User\Authentication\Domain\Exception\InvalidRefreshTokenException;
 
 /**
- * Access token value object.
+ * Refresh token value object.
  */
-final readonly class AccessToken extends SecureToken
+final readonly class RefreshToken extends SecureToken
 {
 	/**
 	 * Throws an exception for an invalid access token.
 	 *
-	 * @throws InvalidAccessTokenException if the access token is invalid
+	 * @throws InvalidRefreshTokenException if the access token is invalid
 	 */
 	public function throwException(string $value): never
 	{
-		throw InvalidAccessTokenException::forInvalidAccessToken($value);
+		throw InvalidRefreshTokenException::forInvalidRefreshToken($value);
 	}
 }

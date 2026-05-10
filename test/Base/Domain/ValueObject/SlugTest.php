@@ -17,7 +17,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\ValueObject\Slug;
-use Webify\Test\Base\Domain\ValueObject\Fixture\ExampleSlug;
+use Webify\Test\Base\Domain\ValueObject\Example\ExampleSlug;
 
 /**
  * SlugTest tests the functionality of the Slug base value object.
