@@ -93,6 +93,7 @@ final class RoleAssignmentTest extends TestCase
 	public function testAssignWithTenantId(): void
 	{
 		$assignment = RoleAssignment::assign($this->assignmentId, $this->roleId, $this->subjectId, $this->tenantId);
+
 		/** @var TenantId $tenantId */
 		$tenantId = $assignment->getTenantId();
 
@@ -209,7 +210,7 @@ final class RoleAssignmentTest extends TestCase
 	public function testAssignRecordsDomainEvent(): void
 	{
 		$assignment = RoleAssignment::assign($this->assignmentId, $this->roleId, $this->subjectId, $this->tenantId);
-		$events = $assignment->getDomainEvents();
+		$events     = $assignment->getDomainEvents();
 
 		$this->assertCount(1, $events);
 		$this->assertInstanceOf(RoleAssigned::class, $events[0]);
@@ -279,6 +280,7 @@ final class RoleAssignmentTest extends TestCase
 			expiresAt: $expiresAt
 		);
 		$assignment = RoleAssignment::reconstitute($readModel);
+
 		/** @var TenantId $tenantId */
 		$tenantId = $assignment->getTenantId();
 
