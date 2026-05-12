@@ -13,9 +13,8 @@ declare(strict_types=1);
 
 namespace Webify\User\Authentication\Domain\ValueObject;
 
-use Exception;
 use Webify\Base\Domain\ValueObject\AggregateId;
-use Webify\User\Authentication\Domain\Exception\InvalidTokenIdException;
+use Webify\User\Authentication\Domain\Exception\InvalidSessionIdException;
 
 /**
  * The token ID value object.
@@ -23,15 +22,15 @@ use Webify\User\Authentication\Domain\Exception\InvalidTokenIdException;
  * Define a typed identity for an authentication session token.
  * Reuses the AggregateId base class to get ULID validation.
  */
-final readonly class TokenId extends AggregateId
+final readonly class SessionId extends AggregateId
 {
 	/**
 	 * Will throw an exception if the token id value is not valid.
 	 *
-	 * @throws InvalidTokenIdException
+	 * @throws InvalidSessionIdException
 	 */
 	protected function throwException(string $value): never
 	{
-		throw InvalidTokenIdException::forInvalidId($value);
+		throw InvalidSessionIdException::forInvalidId($value);
 	}
 }

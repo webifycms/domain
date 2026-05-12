@@ -13,13 +13,11 @@ declare(strict_types=1);
 
 namespace Webify\Test\User\Authorization\Domain\Entity;
 
-use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\ValueObject\DateTime;
 use Webify\User\Authorization\Domain\Entity\RoleAssignment;
 use Webify\User\Authorization\Domain\Event\RoleAssigned;
-use Webify\User\Authorization\Domain\ReadModel\RoleAssignment as RoleAssignmentReadModel;
 use Webify\User\Authorization\Domain\ValueObject\{RoleAssignmentId, RoleId, SubjectId, TenantId};
 
 /**
@@ -36,7 +34,6 @@ use Webify\User\Authorization\Domain\ValueObject\{RoleAssignmentId, RoleId, Subj
 #[CoversMethod(RoleAssignment::class, 'getExpiresAt')]
 #[CoversMethod(RoleAssignment::class, 'isApplicableFor')]
 #[CoversMethod(RoleAssignment::class, 'isExpired')]
-#[CoversMethod(RoleAssignment::class, 'reconstitute')]
 final class RoleAssignmentTest extends TestCase
 {
 	/**
@@ -214,104 +211,5 @@ final class RoleAssignmentTest extends TestCase
 
 		$this->assertCount(1, $events);
 		$this->assertInstanceOf(RoleAssigned::class, $events[0]);
-	}
-
-	/**
-	 * Tests reconstitute restores a RoleAssignment without tenant or expiry.
-	 */
-	#[Test]
-	public function testReconstituteWithoutTenantOrExpiry(): void
-	{
-		$readModel = new RoleAssignmentReadModel(
-			id: '01ARZ3NDEKTSV4RRFFQ69G5FAV',
-			roleId: '01ARZ3NDEKTSV4RRFFQ69G5FBW',
-			subjectId: '01ARZ3NDEKTSV4RRFFQ69G5FCX'
-		);
-		$assignment = RoleAssignment::reconstitute($readModel);
-
-		$this->assertTrue($this->assignmentId->equals($assignment->getId()));
-		$this->assertTrue($this->roleId->equals($assignment->getRoleId()));
-		$this->assertTrue($this->subjectId->equals($assignment->getSubjectId()));
-		$this->assertNull($assignment->getTenantId());
-		$this->assertNull($assignment->getExpiresAt());
-		$this->assertFalse($assignment->isExpired());
-		$this->assertTrue($assignment->isApplicableFor(null));
-		$this->assertCount(0, $assignment->getDomainEvents());
-	}
-
-	/**
-	 * Tests reconstitute restores a RoleAssignment with a tenant but without expiry.
-	 */
-	#[Test]
-	public function testReconstituteWithTenantWithoutExpiry(): void
-	{
-		$readModel = new RoleAssignmentReadModel(
-			id: '01ARZ3NDEKTSV4RRFFQ69G5FAV',
-			roleId: '01ARZ3NDEKTSV4RRFFQ69G5FBW',
-			subjectId: '01ARZ3NDEKTSV4RRFFQ69G5FCX',
-			tenantId: '01ARZ3NDEKTSV4RRFFQ69G5FDY'
-		);
-		$assignment = RoleAssignment::reconstitute($readModel);
-
-		$this->assertTrue($this->assignmentId->equals($assignment->getId()));
-		$this->assertTrue($this->roleId->equals($assignment->getRoleId()));
-		$this->assertTrue($this->subjectId->equals($assignment->getSubjectId()));
-		$this->assertNotNull($assignment->getTenantId());
-		$this->assertTrue($this->tenantId->equals($assignment->getTenantId()));
-		$this->assertNull($assignment->getExpiresAt());
-		$this->assertFalse($assignment->isExpired());
-		$this->assertTrue($assignment->isApplicableFor($this->tenantId));
-		$this->assertFalse($assignment->isApplicableFor(null));
-		$this->assertCount(0, $assignment->getDomainEvents());
-	}
-
-	/**
-	 * Tests reconstitute restores a RoleAssignment with tenant and expiry.
-	 */
-	#[Test]
-	public function testReconstituteWithTenantAndExpiry(): void
-	{
-		$expiresAt = new DateTimeImmutable('+1 hour');
-		$readModel = new RoleAssignmentReadModel(
-			id: '01ARZ3NDEKTSV4RRFFQ69G5FAV',
-			roleId: '01ARZ3NDEKTSV4RRFFQ69G5FBW',
-			subjectId: '01ARZ3NDEKTSV4RRFFQ69G5FCX',
-			tenantId: '01ARZ3NDEKTSV4RRFFQ69G5FDY',
-			expiresAt: $expiresAt
-		);
-		$assignment = RoleAssignment::reconstitute($readModel);
-
-		/** @var TenantId $tenantId */
-		$tenantId = $assignment->getTenantId();
-
-		$this->assertTrue($this->assignmentId->equals($assignment->getId()));
-		$this->assertTrue($this->roleId->equals($assignment->getRoleId()));
-		$this->assertTrue($this->subjectId->equals($assignment->getSubjectId()));
-		$this->assertTrue($this->tenantId->equals($tenantId));
-		$this->assertNotNull($assignment->getExpiresAt());
-		$this->assertFalse($assignment->isExpired());
-		$this->assertTrue($assignment->isApplicableFor($this->tenantId));
-		$this->assertCount(0, $assignment->getDomainEvents());
-	}
-
-	/**
-	 * Tests reconstitute restores a RoleAssignment with an expired date.
-	 */
-	#[Test]
-	public function testReconstituteWithExpiredDate(): void
-	{
-		$expiresAt = new DateTimeImmutable('-1 hour');
-		$readModel = new RoleAssignmentReadModel(
-			id: '01ARZ3NDEKTSV4RRFFQ69G5FAV',
-			roleId: '01ARZ3NDEKTSV4RRFFQ69G5FBW',
-			subjectId: '01ARZ3NDEKTSV4RRFFQ69G5FCX',
-			tenantId: '01ARZ3NDEKTSV4RRFFQ69G5FDY',
-			expiresAt: $expiresAt
-		);
-		$assignment = RoleAssignment::reconstitute($readModel);
-
-		$this->assertNotNull($assignment->getExpiresAt());
-		$this->assertTrue($assignment->isExpired());
-		$this->assertCount(0, $assignment->getDomainEvents());
 	}
 }

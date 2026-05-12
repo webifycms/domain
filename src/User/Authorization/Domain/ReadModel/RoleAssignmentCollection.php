@@ -11,17 +11,16 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Collection;
+namespace Webify\User\Authorization\Domain\ReadModel;
 
 use Webify\Base\Domain\Collection\Collection;
-use Webify\User\Authorization\Domain\ReadModel\RoleAssignment;
 
 /**
  * Collection class for RoleAssignment read model.
  *
  * @extends Collection<RoleAssignment>
  */
-final class RoleAssignmentReadModelCollection extends Collection
+final class RoleAssignmentCollection extends Collection
 {
 	/**
 	 * {@inheritDoc}

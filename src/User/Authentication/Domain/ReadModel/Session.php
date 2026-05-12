@@ -11,23 +11,23 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\ReadModel;
-
-use DateTimeImmutable;
+namespace Webify\User\Authentication\Domain\ReadModel;
 
 /**
- * The RoleAssignment read model represents raw data of a role assignment entity.
+ * Session read model.
  */
-final readonly class RoleAssignment
+final readonly class Session
 {
 	/**
 	 * The constructor.
 	 */
 	public function __construct(
 		public string $id,
-		public string $roleId,
-		public string $subjectId,
-		public ?string $tenantId = null,
-		public ?DateTimeImmutable $expiresAt = null
+		public string $userId,
+		public string $accessToken,
+		public string $refreshToken,
+		public string $expiresAt,
+		public string $createdAt,
+		public bool $revoked
 	) {}
 }

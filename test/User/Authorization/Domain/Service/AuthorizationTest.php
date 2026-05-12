@@ -13,16 +13,17 @@ declare(strict_types=1);
 
 namespace Webify\Test\User\Authorization\Domain\Service;
 
-use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizableSubjectInterface, AuthorizationRuleInterface};
 use Webify\Base\Domain\Service\Authorization\AuthorizationRuleRegistryInterface;
-use Webify\User\Authorization\Domain\Collection\{PermissionCollection, RoleAssignmentReadModelCollection};
-use Webify\User\Authorization\Domain\Query\{RoleAssignmentQueryInterface, RoleQueryInterface};
-use Webify\User\Authorization\Domain\ReadModel\{Role as RoleReadModel, RoleAssignment as RoleAssignmentReadModel};
+use Webify\Base\Domain\ValueObject\DateTime;
+use Webify\User\Authorization\Domain\Collection\{PermissionCollection, RoleAssignmentCollection};
+use Webify\User\Authorization\Domain\Entity\{Role, RoleAssignment};
+use Webify\User\Authorization\Domain\Exception\RoleNotFoundException;
+use Webify\User\Authorization\Domain\Repository\{RoleAssignmentRepositoryInterface, RoleRepositoryInterface};
 use Webify\User\Authorization\Domain\Service\Authorization;
-use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleAssignmentId, RoleId, SubjectId, TenantId};
+use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleAssignmentId, RoleId, RoleName, RoleSlug, SubjectId, TenantId};
 
 /**
  * AuthorizationTest tests the functionality of the Authorization service.
@@ -33,10 +34,7 @@ use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleAssignmentId, 
 #[CoversMethod(Authorization::class, '__construct')]
 #[CoversMethod(Authorization::class, 'check')]
 #[CoversMethod(Authorization::class, 'evaluate')]
-#[CoversMethod(Authorization::class, 'getSubjectId')]
 #[CoversMethod(Authorization::class, 'getTenantId')]
-#[CoversMethod(Authorization::class, 'getRoleAssignment')]
-#[CoversMethod(Authorization::class, 'getRole')]
 #[CoversMethod(Authorization::class, 'generateCacheKey')]
 final class AuthorizationTest extends TestCase
 {
@@ -85,29 +83,29 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative()
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId
 		);
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -143,7 +141,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertTrue($service->check('read', $subject, $resource));
 	}
@@ -155,11 +153,11 @@ final class AuthorizationTest extends TestCase
 	#[Test]
 	public function testCheckReturnsFalseWhenSubjectHasNoAssignments(): void
 	{
-		$roleQuery       = $this->createStub(RoleQueryInterface::class);
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$roleRepository       = $this->createStub(RoleRepositoryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -195,7 +193,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertFalse($service->check('read', $subject, $resource));
 	}
@@ -219,29 +217,29 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Viewer',
-			'webify.viewer',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Viewer'),
+			RoleSlug::fromString('webify.viewer'),
 			$permissions,
 			false
 		);
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative()
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId
 		);
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -277,7 +275,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertFalse($service->check('delete', $subject, $resource));
 	}
@@ -292,21 +290,21 @@ final class AuthorizationTest extends TestCase
 	#[Test]
 	public function testCheckReturnsFalseWhenRoleNotFound(): void
 	{
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative()
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId
 		);
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn(null)
+		$roleRepository->method('getById')
+			->willThrowException(RoleNotFoundException::forId($this->roleId->toNative()))
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -342,7 +340,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertFalse($service->check('read', $subject, $resource));
 	}
@@ -365,32 +363,32 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
-		$expiredDate         = new DateTimeImmutable('-1 day');
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative(),
+		$expiredDate         = DateTime::fromString('-1 day');
+		$assignment          = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId,
 			null,
 			$expiredDate
 		);
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -426,7 +424,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertFalse($service->check('read', $subject, $resource));
 	}
@@ -450,31 +448,31 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
 		$differentTenant     = TenantId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FEZ');
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative(),
-			$differentTenant->toNative()
+		$assignment          = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId,
+			$differentTenant
 		);
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -510,7 +508,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertFalse($service->check('read', $subject, $resource));
 	}
@@ -534,29 +532,29 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative()
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId
 		);
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -592,7 +590,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertTrue($service->check('read', $subject, $resource));
 	}
@@ -616,30 +614,30 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative(),
-			$this->tenantId->toNative()
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId,
+			$this->tenantId
 		);
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -675,7 +673,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertFalse($service->check('read', $subject, $resource));
 	}
@@ -700,30 +698,30 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative(),
-			$this->tenantId->toNative()
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId,
+			$this->tenantId
 		);
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -759,7 +757,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertTrue($service->check('read', $subject, $resource));
 	}
@@ -783,17 +781,17 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative()
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId
 		);
 
 		$rule = $this->createStub(AuthorizationRuleInterface::class);
@@ -802,16 +800,16 @@ final class AuthorizationTest extends TestCase
 			->willReturn(false)
 		;
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -847,7 +845,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertFalse($service->check('read', $subject, $resource));
 	}
@@ -872,17 +870,17 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative()
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId
 		);
 
 		$rule = $this->createStub(AuthorizationRuleInterface::class);
@@ -891,16 +889,16 @@ final class AuthorizationTest extends TestCase
 			->willReturn(true)
 		;
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -936,7 +934,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertTrue($service->check('read', $subject, $resource));
 	}
@@ -959,32 +957,32 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative()
+		$assignment = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId
 		);
 
-		$roleQuery = $this->createMock(RoleQueryInterface::class);
+		$roleRepository = $this->createMock(RoleRepositoryInterface::class);
 
-		$roleQuery->expects($this->once())
-			->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->expects($this->once())
+			->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createMock(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createMock(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->expects($this->once())
-			->method('findBySubjectId')
+		$assignmentRepository->expects($this->once())
+			->method('getBySubjectId')
 			->willReturn(
-				RoleAssignmentReadModelCollection::from([$assignmentReadModel])
+				RoleAssignmentCollection::from([$assignment])
 			)
 		;
 
@@ -1021,7 +1019,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertTrue($service->check('read', $subject, $resource));
 		$this->assertTrue($service->check('read', $subject, $resource));
@@ -1046,32 +1044,32 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Editor',
-			'webify.editor',
+		$role = Role::create(
+			$this->roleId,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions,
 			false
 		);
-		$futureDate          = new DateTimeImmutable('+1 day');
-		$assignmentReadModel = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative(),
+		$futureDate          = DateTime::fromString('+1 day');
+		$assignment          = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId,
 			null,
 			$futureDate
 		);
 
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
-			->willReturn($roleReadModel)
+		$roleRepository->method('getById')
+			->willReturn($role)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -1107,7 +1105,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertTrue($service->check('read', $subject, $resource));
 	}
@@ -1142,46 +1140,46 @@ final class AuthorizationTest extends TestCase
 				'resource' => 'all',
 			]),
 		]);
-		$roleReadModel1 = new RoleReadModel(
-			$this->roleId->toNative(),
-			'Viewer',
-			'webify.viewer',
+		$role1 = Role::create(
+			$this->roleId,
+			RoleName::fromString('Viewer'),
+			RoleSlug::fromString('webify.viewer'),
 			$permissions1,
 			false
 		);
-		$roleReadModel2 = new RoleReadModel(
-			$roleId2->toNative(),
-			'Editor',
-			'webify.editor',
+		$role2 = Role::create(
+			$roleId2,
+			RoleName::fromString('Editor'),
+			RoleSlug::fromString('webify.editor'),
 			$permissions2,
 			false
 		);
-		$assignmentReadModel1 = new RoleAssignmentReadModel(
-			$this->assignmentId->toNative(),
-			$this->roleId->toNative(),
-			$this->subjectId->toNative()
+		$assignment1 = RoleAssignment::assign(
+			$this->assignmentId,
+			$this->roleId,
+			$this->subjectId
 		);
-		$assignmentReadModel2 = new RoleAssignmentReadModel(
-			$assignmentId2->toNative(),
-			$roleId2->toNative(),
-			$this->subjectId->toNative()
+		$assignment2 = RoleAssignment::assign(
+			$assignmentId2,
+			$roleId2,
+			$this->subjectId
 		);
-		$roleQuery = $this->createStub(RoleQueryInterface::class);
+		$roleRepository = $this->createStub(RoleRepositoryInterface::class);
 
-		$roleQuery->method('findById')
+		$roleRepository->method('getById')
 			->willReturnCallback(
-				fn (RoleId $id): ?RoleReadModel => match ($id->toNative()) {
-					$this->roleId->toNative() => $roleReadModel1,
-					$roleId2->toNative()      => $roleReadModel2,
-					default                   => null,
+				fn (RoleId $id): Role => match ($id->toNative()) {
+					$this->roleId->toNative() => $role1,
+					$roleId2->toNative()      => $role2,
+					default                   => throw RoleNotFoundException::forId($id->toNative()),
 				}
 			)
 		;
 
-		$assignmentQuery = $this->createStub(RoleAssignmentQueryInterface::class);
+		$assignmentRepository = $this->createStub(RoleAssignmentRepositoryInterface::class);
 
-		$assignmentQuery->method('findBySubjectId')
-			->willReturn(RoleAssignmentReadModelCollection::from([$assignmentReadModel1, $assignmentReadModel2]))
+		$assignmentRepository->method('getBySubjectId')
+			->willReturn(RoleAssignmentCollection::from([$assignment1, $assignment2]))
 		;
 
 		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
@@ -1217,7 +1215,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(null)
 		;
 
-		$service = new Authorization($roleQuery, $assignmentQuery, $ruleRegistry);
+		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
 		$this->assertTrue($service->check('read', $subject, $resource));
 		$this->assertTrue($service->check('write', $subject, $resource));
