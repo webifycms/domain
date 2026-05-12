@@ -11,23 +11,22 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Collection;
+namespace Webify\User\Authorization\Domain\ReadModel;
 
 use Webify\Base\Domain\Collection\Collection;
-use Webify\User\Authorization\Domain\ValueObject\Permission;
 
 /**
- * Permission collection.
+ * Collection class for Role-read models.
  *
- * @extends Collection<Permission>
+ * @extends Collection<Role>
  */
-final class PermissionCollection extends Collection
+final class RoleCollection extends Collection
 {
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function type(): string
 	{
-		return Permission::class;
+		return Role::class;
 	}
 }

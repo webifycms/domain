@@ -36,12 +36,16 @@
             <directory>test/Site</directory>
         </testsuite>
 
-        <testsuite name="identity">
-            <directory>test/User/Identity</directory>
+        <testsuite name="authentication">
+            <directory>test/User/Authentication</directory>
         </testsuite>
 
         <testsuite name="authorization">
             <directory>test/User/Authorization</directory>
+        </testsuite>
+
+        <testsuite name="identity">
+            <directory>test/User/Identity</directory>
         </testsuite>
     </testsuites>
 

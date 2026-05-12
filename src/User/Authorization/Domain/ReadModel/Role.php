@@ -13,21 +13,27 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\ReadModel;
 
-use Webify\User\Authorization\Domain\Collection\PermissionCollection;
-
 /**
- * Role read model.
+ * The Role read model represents raw data of a role entity.
+ *
+ * @todo Permissions should be decided later after the persistence layer is implemented.
  */
 final readonly class Role
 {
 	/**
 	 * The constructor.
+	 *
+	 * @param array<array{
+	 *      scope: string,
+	 *      action: string,
+	 *      resource: string,
+	 *  }> $permissions
 	 */
 	public function __construct(
 		public string $id,
 		public string $name,
 		public string $slug,
-		public PermissionCollection $permissions,
+		public array $permissions,
 		public bool $isSystemRole
 	) {}
 }

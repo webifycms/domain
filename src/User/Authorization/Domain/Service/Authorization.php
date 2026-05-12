@@ -15,10 +15,9 @@ namespace Webify\User\Authorization\Domain\Service;
 
 use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizableSubjectInterface};
 use Webify\Base\Domain\Service\Authorization\{AuthorizationInterface, AuthorizationRuleRegistryInterface};
-use Webify\User\Authorization\Domain\Entity\{Role as RoleEntity, RoleAssignment as RoleAssignmentEntity};
-use Webify\User\Authorization\Domain\Query\{RoleAssignmentQueryInterface, RoleQueryInterface};
-use Webify\User\Authorization\Domain\ReadModel\{Role as RoleReadModel, RoleAssignment as RoleAssignmentReadModel};
-use Webify\User\Authorization\Domain\ValueObject\{RoleId, SubjectId, TenantId};
+use Webify\User\Authorization\Domain\Exception\RoleNotFoundException;
+use Webify\User\Authorization\Domain\Repository\{RoleAssignmentRepositoryInterface, RoleRepositoryInterface};
+use Webify\User\Authorization\Domain\ValueObject\{SubjectId, TenantId};
 
 /**
  * Authorization class provides the implementation of the AuthorizationInterface.
@@ -38,8 +37,8 @@ final class Authorization implements AuthorizationInterface
 	 * The constructor.
 	 */
 	public function __construct(
-		private readonly RoleQueryInterface $roleQuery,
-		private readonly RoleAssignmentQueryInterface $assignmentQuery,
+		private readonly RoleRepositoryInterface $roleRepository,
+		private readonly RoleAssignmentRepositoryInterface $assignmentRepository,
 		private readonly AuthorizationRuleRegistryInterface $ruleRegistry
 	) {}
 
@@ -68,40 +67,34 @@ final class Authorization implements AuthorizationInterface
 		AuthorizableSubjectInterface $subject,
 		AuthorizableResourceInterface $resource
 	): bool {
-		$assignments = $this->assignmentQuery->findBySubjectId($this->getSubjectId($subject->subjectId()));
-		$rules       = $this->ruleRegistry->getAllApplicableTo($resource);
+		try {
+			$assignments = $this->assignmentRepository->getBySubjectId(SubjectId::fromString($subject->subjectId()));
+			$rules       = $this->ruleRegistry->getAllApplicableTo($resource);
 
-		foreach ($assignments as $assignment) {
-			$assignment = $this->getRoleAssignment($assignment);
-
-			if ($assignment->isExpired() || !$assignment->isApplicableFor($this->getTenantId($subject->tenantId()))) {
-				continue;
-			}
-
-			$role = $this->getRole($assignment->getRoleId());
-
-			if (null === $role || !$role->allows($resource->resourceScope(), $action, $resource->resourceType())) {
-				continue;
-			}
-
-			foreach ($rules as $rule) {
-				if (!$rule->isSatisfied($subject, $resource)) {
-					continue 2;
+			foreach ($assignments as $assignment) {
+				if ($assignment->isExpired() || !$assignment->isApplicableFor($this->getTenantId($subject->tenantId()))) {
+					continue;
 				}
+
+				$role = $this->roleRepository->getById($assignment->getRoleId());
+
+				if (!$role->allows($resource->resourceScope(), $action, $resource->resourceType())) {
+					continue;
+				}
+
+				foreach ($rules as $rule) {
+					if (!$rule->isSatisfied($subject, $resource)) {
+						continue 2;
+					}
+				}
+
+				return true;
 			}
 
-			return true;
+			return false;
+		} catch (RoleNotFoundException) {
+			return false;
 		}
-
-		return false;
-	}
-
-	/**
-	 * Converts the subject ID string to a SubjectId object.
-	 */
-	private function getSubjectId(string $subjectId): SubjectId
-	{
-		return SubjectId::fromString($subjectId);
 	}
 
 	/**
@@ -110,28 +103,6 @@ final class Authorization implements AuthorizationInterface
 	private function getTenantId(?string $tenantId): ?TenantId
 	{
 		return null !== $tenantId ? TenantId::fromString($tenantId) : null;
-	}
-
-	/**
-	 * Converts the role assignment read model to a role assignment entity.
-	 */
-	private function getRoleAssignment(RoleAssignmentReadModel $assignment): RoleAssignmentEntity
-	{
-		return RoleAssignmentEntity::reconstitute($assignment);
-	}
-
-	/**
-	 * Retrieves the role entity associated with the given role ID, or null if not found.
-	 */
-	private function getRole(RoleId $id): ?RoleEntity
-	{
-		$role = $this->roleQuery->findById($id);
-
-		if ($role instanceof RoleReadModel) {
-			return RoleEntity::reconstitute($role);
-		}
-
-		return null;
 	}
 
 	/**

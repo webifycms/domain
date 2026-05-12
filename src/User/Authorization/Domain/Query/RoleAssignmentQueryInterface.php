@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\Query;
 
-use Webify\User\Authorization\Domain\Collection\RoleAssignmentReadModelCollection;
-use Webify\User\Authorization\Domain\ReadModel\RoleAssignment;
+use Webify\User\Authorization\Domain\ReadModel\{RoleAssignment, RoleAssignmentCollection};
 use Webify\User\Authorization\Domain\ValueObject\{RoleAssignmentId, RoleId, SubjectId, TenantId};
 
 /**
@@ -35,33 +34,33 @@ interface RoleAssignmentQueryInterface
 	 *
 	 * @param RoleId $roleId the identifier of the role to find assignments for
 	 *
-	 * @return RoleAssignmentReadModelCollection a collection of role assignments corresponding to the role ID
+	 * @return RoleAssignmentCollection a collection of role assignments corresponding to the role ID
 	 */
-	public function findByRoleId(RoleId $roleId): RoleAssignmentReadModelCollection;
+	public function findAllByRoleId(RoleId $roleId): RoleAssignmentCollection;
 
 	/**
 	 * Retrieves a collection of role assignments associated with a specific subject identifier.
 	 *
 	 * @param SubjectId $subjectId the unique identifier of the subject
 	 *
-	 * @return RoleAssignmentReadModelCollection a collection of role assignment read models linked
-	 *                                           to the specified subject
+	 * @return RoleAssignmentCollection a collection of role assignment read models linked
+	 *                                  to the specified subject
 	 */
-	public function findBySubjectId(SubjectId $subjectId): RoleAssignmentReadModelCollection;
+	public function findAllBySubjectId(SubjectId $subjectId): RoleAssignmentCollection;
 
 	/**
 	 * Retrieves a collection of role assignment read models associated with a specific tenant.
 	 *
 	 * @param TenantId $tenantId the unique identifier of the tenant
 	 *
-	 * @return RoleAssignmentReadModelCollection the collection of role assignment read models for the given tenant
+	 * @return RoleAssignmentCollection the collection of role assignment read models for the given tenant
 	 */
-	public function findByTenantId(TenantId $tenantId): RoleAssignmentReadModelCollection;
+	public function findAllByTenantId(TenantId $tenantId): RoleAssignmentCollection;
 
 	/**
 	 * Retrieves all role assignments.
 	 *
-	 * @return RoleAssignmentReadModelCollection a collection containing all role assignments
+	 * @return RoleAssignmentCollection a collection containing all role assignments
 	 */
-	public function findAll(): RoleAssignmentReadModelCollection;
+	public function findAll(): RoleAssignmentCollection;
 }

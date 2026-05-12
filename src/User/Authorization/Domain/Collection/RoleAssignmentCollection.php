@@ -14,20 +14,20 @@ declare(strict_types=1);
 namespace Webify\User\Authorization\Domain\Collection;
 
 use Webify\Base\Domain\Collection\Collection;
-use Webify\User\Authorization\Domain\ReadModel\Role;
+use Webify\User\Authorization\Domain\Entity\RoleAssignment;
 
 /**
- * Collection class for Role-read models.
+ * Role assignment collection.
  *
- * @extends Collection<Role>
+ * @extends Collection<RoleAssignment>
  */
-final class RoleReadModelCollection extends Collection
+final class RoleAssignmentCollection extends Collection
 {
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function type(): string
 	{
-		return Role::class;
+		return RoleAssignment::class;
 	}
 }

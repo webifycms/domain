@@ -18,7 +18,6 @@ use Webify\Base\Domain\ValueObject\DateTime;
 use Webify\User\Authorization\Domain\Collection\PermissionCollection;
 use Webify\User\Authorization\Domain\Event\{PermissionGranted, PermissionRevoked, RoleCreated};
 use Webify\User\Authorization\Domain\Exception\SystemRoleModificationException;
-use Webify\User\Authorization\Domain\ReadModel\Role as RoleReadModel;
 use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleId, RoleName, RoleSlug};
 
 /**
@@ -165,24 +164,6 @@ final class Role extends AggregateRoot
 		);
 
 		return $role;
-	}
-
-	/**
-	 * Reconstitute a role aggregate from a read model.
-	 *
-	 * @param RoleReadModel $role the read model containing role data
-	 *
-	 * @return self an instance of the role aggregate reconstructed from the provided data
-	 */
-	public static function reconstitute(RoleReadModel $role): self
-	{
-		return new self(
-			RoleId::fromString($role->id),
-			RoleName::fromString($role->name),
-			RoleSlug::fromString($role->slug),
-			$role->permissions,
-			$role->isSystemRole
-		);
 	}
 
 	/**

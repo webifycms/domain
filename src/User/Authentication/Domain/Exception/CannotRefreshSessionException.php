@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Webify\User\Authentication\Domain\Exception;
 
-use InvalidArgumentException;
+use DomainException;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Exception thrown when an invalid token ID is encountered.
+ * Thrown when a session cannot be refreshed.
  */
-final class InvalidTokenIdException extends InvalidArgumentException implements TranslatableExceptionInterface
+final class CannotRefreshSessionException extends DomainException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
@@ -35,17 +35,16 @@ final class InvalidTokenIdException extends InvalidArgumentException implements 
 	}
 
 	/**
-	 * Factory method to initiate this with a default message.
+	 * Factory method to create an exception for a session that cannot be refreshed due to it being expired or revoked.
 	 */
-	public static function forInvalidId(string $id): InvalidTokenIdException
+	public static function create(): CannotRefreshSessionException
 	{
 		return new self(
 			new ExceptionTranslation(
 				'user.authentication',
-				'invalid_token_id',
-				['id' => $id]
+				'expired_or_revoked_session',
 			),
-			sprintf('The token ID "%s" is invalid.', $id)
+			'Cannot refresh session. Session has expired or has been revoked.'
 		);
 	}
 }

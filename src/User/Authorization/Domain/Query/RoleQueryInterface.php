@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\Query;
 
-use Webify\User\Authorization\Domain\Collection\RoleReadModelCollection;
-use Webify\User\Authorization\Domain\ReadModel\Role;
+use Webify\User\Authorization\Domain\ReadModel\{Role, RoleCollection};
 use Webify\User\Authorization\Domain\ValueObject\{RoleId, RoleSlug};
 
 /**
@@ -42,7 +41,7 @@ interface RoleQueryInterface
 	/**
 	 * Retrieves a collection of all Role models.
 	 *
-	 * @return RoleReadModelCollection the collection containing all Role models
+	 * @return RoleCollection the collection containing all Role models
 	 */
-	public function findAll(): RoleReadModelCollection;
+	public function findAll(): RoleCollection;
 }

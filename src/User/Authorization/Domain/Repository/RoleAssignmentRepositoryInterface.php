@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\Repository;
 
+use Webify\User\Authorization\Domain\Collection\RoleAssignmentCollection;
 use Webify\User\Authorization\Domain\Entity\RoleAssignment;
 use Webify\User\Authorization\Domain\Exception\RoleAssignmentNotFoundException;
 use Webify\User\Authorization\Domain\ValueObject\{RoleAssignmentId, RoleId, SubjectId, TenantId};
@@ -32,6 +33,24 @@ interface RoleAssignmentRepositoryInterface
 	 * @throws RoleAssignmentNotFoundException if the RoleAssignment with the given identifier is not found
 	 */
 	public function getById(RoleAssignmentId $id): RoleAssignment;
+
+	/**
+	 * Retrieves a collection of RoleAssignment objects associated with a specific role ID.
+	 *
+	 * @param RoleId $roleId the ID of the role
+	 *
+	 * @return RoleAssignmentCollection a collection of RoleAssignment objects associated with the given role ID
+	 */
+	public function getByRoleId(RoleId $roleId): RoleAssignmentCollection;
+
+	/**
+	 * Retrieves a collection of RoleAssignment objects associated with a specific subject ID.
+	 *
+	 * @param SubjectId $subjectId the ID of the subject
+	 *
+	 * @return RoleAssignmentCollection a collection of RoleAssignment objects associated with the given subject ID
+	 */
+	public function getBySubjectId(SubjectId $subjectId): RoleAssignmentCollection;
 
 	/**
 	 * Checks if a role assignment exists for the given role ID and subject ID.
