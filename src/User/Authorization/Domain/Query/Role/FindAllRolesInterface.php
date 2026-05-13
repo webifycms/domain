@@ -11,22 +11,17 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\ReadModel;
-
-use Webify\Base\Domain\Collection\Collection;
+namespace Webify\User\Authorization\Domain\Query\Role;
 
 /**
- * Collection class for Role-read models.
- *
- * @extends Collection<Role>
+ * Query class defines the contract for a query to find all roles.
  */
-final class RoleCollection extends Collection
+interface FindAllRolesInterface
 {
 	/**
-	 * {@inheritDoc}
+	 * Retrieves a collection of all Role models.
+	 *
+	 * @return RoleCollection the collection containing all Role models
 	 */
-	protected function type(): string
-	{
-		return Role::class;
-	}
+	public function findAll(): RoleCollection;
 }

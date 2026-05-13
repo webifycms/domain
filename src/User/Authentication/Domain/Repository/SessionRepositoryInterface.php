@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Webify\User\Authentication\Domain\Repository;
 
 use Webify\User\Authentication\Domain\Entity\Session;
-use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, SessionId};
 use Webify\User\Authentication\Domain\Exception\SessionNotFoundException;
+use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, SessionId};
 
 /**
  * SessionRepositoryInterface defines the contract for the session repository.

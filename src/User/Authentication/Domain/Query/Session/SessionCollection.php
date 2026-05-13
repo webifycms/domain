@@ -11,22 +11,22 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\ReadModel;
+namespace Webify\User\Authentication\Domain\Query\Session;
 
 use Webify\Base\Domain\Collection\Collection;
 
 /**
- * Collection class for RoleAssignment read model.
+ * Collection class for Session's read models.
  *
- * @extends Collection<RoleAssignment>
+ * @extends Collection<Session>
  */
-final class RoleAssignmentCollection extends Collection
+final class SessionCollection extends Collection
 {
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function type(): string
 	{
-		return RoleAssignment::class;
+		return Session::class;
 	}
 }
