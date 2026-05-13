@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\Base\Domain\Contract\Translation;
 
 /**
- * A simple data transfer object to hold translation information for exceptions.
+ * Data transfer object to hold translation information for exceptions.
  */
 final readonly class ExceptionTranslation
 {
