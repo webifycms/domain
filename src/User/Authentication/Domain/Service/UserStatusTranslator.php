@@ -11,11 +11,13 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authentication\Application\Service;
+namespace Webify\User\Authentication\Domain\Service;
 
 use Webify\User\Authentication\Domain\ValueObject\UserStatus;
 
 /**
+ * UserStatusTranslator service handles the translation of the user status.
+ *
  * Translates the user status string to a UserStatus enum value.
  */
 final class UserStatusTranslator
