@@ -16,18 +16,16 @@ namespace Webify\Test\User\Identity\Domain\Entity;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\User\Identity\Domain\Entity\User;
-use Webify\User\Identity\Domain\Event\{
-	UserEmailWasChanged,
+use Webify\User\Identity\Domain\Event\{UserEmailWasChanged,
 	UserPasswordWasChanged,
 	UserWasActivated,
 	UserWasDeactivated,
-	UserWasRegistered
-};
+	UserWasRegistered};
 use Webify\User\Identity\Domain\Exception\{UserAlreadyActivatedException,
 	UserAlreadyDeactivatedException,
 	UserCannotBeDeactivatedException};
-use Webify\User\Identity\Domain\Service\PasswordHasher;
-use Webify\User\Identity\Domain\ValueObject\{UserEmail, UserId};
+use Webify\User\Identity\Domain\ValueObject\{PasswordHash, UserEmail, UserId};
+use Webify\User\Identity\Infrastructure\Service\PasswordHasher;
 
 /**
  * UserTest tests the functionality of the User entity.
@@ -60,7 +58,7 @@ final class UserTest extends TestCase
 		$this->user           = User::register(
 			UserId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
 			UserEmail::fromString('test@example.com'),
-			$this->passwordHasher->hash('password'),
+			PasswordHash::fromHash($this->passwordHasher->hash('password')),
 			'Test User'
 		);
 	}
@@ -175,7 +173,7 @@ final class UserTest extends TestCase
 	#[Test]
 	public function testChangePassword(): void
 	{
-		$newPassword = $this->passwordHasher->hash('new_password');
+		$newPassword = PasswordHash::fromHash($this->passwordHasher->hash('new_password'));
 
 		$this->user->changePassword($newPassword);
 		$this->assertTrue($this->user->getPasswordHash()->equals($newPassword));

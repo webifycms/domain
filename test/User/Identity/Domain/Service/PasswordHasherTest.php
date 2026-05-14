@@ -15,8 +15,7 @@ namespace Webify\Test\User\Identity\Domain\Service;
 
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
-use Webify\User\Identity\Domain\Service\PasswordHasher;
-use Webify\User\Identity\Domain\ValueObject\PasswordHash;
+use Webify\User\Identity\Infrastructure\Service\PasswordHasher;
 
 /**
  * PasswordHashTest tests the functionality of the PasswordHash service.
@@ -43,25 +42,35 @@ final class PasswordHasherTest extends TestCase
 		$this->passwordHash = new PasswordHasher();
 	}
 
+	/**
+	 * Tests that the hash method returns a non-empty hashed password
+	 * for the provided input string.
+	 */
 	#[Test]
 	public function testHashReturnsHashedPassword(): void
 	{
 		$password       = 'test_password_123';
 		$hashedPassword = $this->passwordHash->hash($password);
 
-		$this->assertInstanceOf(PasswordHash::class, $hashedPassword);
-		$this->assertNotEmpty($hashedPassword->toNative());
+		$this->assertNotEmpty($hashedPassword);
 	}
 
+	/**
+	 * Tests that the verify method returns true when provided with the correct password and its hashed counterpart.
+	 */
 	#[Test]
 	public function testVerifyReturnsTrueForCorrectPassword(): void
 	{
 		$password       = 'test_password_123';
 		$hashedPassword = $this->passwordHash->hash($password);
 
-		$this->assertTrue($this->passwordHash->verify($password, $hashedPassword->toNative()));
+		$this->assertTrue($this->passwordHash->verify($password, $hashedPassword));
 	}
 
+	/**
+	 * Tests that the password verification method returns false
+	 * when a wrong password is provided for a given hashed password.
+	 */
 	#[Test]
 	public function testVerifyReturnsFalseForIncorrectPassword(): void
 	{
@@ -69,9 +78,12 @@ final class PasswordHasherTest extends TestCase
 		$wrongPassword   = 'wrongPassword';
 		$hashedPassword  = $this->passwordHash->hash($correctPassword);
 
-		$this->assertFalse($this->passwordHash->verify($wrongPassword, $hashedPassword->toNative()));
+		$this->assertFalse($this->passwordHash->verify($wrongPassword, $hashedPassword));
 	}
 
+	/**
+	 * Tests that the `hash` method generates unique hashes for the same input password.
+	 */
 	#[Test]
 	public function testHashGeneratesUniqueHashes(): void
 	{
@@ -79,16 +91,18 @@ final class PasswordHasherTest extends TestCase
 		$hash1    = $this->passwordHash->hash($password);
 		$hash2    = $this->passwordHash->hash($password);
 
-		$this->assertNotSame($hash1->toNative(), $hash2->toNative());
+		$this->assertNotSame($hash1, $hash2);
 	}
 
+	/**
+	 * Tests that a hashed password can be successfully verified against its plain text version.
+	 */
 	#[Test]
 	public function testHashedPasswordCanBeVerified(): void
 	{
 		$password       = 'test_password_123';
 		$hashedPassword = $this->passwordHash->hash($password);
-
-		$result = $this->passwordHash->verify($password, $hashedPassword->toNative());
+		$result         = $this->passwordHash->verify($password, $hashedPassword);
 
 		$this->assertTrue($result);
 	}

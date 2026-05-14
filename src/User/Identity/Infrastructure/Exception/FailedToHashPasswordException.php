@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Identity\Domain\Exception;
+namespace Webify\User\Identity\Infrastructure\Exception;
 
 use RuntimeException;
 use Throwable;
@@ -31,10 +31,9 @@ final class FailedToHashPasswordException extends RuntimeException implements Tr
 	private function __construct(
 		public readonly ExceptionTranslation $translation,
 		string $message = '',
-		int $code = 0,
 		?Throwable $previous = null
 	) {
-		parent::__construct($message, $code, $previous);
+		parent::__construct($message, 0, $previous);
 	}
 
 	/**
@@ -48,7 +47,6 @@ final class FailedToHashPasswordException extends RuntimeException implements Tr
 				'failed_to_hash_password'
 			),
 			'Failed to hash password.',
-			0,
 			$previous
 		);
 	}
