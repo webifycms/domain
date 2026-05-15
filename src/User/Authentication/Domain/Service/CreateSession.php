@@ -29,7 +29,7 @@ use Webify\User\Authentication\Domain\Repository\SessionRepositoryInterface;
 use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, SessionId, UserId};
 
 /**
- * CreateSession service handles the creation of a new session.
+ * CreateSession domain service handles the creation of a new session.
  *
  * Encapsulate the use case of authenticating a user with email and password and issuing a new
  * session. This is the primary entry point into the Authentication BC.
@@ -56,8 +56,6 @@ final readonly class CreateSession
 	 * @param string            $password  the password provided for authentication
 	 * @param DateTimeImmutable $expiresAt the expiration time for the session
 	 *
-	 * @return Session the newly created session instance
-	 *
 	 * @throws InvalidUserCredentialException            if the email or password is invalid
 	 * @throws UserNotEligibleForAuthenticationException if the user's status does not allow session creation
 	 */
@@ -65,7 +63,7 @@ final readonly class CreateSession
 		string $email,
 		string $password,
 		DateTimeImmutable $expiresAt
-	): Session {
+	): void {
 		$credential = $this->credentialLookup->findByEmail($email);
 
 		if (null === $credential) {
@@ -89,7 +87,5 @@ final readonly class CreateSession
 
 		$this->repository->persist($session);
 		$this->eventPublisher->publish(...$session->getDomainEvents());
-
-		return $session;
 	}
 }
