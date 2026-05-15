@@ -26,7 +26,7 @@ use Webify\User\Authentication\Domain\Exception\{InvalidUserCredentialException,
 use Webify\User\Authentication\Domain\Guard\UserMustBeActive;
 use Webify\User\Authentication\Domain\Repository\SessionRepositoryInterface;
 use Webify\User\Authentication\Domain\Service\{CreateSession, UserStatusTranslator};
-use Webify\User\Authentication\Domain\ValueObject\UserId;
+use Webify\User\Authentication\Domain\ValueObject\{SessionId, UserId};
 
 /**
  * CreateSessionTest tests the CreateSession domain service.
@@ -100,13 +100,12 @@ final class CreateSessionTest extends TestCase
 	 * - Publishing a domain event for the created session.
 	 *
 	 * It asserts that:
-	 * - The returned session is an instance of the Session class.
-	 * - The session contains the correct user ID corresponding to the provided credentials.
+	 * - The session persisted to the repository contains the correct user ID and session ID.
 	 */
 	#[Test]
 	public function testCreateSessionSuccessfully(): void
 	{
-		$email        = 'test@example.com';
+		$email        = 'test@webifycms.com';
 		$password     = 'password123';
 		$expiresAt    = new DateTimeImmutable('2099-01-01 00:00:00');
 		$userId       = '01ARZ3NDEKTSV4RRFFQ69G5FAV';
@@ -139,17 +138,21 @@ final class CreateSessionTest extends TestCase
 		$this->repository
 			->expects($this->once())
 			->method('persist')
-			->with($this->isInstanceOf(Session::class))
+			->with($this->callback(
+				function (Session $session) use ($userId, $generatedId): bool {
+					$this->assertTrue($session->getUserId()->equals(UserId::fromString($userId)));
+					$this->assertTrue($session->getId()->equals(SessionId::fromString($generatedId)));
+
+					return true;
+				}
+			))
 		;
 		$this->eventPublisher
 			->expects($this->once())
 			->method('publish')
 		;
 
-		$session = $this->createSession->create($email, $password, $expiresAt);
-
-		$this->assertInstanceOf(Session::class, $session);
-		$this->assertTrue($session->getUserId()->equals(UserId::fromString($userId)));
+		$this->createSession->create($email, $password, $expiresAt);
 	}
 
 	/**
@@ -162,12 +165,12 @@ final class CreateSessionTest extends TestCase
 		$this->credentialLookup
 			->expects($this->once())
 			->method('findByEmail')
-			->with('unknown@example.com')
+			->with('unknown@webifycms.com')
 			->willReturn(null)
 		;
 		$this->expectException(InvalidUserCredentialException::class);
 		$this->createSession->create(
-			'unknown@example.com',
+			'unknown@webifycms.com',
 			'any_password',
 			new DateTimeImmutable('2099-01-01 00:00:00')
 		);
@@ -185,7 +188,7 @@ final class CreateSessionTest extends TestCase
 	#[AllowMockObjectsWithoutExpectations]
 	public function testCreateThrowsExceptionWhenPasswordIsInvalid(): void
 	{
-		$email        = 'test@example.com';
+		$email        = 'test@webifycms.com';
 		$passwordHash = password_hash('correct_password', PASSWORD_DEFAULT);
 		$credential   = new UserCredential(
 			id: '01ARZ3NDEKTSV4RRFFQ69G5FAV',
@@ -222,7 +225,7 @@ final class CreateSessionTest extends TestCase
 	#[AllowMockObjectsWithoutExpectations]
 	public function testCreateThrowsExceptionWhenUserNotActive(): void
 	{
-		$email        = 'test@example.com';
+		$email        = 'test@webifycms.com';
 		$password     = 'password123';
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 		$credential   = new UserCredential(
