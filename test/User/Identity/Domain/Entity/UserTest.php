@@ -16,7 +16,8 @@ namespace Webify\Test\User\Identity\Domain\Entity;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\User\Identity\Domain\Entity\User;
-use Webify\User\Identity\Domain\Event\{UserEmailWasChanged,
+use Webify\User\Identity\Domain\Event\{UserDisplayNameWasChanged,
+	UserEmailWasChanged,
 	UserPasswordWasChanged,
 	UserWasActivated,
 	UserWasDeactivated,
@@ -24,7 +25,7 @@ use Webify\User\Identity\Domain\Event\{UserEmailWasChanged,
 use Webify\User\Identity\Domain\Exception\{UserAlreadyActivatedException,
 	UserAlreadyDeactivatedException,
 	UserCannotBeDeactivatedException};
-use Webify\User\Identity\Domain\ValueObject\{PasswordHash, UserEmail, UserId};
+use Webify\User\Identity\Domain\ValueObject\{DisplayName, PasswordHash, UserEmail, UserId};
 use Webify\User\Identity\Infrastructure\Service\PasswordHasher;
 
 /**
@@ -35,8 +36,10 @@ use Webify\User\Identity\Infrastructure\Service\PasswordHasher;
 #[CoversClass(User::class)]
 #[CoversMethod(User::class, 'activate')]
 #[CoversMethod(User::class, 'deactivate')]
+#[CoversMethod(User::class, 'changeDisplayName')]
 #[CoversMethod(User::class, 'changeEmail')]
 #[CoversMethod(User::class, 'changePassword')]
+#[CoversMethod(User::class, 'getDisplayName')]
 final class UserTest extends TestCase
 {
 	/**
@@ -59,7 +62,7 @@ final class UserTest extends TestCase
 			UserId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FAV'),
 			UserEmail::fromString('test@example.com'),
 			PasswordHash::fromHash($this->passwordHasher->hash('password')),
-			'Test User'
+			DisplayName::fromString('Test User')
 		);
 	}
 
@@ -182,5 +185,37 @@ final class UserTest extends TestCase
 
 		$this->assertCount(2, $events);
 		$this->assertInstanceOf(UserPasswordWasChanged::class, $events[1]);
+	}
+
+	#[Test]
+	public function testGetDisplayName(): void
+	{
+		$this->assertSame('Test User', $this->user->getDisplayName()->toNative());
+	}
+
+	#[Test]
+	public function testChangeDisplayName(): void
+	{
+		$newDisplayName = DisplayName::fromString('New Display Name');
+
+		$this->user->changeDisplayName($newDisplayName);
+		$this->assertTrue($this->user->getDisplayName()->equals($newDisplayName));
+
+		$events = $this->user->getDomainEvents();
+
+		$this->assertCount(2, $events);
+		$this->assertInstanceOf(UserDisplayNameWasChanged::class, $events[1]);
+	}
+
+	#[Test]
+	public function testChangeDisplayNameWithSameNameDoesNotRecordEvent(): void
+	{
+		$events = $this->user->getDomainEvents();
+		$this->assertCount(1, $events);
+
+		$this->user->changeDisplayName(DisplayName::fromString('Test User'));
+
+		$events = $this->user->getDomainEvents();
+		$this->assertCount(1, $events);
 	}
 }
