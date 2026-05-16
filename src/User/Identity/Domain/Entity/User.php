@@ -25,7 +25,7 @@ use Webify\User\Identity\Domain\Event\{UserDisplayNameWasChanged,
 use Webify\User\Identity\Domain\Exception\{UserAlreadyActivatedException,
 	UserAlreadyDeactivatedException,
 	UserCannotBeDeactivatedException};
-use Webify\User\Identity\Domain\ValueObject\{PasswordHash, UserEmail, UserId, UserStatus};
+use Webify\User\Identity\Domain\ValueObject\{DisplayName, PasswordHash, UserEmail, UserId, UserStatus};
 
 /**
  * User aggregate root.
@@ -38,7 +38,7 @@ final class User extends AggregateRoot
 	 * @param UserId       $id           the unique identifier for the user
 	 * @param UserEmail    $email        the email address of the user
 	 * @param PasswordHash $passwordHash the hashed password of the user
-	 * @param string       $displayName  the display name of the user
+	 * @param DisplayName  $displayName  the display name of the user
 	 * @param DateTime     $createdAt    the datetime when the user was created
 	 * @param DateTime     $updatedAt    the datetime when the user was last updated
 	 * @param UserStatus   $status       the status indicating the user state
@@ -47,7 +47,7 @@ final class User extends AggregateRoot
 		private readonly UserId $id,
 		private UserEmail $email,
 		private PasswordHash $passwordHash,
-		private string $displayName,
+		private DisplayName $displayName,
 		private readonly DateTime $createdAt,
 		private DateTime $updatedAt,
 		private UserStatus $status = UserStatus::Inactive
@@ -80,7 +80,7 @@ final class User extends AggregateRoot
 	/**
 	 * Get the display name.
 	 */
-	public function getDisplayName(): string
+	public function getDisplayName(): DisplayName
 	{
 		return $this->displayName;
 	}
@@ -198,8 +198,12 @@ final class User extends AggregateRoot
 	/**
 	 * Change the display name of the user.
 	 */
-	public function changeDisplayName(string $displayName): void
+	public function changeDisplayName(DisplayName $displayName): void
 	{
+		if ($this->displayName->equals($displayName)) {
+			return;
+		}
+
 		$oldDisplayName    = $this->displayName;
 		$this->displayName = $displayName;
 		$this->updatedAt   = DateTime::now();
@@ -207,8 +211,8 @@ final class User extends AggregateRoot
 		$this->recordDomainEvent(
 			new UserDisplayNameWasChanged(
 				$this->id->toNative(),
-				$oldDisplayName,
-				$displayName,
+				$oldDisplayName->toNative(),
+				$displayName->toNative(),
 				$this->updatedAt->toNative()
 			)
 		);
@@ -221,7 +225,7 @@ final class User extends AggregateRoot
 		UserId $id,
 		UserEmail $email,
 		PasswordHash $password,
-		string $displayName
+		DisplayName $displayName
 	): self {
 		$user = new self(
 			$id,
@@ -237,6 +241,7 @@ final class User extends AggregateRoot
 			new UserWasRegistered(
 				$user->getId()->toNative(),
 				$user->getEmail()->toNative(),
+				$user->getDisplayName()->toNative(),
 				$user->getCreatedAt()->toNative()
 			)
 		);
