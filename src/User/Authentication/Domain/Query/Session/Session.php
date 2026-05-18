@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Authentication\Domain\Query\Session;
 
 /**
- * Session read model.
+ * Session read modal.
  */
 final readonly class Session
 {

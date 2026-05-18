@@ -11,22 +11,17 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authentication\Domain\Query\Session;
-
-use Webify\Base\Domain\Collection\Collection;
+namespace Webify\User\Identity\Domain\Query\User;
 
 /**
- * Collection class for Session's read modals.
- *
- * @extends Collection<Session>
+ * Query class defines the contract for a query to find all users.
  */
-final class SessionCollection extends Collection
+interface FindAllUserInterface
 {
 	/**
-	 * {@inheritDoc}
+	 * Retrieves a collection of all users.
+	 *
+	 * @return UserCollection a collection containing all user entities
 	 */
-	protected function type(): string
-	{
-		return Session::class;
-	}
+	public function findAll(): UserCollection;
 }

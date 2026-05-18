@@ -11,22 +11,22 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authentication\Domain\Query\Session;
+namespace Webify\User\Identity\Domain\Query\User;
 
 use Webify\Base\Domain\Collection\Collection;
 
 /**
- * Collection class for Session's read modals.
+ * Collection class for User-read modals.
  *
- * @extends Collection<Session>
+ * @extends Collection<User>
  */
-final class SessionCollection extends Collection
+final class UserCollection extends Collection
 {
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function type(): string
 	{
-		return Session::class;
+		return User::class;
 	}
 }

@@ -16,7 +16,7 @@ namespace Webify\User\Authorization\Domain\Query\Role;
 use Webify\Base\Domain\Collection\Collection;
 
 /**
- * Collection class for Role-read models.
+ * Collection class for Role-read modals.
  *
  * @extends Collection<Role>
  */
