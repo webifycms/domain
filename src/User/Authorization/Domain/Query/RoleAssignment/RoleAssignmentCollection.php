@@ -16,7 +16,7 @@ namespace Webify\User\Authorization\Domain\Query\RoleAssignment;
 use Webify\Base\Domain\Collection\Collection;
 
 /**
- * Collection class for RoleAssignment read model.
+ * Collection class for RoleAssignment read modal.
  *
  * @extends Collection<RoleAssignment>
  */
