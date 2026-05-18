@@ -35,7 +35,7 @@ final class EmailMustBeUniqueException extends DomainException implements Transl
 	}
 
 	/**
-	 * Factory method to create a EmailMustBeUniqueException for a specific user email.
+	 * Factory method to create an EmailMustBeUniqueException for a specific user email.
 	 */
 	public static function create(string $email): EmailMustBeUniqueException
 	{
