@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Query\Role;
+namespace Webify\User\Authorization\Application\Query\Role;
 
 /**
  * Query class defines the contract for a query to find all roles.

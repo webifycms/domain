@@ -11,22 +11,22 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Identity\Domain\Query\User;
+namespace Webify\User\Authorization\Application\Query\Role;
 
 use Webify\Base\Domain\Collection\Collection;
 
 /**
- * Collection class for User-read modals.
+ * Collection class for Role-read models.
  *
- * @extends Collection<User>
+ * @extends Collection<Role>
  */
-final class UserCollection extends Collection
+final class RoleCollection extends Collection
 {
 	/**
 	 * {@inheritDoc}
 	 */
 	protected function type(): string
 	{
-		return User::class;
+		return Role::class;
 	}
 }

@@ -11,12 +11,12 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Query\RoleAssignment;
+namespace Webify\User\Authorization\Application\Query\RoleAssignment;
 
 use DateTimeImmutable;
 
 /**
- * The RoleAssignment read modal represents raw data of a role assignment entity.
+ * The RoleAssignment read model represents raw data of a role assignment entity.
  */
 final readonly class RoleAssignment
 {

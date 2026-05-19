@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Identity\Domain\Query\User;
+namespace Webify\User\Identity\Application\Query\User;
 
 use Webify\User\Identity\Domain\ValueObject\UserId;
 
@@ -25,7 +25,7 @@ interface FindUserByIdInterface
 	 *
 	 * @param UserId $id the identifier of the user to find
 	 *
-	 * @return null|User the User read-modal if found, or null if no user matches the given ID
+	 * @return null|User the User read-model if found, or null if no user matches the given ID
 	 */
 	public function find(UserId $id): ?User;
 }

@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Query\RoleAssignment;
+namespace Webify\User\Authorization\Application\Query\RoleAssignment;
 
 use Webify\User\Authorization\Domain\ValueObject\RoleAssignmentId;
 
