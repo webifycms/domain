@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Query\RoleAssignment;
+namespace Webify\User\Authorization\Application\Query\RoleAssignment;
 
 /**
  * RoleAssignmentQueryInterface defines the contract for a role assignment query.

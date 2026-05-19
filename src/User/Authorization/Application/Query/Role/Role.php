@@ -11,10 +11,10 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Query\Role;
+namespace Webify\User\Authorization\Application\Query\Role;
 
 /**
- * The Role read modal represents raw data of a role entity.
+ * The Role read model represents raw data of a role entity.
  *
  * @todo Permissions type should be decided later after the persistence layer is implemented.
  */

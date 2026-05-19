@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authentication\Domain\Query\Session;
+namespace Webify\User\Authentication\Application\Query\Session;
 
 use Webify\User\Authentication\Domain\ValueObject\UserId;
 

@@ -11,10 +11,10 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authentication\Domain\Query\Session;
+namespace Webify\User\Authentication\Application\Query\Session;
 
 /**
- * Session read modal.
+ * Session read model.
  */
 final readonly class Session
 {

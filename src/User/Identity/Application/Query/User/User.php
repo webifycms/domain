@@ -11,10 +11,10 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Identity\Domain\Query\User;
+namespace Webify\User\Identity\Application\Query\User;
 
 /**
- * User read modal.
+ * User read model.
  */
 final readonly class User
 {

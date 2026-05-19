@@ -11,22 +11,17 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Query\Role;
-
-use Webify\Base\Domain\Collection\Collection;
+namespace Webify\User\Identity\Application\Query\User;
 
 /**
- * Collection class for Role-read modals.
- *
- * @extends Collection<Role>
+ * Query class defines the contract for a query to find all users.
  */
-final class RoleCollection extends Collection
+interface FindAllUserInterface
 {
 	/**
-	 * {@inheritDoc}
+	 * Retrieves a collection of all users.
+	 *
+	 * @return UserCollection a collection containing all user entities
 	 */
-	protected function type(): string
-	{
-		return Role::class;
-	}
+	public function findAll(): UserCollection;
 }

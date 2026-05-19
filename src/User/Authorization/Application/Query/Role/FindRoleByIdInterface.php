@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\User\Authorization\Domain\Query\Role;
+namespace Webify\User\Authorization\Application\Query\Role;
 
 use Webify\User\Authorization\Domain\ValueObject\RoleId;
 
