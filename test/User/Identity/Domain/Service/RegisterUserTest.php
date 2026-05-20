@@ -21,7 +21,8 @@ use Webify\Base\Domain\Event\DomainEventPublisherInterface;
 use Webify\Base\Domain\Service\UlidGeneratorInterface;
 use Webify\User\Identity\Domain\Entity\User;
 use Webify\User\Identity\Domain\Exception\EmailMustBeUniqueException;
-use Webify\User\Identity\Domain\Guard\EmailMustBeUnique;
+use Webify\User\Identity\Domain\Guard\{EmailMustBeUnique, PasswordMustBeStrong};
+use Webify\User\Identity\Domain\Policy\PasswordPolicy;
 use Webify\User\Identity\Domain\Repository\UserRepositoryInterface;
 use Webify\User\Identity\Domain\Service\RegisterUser;
 use Webify\User\Identity\Domain\ValueObject\UserEmail;
@@ -74,6 +75,16 @@ final class RegisterUserTest extends TestCase
 			$this->passwordHasher,
 			$this->repository,
 			new EmailMustBeUnique($this->repository),
+			new PasswordMustBeStrong(
+				new PasswordPolicy(
+					minimumLength: 1,
+					maximumLength: 255,
+					minimumUppercaseChars: 0,
+					minimumLowercaseChars: 0,
+					minimumDigits: 0,
+					minimumSpecialChars: 0,
+				)
+			),
 			$this->ulidGenerator,
 			$this->eventPublisher
 		);

@@ -16,6 +16,7 @@ namespace Webify\User\Identity\Domain\Service;
 use Webify\Base\Domain\Contract\Identity\PasswordHasherInterface;
 use Webify\Base\Domain\Event\DomainEventPublisherInterface;
 use Webify\User\Identity\Domain\Exception\CurrentPasswordNotMatchedException;
+use Webify\User\Identity\Domain\Guard\PasswordMustBeStrong;
 use Webify\User\Identity\Domain\Repository\UserRepositoryInterface;
 use Webify\User\Identity\Domain\ValueObject\{PasswordHash, UserId};
 
@@ -33,6 +34,7 @@ final readonly class UpdateUserPassword
 	public function __construct(
 		private PasswordHasherInterface $passwordHasher,
 		private UserRepositoryInterface $repository,
+		private PasswordMustBeStrong $passwordMustBeStrong,
 		private DomainEventPublisherInterface $eventPublisher
 	) {}
 
@@ -52,6 +54,8 @@ final readonly class UpdateUserPassword
 		if (!$this->passwordHasher->verify($currentPassword, $user->getPasswordHash()->toNative())) {
 			throw CurrentPasswordNotMatchedException::create();
 		}
+
+		$this->passwordMustBeStrong->guard($newPassword);
 
 		$passwordHash = PasswordHash::fromHash($this->passwordHasher->hash($newPassword));
 

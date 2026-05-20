@@ -17,7 +17,7 @@ use Webify\Base\Domain\Contract\Identity\PasswordHasherInterface;
 use Webify\Base\Domain\Event\DomainEventPublisherInterface;
 use Webify\Base\Domain\Service\UlidGeneratorInterface;
 use Webify\User\Identity\Domain\Entity\User;
-use Webify\User\Identity\Domain\Guard\EmailMustBeUnique;
+use Webify\User\Identity\Domain\Guard\{EmailMustBeUnique, PasswordMustBeStrong};
 use Webify\User\Identity\Domain\Repository\UserRepositoryInterface;
 use Webify\User\Identity\Domain\ValueObject\{DisplayName, PasswordHash, UserEmail, UserId};
 
@@ -29,10 +29,14 @@ use Webify\User\Identity\Domain\ValueObject\{DisplayName, PasswordHash, UserEmai
  */
 final readonly class RegisterUser
 {
+	/**
+	 * The constructor.
+	 */
 	public function __construct(
 		private PasswordHasherInterface $passwordHasher,
 		private UserRepositoryInterface $repository,
 		private EmailMustBeUnique $emailMustBeUnique,
+		private PasswordMustBeStrong $passwordMustBeStrong,
 		private UlidGeneratorInterface $ulidGenerator,
 		private DomainEventPublisherInterface $eventPublisher
 	) {}
@@ -49,6 +53,7 @@ final readonly class RegisterUser
 		$userEmail = UserEmail::fromString($email);
 
 		$this->emailMustBeUnique->guard($userEmail);
+		$this->passwordMustBeStrong->guard($password);
 
 		$hashedPassword = $this->passwordHasher->hash($password);
 		$user           = User::register(
