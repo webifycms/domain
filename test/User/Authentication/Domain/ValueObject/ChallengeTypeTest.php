@@ -24,7 +24,7 @@ use Webify\User\Authentication\Domain\ValueObject\ChallengeType;
  */
 #[CoversClass(ChallengeType::class)]
 #[CoversMethod(ChallengeType::class, 'isCode')]
-#[CoversMethod(ChallengeType::class, 'isLink')]
+#[CoversMethod(ChallengeType::class, 'isToken')]
 final class ChallengeTypeTest extends TestCase
 {
 	/**
@@ -37,32 +37,32 @@ final class ChallengeTypeTest extends TestCase
 	}
 
 	/**
-	 * Tests that the Link case has the correct backing value.
+	 * Tests that the Token case has the correct backing value.
 	 */
 	#[Test]
-	public function testLinkCaseHasCorrectValue(): void
+	public function testTokenCaseHasCorrectValue(): void
 	{
-		$this->assertSame('link', ChallengeType::Link->value);
+		$this->assertSame('token', ChallengeType::Token->value);
 	}
 
 	/**
-	 * Tests that isCode returns true for the Code case and false for the Link case.
+	 * Tests that isCode returns true for the Code case and false for the Token case.
 	 */
 	#[Test]
 	public function testIsCode(): void
 	{
 		$this->assertTrue(ChallengeType::Code->isCode());
-		$this->assertFalse(ChallengeType::Link->isCode());
+		$this->assertFalse(ChallengeType::Token->isCode());
 	}
 
 	/**
-	 * Tests that isLink returns true for the Link case and false for the Code case.
+	 * Tests that isToken returns true for the Token case and false for the Code case.
 	 */
 	#[Test]
-	public function testIsLink(): void
+	public function testIsToken(): void
 	{
-		$this->assertTrue(ChallengeType::Link->isLink());
-		$this->assertFalse(ChallengeType::Code->isLink());
+		$this->assertTrue(ChallengeType::Token->isToken());
+		$this->assertFalse(ChallengeType::Code->isToken());
 	}
 
 	/**
@@ -72,7 +72,7 @@ final class ChallengeTypeTest extends TestCase
 	public function testTryFromWithValidValue(): void
 	{
 		$this->assertSame(ChallengeType::Code, ChallengeType::tryFrom('code'));
-		$this->assertSame(ChallengeType::Link, ChallengeType::tryFrom('link'));
+		$this->assertSame(ChallengeType::Token, ChallengeType::tryFrom('token'));
 	}
 
 	/**

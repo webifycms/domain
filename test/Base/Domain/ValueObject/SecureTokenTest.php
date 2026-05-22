@@ -16,6 +16,7 @@ namespace Webify\Test\Base\Domain\ValueObject;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test, UsesClass};
 use PHPUnit\Framework\TestCase;
+use Webify\Base\Domain\Exception\SecureTokenGenerationFailedException;
 use Webify\Base\Domain\ValueObject\SecureToken;
 use Webify\Test\Base\Domain\ValueObject\Example\ExampleSecureToken;
 
@@ -31,6 +32,7 @@ use Webify\Test\Base\Domain\ValueObject\Example\ExampleSecureToken;
 #[CoversMethod(SecureToken::class, 'equals')]
 #[CoversMethod(SecureToken::class, '__toString')]
 #[UsesClass(ExampleSecureToken::class)]
+#[UsesClass(SecureTokenGenerationFailedException::class)]
 final class SecureTokenTest extends TestCase
 {
 	/**
@@ -39,9 +41,12 @@ final class SecureTokenTest extends TestCase
 	#[Test]
 	public function testCreateValidSecureToken(): void
 	{
-		$token = $this->createConcreteSecureToken('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
-
-		$this->assertInstanceOf(SecureToken::class, $token);
+		$this->assertInstanceOf(
+			SecureToken::class,
+			$this->createConcreteSecureToken(
+				'0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+			)
+		);
 	}
 
 	/**
@@ -51,7 +56,6 @@ final class SecureTokenTest extends TestCase
 	public function testInvalidShortTokenThrowsException(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-
 		$this->createConcreteSecureToken('too-short');
 	}
 
@@ -126,7 +130,7 @@ final class SecureTokenTest extends TestCase
 	}
 
 	/**
-	 * Test equals with same values.
+	 * Test equals with the same values.
 	 */
 	#[Test]
 	public function testEqualsWithSameValues(): void
@@ -144,8 +148,12 @@ final class SecureTokenTest extends TestCase
 	#[Test]
 	public function testEqualsWithDifferentValues(): void
 	{
-		$token1 = $this->createConcreteSecureToken('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
-		$token2 = $this->createConcreteSecureToken('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdee');
+		$token1 = $this->createConcreteSecureToken(
+			'0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+		);
+		$token2 = $this->createConcreteSecureToken(
+			'0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdee'
+		);
 
 		$this->assertFalse($token1->equals($token2));
 	}
@@ -156,7 +164,9 @@ final class SecureTokenTest extends TestCase
 	#[Test]
 	public function testFromStringReturnsCorrectType(): void
 	{
-		$token = ExampleSecureToken::fromString('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef');
+		$token = ExampleSecureToken::fromString(
+			'0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+		);
 
 		$this->assertInstanceOf(ExampleSecureToken::class, $token);
 	}

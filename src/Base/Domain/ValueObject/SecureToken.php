@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Webify\Base\Domain\ValueObject;
 
+use Random\RandomException;
+use Webify\Base\Domain\Exception\SecureTokenGenerationFailedException;
+
 /**
  * The secure token value object base class.
  *
@@ -25,7 +28,12 @@ abstract readonly class SecureToken
 	/**
 	 * Minimum length of the access token.
 	 */
-	private const int MIN_LENGTH = 64;
+	protected const int MIN_LENGTH = 64;
+
+	/**
+	 * The length of the access token.
+	 */
+	protected const int LENGTH = 64;
 
 	/**
 	 * Private constructor enforces the use of the factory method.
@@ -64,12 +72,17 @@ abstract readonly class SecureToken
 
 	/**
 	 * Creates a new cryptographically random access token.
-	 *
 	 * Uses random_bytes() and bin2hex() to produce a 64-character hex token.
+	 *
+	 * @throws SecureTokenGenerationFailedException if the random bytes generation fails
 	 */
 	public static function generate(): static
 	{
-		return new static(bin2hex(random_bytes(32)));
+		try {
+			return new static(bin2hex(random_bytes(self::LENGTH / 2)));
+		} catch (RandomException $exception) {
+			throw SecureTokenGenerationFailedException::create($exception);
+		}
 	}
 
 	/**
