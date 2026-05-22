@@ -20,8 +20,8 @@ namespace Webify\User\Authentication\Domain\ValueObject;
  */
 enum ChallengeType: string
 {
-	case Code = 'code';
-	case Link = 'link';
+	case Code  = 'code';
+	case Token = 'token';
 
 	/**
 	 * Determines if the current instance represents a Code.
@@ -32,10 +32,10 @@ enum ChallengeType: string
 	}
 
 	/**
-	 * Determines if the current instance represents a Link.
+	 * Determines if the current instance represents a Token.
 	 */
-	public function isLink(): bool
+	public function isToken(): bool
 	{
-		return self::Link === $this;
+		return self::Token === $this;
 	}
 }
