@@ -14,22 +14,22 @@ declare(strict_types=1);
 namespace Webify\User\Authentication\Domain\ValueObject;
 
 use Webify\Base\Domain\ValueObject\AggregateId;
-use Webify\User\Authentication\Domain\Exception\InvalidSessionIdException;
+use Webify\User\Authentication\Domain\Exception\InvalidChallengeIdException;
 
 /**
- * Session ID value object.
+ * Challenge ID value object.
  *
- * Define a typed identity for an authentication session.
+ * Define a typed identity for an authentication challenge.
  */
-final readonly class SessionId extends AggregateId
+final readonly class ChallengeId extends AggregateId
 {
 	/**
-	 * Will throw an exception if the token id value is not valid.
+	 * Throws an exception for an invalid challenge ID.
 	 *
-	 * @throws InvalidSessionIdException
+	 * @throws InvalidChallengeIdException
 	 */
 	protected function throwException(string $value): never
 	{
-		throw InvalidSessionIdException::forInvalidId($value);
+		throw InvalidChallengeIdException::forInvalidId($value);
 	}
 }
