@@ -41,34 +41,16 @@ use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, Se
 #[CoversMethod(Session::class, 'isRevoked')]
 final class SessionTest extends TestCase
 {
-	/**
-	 * The identifier for a specific session.
-	 */
 	private SessionId $sessionId;
 
-	/**
-	 * The unique identifier for a specific user.
-	 */
 	private UserId $userId;
 
-	/**
-	 * The access token for the session.
-	 */
 	private AccessToken $accessToken;
 
-	/**
-	 * The refresh token for the session.
-	 */
 	private RefreshToken $refreshToken;
 
-	/**
-	 * The expiration date of the session.
-	 */
 	private DateTime $expiresAt;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function setUp(): void
 	{
 		$this->sessionId    = SessionId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FAV');
@@ -78,9 +60,6 @@ final class SessionTest extends TestCase
 		$this->expiresAt    = DateTime::fromString('2099-01-01 00:00:00');
 	}
 
-	/**
-	 * Tests that opening a session records a SessionWasOpened domain event.
-	 */
 	#[Test]
 	public function testOpenSessionRecordsSessionWasOpenedEvent(): void
 	{
@@ -91,9 +70,6 @@ final class SessionTest extends TestCase
 		$this->assertInstanceOf(SessionWasOpened::class, $events[0]);
 	}
 
-	/**
-	 * Tests that the initial state of a session is correct.
-	 */
 	#[Test]
 	public function testOpenSessionInitialState(): void
 	{
@@ -104,9 +80,6 @@ final class SessionTest extends TestCase
 		$this->assertTrue($session->isActive());
 	}
 
-	/**
-	 * Tests the getters for a session.
-	 */
 	#[Test]
 	public function testSessionGetters(): void
 	{
@@ -120,9 +93,6 @@ final class SessionTest extends TestCase
 		$this->assertInstanceOf(DateTime::class, $session->getCreatedAt());
 	}
 
-	/**
-	 * Tests refreshing a session.
-	 */
 	#[Test]
 	public function testRefreshSession(): void
 	{
@@ -143,9 +113,6 @@ final class SessionTest extends TestCase
 		$this->assertInstanceOf(SessionWasRefreshed::class, $events[1]);
 	}
 
-	/**
-	 * Tests that refreshing an expired session throws an exception.
-	 */
 	#[Test]
 	public function testRefreshExpiredSessionThrowsException(): void
 	{
@@ -165,9 +132,6 @@ final class SessionTest extends TestCase
 		);
 	}
 
-	/**
-	 * Tests that refreshing a revoked session throws an exception.
-	 */
 	#[Test]
 	public function testRefreshRevokedSessionThrowsException(): void
 	{
@@ -183,9 +147,6 @@ final class SessionTest extends TestCase
 		);
 	}
 
-	/**
-	 * Tests revoking a session.
-	 */
 	#[Test]
 	public function testRevokeSession(): void
 	{
@@ -201,9 +162,6 @@ final class SessionTest extends TestCase
 		$this->assertInstanceOf(SessionWasRevoked::class, $events[1]);
 	}
 
-	/**
-	 * Tests that revoking a session multiple times is idempotent.
-	 */
 	#[Test]
 	public function testRevokeSessionIsIdempotent(): void
 	{
@@ -222,9 +180,6 @@ final class SessionTest extends TestCase
 		$this->assertCount(1, $revokeEvents);
 	}
 
-	/**
-	 * Tests that the isExpired method returns true for an expired session.
-	 */
 	#[Test]
 	public function testIsExpiredReturnsTrueForExpiredSession(): void
 	{
@@ -239,9 +194,6 @@ final class SessionTest extends TestCase
 		$this->assertTrue($session->isExpired());
 	}
 
-	/**
-	 * Tests that the isExpired method returns false for a non-expired session.
-	 */
 	#[Test]
 	public function testIsExpiredReturnsFalseForNonExpiredSession(): void
 	{
@@ -250,9 +202,6 @@ final class SessionTest extends TestCase
 		$this->assertFalse($session->isExpired());
 	}
 
-	/**
-	 * Tests that the isActive method returns false for an expired session.
-	 */
 	#[Test]
 	public function testIsActiveReturnsFalseForExpiredSession(): void
 	{
@@ -267,9 +216,6 @@ final class SessionTest extends TestCase
 		$this->assertFalse($session->isActive());
 	}
 
-	/**
-	 * Tests that the isActive method returns false for a revoked session.
-	 */
 	#[Test]
 	public function testIsActiveReturnsFalseForRevokedSession(): void
 	{
@@ -279,9 +225,6 @@ final class SessionTest extends TestCase
 		$this->assertFalse($session->isActive());
 	}
 
-	/**
-	 * Creates a new Session instance.
-	 */
 	private function createSession(): Session
 	{
 		return Session::open(

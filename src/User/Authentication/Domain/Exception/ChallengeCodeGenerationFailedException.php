@@ -18,7 +18,7 @@ use Throwable;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Exception thrown when an invalid access token is encountered.
+ * Exception thrown when a challenge code generation fails.
  */
 final class ChallengeCodeGenerationFailedException extends RuntimeException implements TranslatableExceptionInterface
 {

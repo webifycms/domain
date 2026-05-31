@@ -15,12 +15,12 @@ namespace Webify\Test\User\Authentication\Domain\Guard;
 
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
-use Webify\User\Authentication\Domain\Exception\UserNotEligibleForAuthenticationException;
+use Webify\User\Authentication\Domain\Exception\AuthenticationFailedException;
 use Webify\User\Authentication\Domain\Guard\UserMustBeActive;
 use Webify\User\Authentication\Domain\ValueObject\UserStatus;
 
 /**
- * UserMustBeActiveTest tests the functionality of the UserMustBeActive guard.
+ * Tests for the UserMustBeActive guard.
  *
  * @internal
  */
@@ -48,7 +48,7 @@ final class UserMustBeActiveTest extends TestCase
 	{
 		$guard = new UserMustBeActive();
 
-		$this->expectException(UserNotEligibleForAuthenticationException::class);
+		$this->expectException(AuthenticationFailedException::class);
 		$guard->guard(UserStatus::Unverified);
 	}
 }

@@ -15,7 +15,7 @@ namespace Webify\User\Authentication\Domain\Repository;
 
 use Webify\User\Authentication\Domain\Entity\Session;
 use Webify\User\Authentication\Domain\Exception\SessionNotFoundException;
-use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, SessionId};
+use Webify\User\Authentication\Domain\ValueObject\{AccessToken, ChallengeSecretInterface, RefreshToken, SessionId};
 
 /**
  * SessionRepositoryInterface defines the contract for the session repository.
@@ -52,4 +52,9 @@ interface SessionRepositoryInterface
 	 * Deletes the specified Session.
 	 */
 	public function delete(Session $session): void;
+
+	/**
+	 * Removes all stale sessions (expired and revoked) for the specified user.
+	 */
+	public function deleteStale(ChallengeSecretInterface $userId): void;
 }

@@ -33,12 +33,12 @@ use Webify\User\Authentication\Domain\ValueObject\ChallengeCode;
 final class ChallengeCodeTest extends TestCase
 {
 	/**
-	 * Test creating a valid challenge code from a native integer.
+	 * Test creating a valid challenge code from a native string.
 	 */
 	#[Test]
 	public function testFromNativeWithValidCode(): void
 	{
-		$code = ChallengeCode::fromNative(123456);
+		$code = ChallengeCode::fromNative('123456');
 
 		$this->assertSame('123456', $code->toNative());
 	}
@@ -55,12 +55,12 @@ final class ChallengeCodeTest extends TestCase
 	}
 
 	/**
-	 * Test fromNative pads short integers to six digits.
+	 * Test fromNative pads short strings to six digits.
 	 */
 	#[Test]
-	public function testFromNativePadsShortInteger(): void
+	public function testFromNativePadsShortString(): void
 	{
-		$code = ChallengeCode::fromNative(123);
+		$code = ChallengeCode::fromNative('123');
 
 		$this->assertSame('000123', $code->toNative());
 	}
@@ -112,7 +112,7 @@ final class ChallengeCodeTest extends TestCase
 	#[Test]
 	public function testToStringReturnsStringRepresentation(): void
 	{
-		$code = ChallengeCode::fromNative(123456);
+		$code = ChallengeCode::fromNative('123456');
 
 		$this->assertSame('123456', (string) $code);
 	}
@@ -123,8 +123,8 @@ final class ChallengeCodeTest extends TestCase
 	#[Test]
 	public function testEqualsReturnsTrueForSameValue(): void
 	{
-		$code1 = ChallengeCode::fromNative(123456);
-		$code2 = ChallengeCode::fromNative(123456);
+		$code1 = ChallengeCode::fromNative('123456');
+		$code2 = ChallengeCode::fromNative('123456');
 
 		$this->assertTrue($code1->equals($code2));
 	}

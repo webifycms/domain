@@ -16,7 +16,7 @@ namespace Webify\Test\Base\Domain\Collection;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use stdClass;
-use Webify\Base\Domain\Collection\Collection;
+use Webify\Base\Contracts\Collection\Collection;
 use Webify\Base\Domain\Exception\{InvalidCollectionIndexException, InvalidCollectionItemTypeException};
 use Webify\Test\Base\Domain\Collection\Fixture\{Item, ItemCollection};
 

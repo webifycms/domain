@@ -45,7 +45,7 @@ final class InvalidChallengeIdException extends InvalidArgumentException impleme
 				'invalid_challenge_id',
 				['id' => $id]
 			),
-			sprintf('The challenge ID "%s" is invalid.', $id)
+			sprintf('The authentication challenge ID "%s" is invalid.', $id)
 		);
 	}
 }

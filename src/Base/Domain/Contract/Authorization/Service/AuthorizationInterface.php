@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Base\Domain\Service\Authorization;
+namespace Webify\Base\Domain\Contract\Authorization\Service;
 
 use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizableSubjectInterface};
 
@@ -33,7 +33,7 @@ interface AuthorizationInterface
 	 *
 	 * @return bool returns true if the subject is authorized to access the resource, false otherwise
 	 */
-	public function check(
+	public function authorize(
 		string $action,
 		AuthorizableSubjectInterface $subject,
 		AuthorizableResourceInterface $resource

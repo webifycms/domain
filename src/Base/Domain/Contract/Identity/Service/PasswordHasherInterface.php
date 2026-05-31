@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Base\Domain\Contract\Identity;
+namespace Webify\Base\Domain\Contract\Identity\Service;
 
 /**
  * The contract for representing a password hashing service.

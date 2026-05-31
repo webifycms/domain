@@ -14,14 +14,17 @@ declare(strict_types=1);
 namespace Webify\User\Authentication\Domain\ValueObject;
 
 use Random\RandomException;
-use Webify\User\Authentication\Domain\Exception\{ChallengeCodeGenerationFailedException, InvalidChallengeCodeException};
+use Webify\User\Authentication\Domain\Exception\{
+	ChallengeCodeGenerationFailedException,
+	InvalidChallengeCodeException
+};
 
 /**
  * Challenge code value object.
  *
  * Represents a 6-digit numeric code used for authentication challenges.
  */
-final readonly class ChallengeCode
+final readonly class ChallengeCode implements ChallengeSecretInterface
 {
 	/**
 	 * The length of the challenge code.
@@ -50,11 +53,11 @@ final readonly class ChallengeCode
 	}
 
 	/**
-	 * Creates an instance of the class from a native integer value.
+	 * Creates an instance of the class from a native string value.
 	 */
-	public static function fromNative(int $value): self
+	public static function fromNative(string $value): self
 	{
-		return new self(str_pad((string) $value, self::LENGTH, '0', STR_PAD_LEFT));
+		return new self(str_pad($value, self::LENGTH, '0', STR_PAD_LEFT));
 	}
 
 	/**
@@ -101,11 +104,27 @@ final readonly class ChallengeCode
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public function verify(ChallengeSecretInterface $secret): bool
+	{
+		if (!$secret instanceof self) {
+			return false;
+		}
+
+		return $this->equals($secret);
+	}
+
+	/**
 	 * Validates the challenge code.
 	 */
 	private function isValid(): bool
 	{
 		if (strlen($this->value) !== self::LENGTH) {
+			return false;
+		}
+
+		if (!ctype_digit($this->value)) {
 			return false;
 		}
 

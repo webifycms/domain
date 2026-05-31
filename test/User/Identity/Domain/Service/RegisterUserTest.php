@@ -16,7 +16,7 @@ namespace Webify\Test\User\Identity\Domain\Service;
 use PHPUnit\Framework\Attributes\{AllowMockObjectsWithoutExpectations, CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Webify\Base\Domain\Contract\Identity\PasswordHasherInterface;
+use Webify\Base\Domain\Contract\Identity\Service\PasswordHasherInterface;
 use Webify\Base\Domain\Event\DomainEventPublisherInterface;
 use Webify\Base\Domain\Service\UlidGeneratorInterface;
 use Webify\User\Identity\Domain\Entity\User;

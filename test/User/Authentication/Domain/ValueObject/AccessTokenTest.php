@@ -26,7 +26,7 @@ use Webify\User\Authentication\Domain\ValueObject\AccessToken;
 #[CoversClass(AccessToken::class)]
 #[CoversMethod(AccessToken::class, '__toString')]
 #[CoversMethod(AccessToken::class, 'generate')]
-#[CoversMethod(AccessToken::class, 'throwException')]
+#[CoversMethod(AccessToken::class, 'throwExceptionWhenInvalid')]
 final class AccessTokenTest extends TestCase
 {
 	/**

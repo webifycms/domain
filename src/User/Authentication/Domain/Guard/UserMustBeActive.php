@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authentication\Domain\Guard;
 
-use Webify\User\Authentication\Domain\Exception\UserNotEligibleForAuthenticationException;
+use Webify\User\Authentication\Domain\Exception\AuthenticationFailedException;
 use Webify\User\Authentication\Domain\ValueObject\UserStatus;
 
 /**
@@ -29,7 +29,7 @@ final class UserMustBeActive
 	public function guard(UserStatus $status): void
 	{
 		if (!$status->isActive()) {
-			throw UserNotEligibleForAuthenticationException::forStatus($status->value);
+			throw AuthenticationFailedException::userNotActive();
 		}
 	}
 }

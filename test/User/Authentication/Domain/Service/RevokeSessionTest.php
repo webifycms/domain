@@ -24,7 +24,7 @@ use Webify\User\Authentication\Domain\Service\RevokeSession;
 use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, SessionId, UserId};
 
 /**
- * RevokeSessionTest tests the functionality of the RevokeSession service.
+ * Tests for the RevokeSession service.
  *
  * @internal
  */
@@ -32,34 +32,16 @@ use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, Se
 #[CoversMethod(RevokeSession::class, 'revoke')]
 final class RevokeSessionTest extends TestCase
 {
-	/**
-	 * The identifier for a specific session.
-	 */
 	private SessionId $sessionId;
 
-	/**
-	 * The unique identifier for a specific user.
-	 */
 	private UserId $userId;
 
-	/**
-	 * The access token for the session.
-	 */
 	private AccessToken $accessToken;
 
-	/**
-	 * The refresh token for the session.
-	 */
 	private RefreshToken $refreshToken;
 
-	/**
-	 * The expiration date of the session.
-	 */
 	private DateTime $expiresAt;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function setUp(): void
 	{
 		$this->sessionId    = SessionId::fromString('01ARZ3NDEKTSV4RRFFQ69G5FAV');
@@ -69,15 +51,6 @@ final class RevokeSessionTest extends TestCase
 		$this->expiresAt    = DateTime::fromString('2099-01-01 00:00:00');
 	}
 
-	/**
-	 * Tests that a session can be revoked successfully.
-	 *
-	 * This method verifies the full revocation flow:
-	 * - The session is retrieved from the repository using the provided session ID.
-	 * - The session is marked as revoked.
-	 * - The updated session is persisted back to the repository.
-	 * - A SessionWasRevoked domain event is published.
-	 */
 	#[Test]
 	public function testRevokeSessionSuccessfully(): void
 	{
@@ -109,12 +82,6 @@ final class RevokeSessionTest extends TestCase
 		$service->revoke($this->sessionId->toNative());
 	}
 
-	/**
-	 * Tests that an exception is thrown when attempting to revoke a non-existent session.
-	 *
-	 * Verifies that the SessionNotFoundException propagates from the repository
-	 * and that persist and publish are never called.
-	 */
 	#[Test]
 	public function testRevokeSessionThrowsExceptionWhenSessionNotFound(): void
 	{
@@ -140,12 +107,6 @@ final class RevokeSessionTest extends TestCase
 		$service->revoke('01ARZ3NDEKTSV4RRFFQ69G5FAV');
 	}
 
-	/**
-	 * Tests that revoking an already revoked session is idempotent.
-	 *
-	 * Verifies that the service can be called multiple times with the same session
-	 * without errors, relying on the entity-level idempotency of the revoke method.
-	 */
 	#[Test]
 	public function testRevokeSessionIsIdempotent(): void
 	{

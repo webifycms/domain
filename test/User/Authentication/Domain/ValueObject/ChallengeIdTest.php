@@ -47,7 +47,7 @@ final class ChallengeIdTest extends TestCase
 	public function testItThrowsExceptionForInvalidChallengeId(): void
 	{
 		$this->expectException(InvalidChallengeIdException::class);
-		$this->expectExceptionMessage('The challenge ID "invalid-challenge-id" is invalid.');
+		$this->expectExceptionMessage('The authentication challenge ID "invalid-challenge-id" is invalid.');
 		ChallengeId::fromString('invalid-challenge-id');
 	}
 }

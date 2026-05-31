@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Identity\Domain\Service;
 
-use Webify\Base\Domain\Contract\Identity\PasswordHasherInterface;
+use Webify\Base\Domain\Contract\Identity\Service\PasswordHasherInterface;
 use Webify\Base\Domain\Event\DomainEventPublisherInterface;
 use Webify\User\Identity\Domain\Exception\CurrentPasswordNotMatchedException;
 use Webify\User\Identity\Domain\Guard\PasswordMustBeStrong;

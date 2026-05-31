@@ -11,26 +11,26 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Base\Domain\Service\Authorization;
+namespace Webify\Base\Domain\Contract\Authorization\Service;
 
-use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizationRuleInterface};
+use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, RuleInterface};
 
 /**
- * AuthorizationRuleRegistryInterface defines the contract for authorization rule registry service.
+ * RuleRegistryInterface defines the contract for authorization rule registry service.
  */
-interface AuthorizationRuleRegistryInterface
+interface RuleRegistryInterface
 {
 	/**
-	 * Adds an authorization rule to the system.
+	 * Register an authorization rule to the system.
 	 *
-	 * @param AuthorizationRuleInterface $rule the authorization rule to be added
+	 * @param RuleInterface $rule the authorization rule to be added
 	 */
-	public function add(AuthorizationRuleInterface $rule): void;
+	public function register(RuleInterface $rule): void;
 
 	/**
 	 * Retrieves all available rules.
 	 *
-	 * @return AuthorizationRuleInterface[] an array containing all rules
+	 * @return RuleInterface[] an array containing all rules
 	 */
 	public function getAll(): array;
 
@@ -39,7 +39,7 @@ interface AuthorizationRuleRegistryInterface
 	 *
 	 * @param AuthorizableResourceInterface $resource the resource for which applicable rules are to be retrieved
 	 *
-	 * @return AuthorizationRuleInterface[] an array of policies applicable to the provided resource
+	 * @return RuleInterface[] an array of policies applicable to the provided resource
 	 */
 	public function getAllApplicableTo(AuthorizableResourceInterface $resource): array;
 }

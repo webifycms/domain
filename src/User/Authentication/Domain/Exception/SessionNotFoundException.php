@@ -42,7 +42,7 @@ final class SessionNotFoundException extends RuntimeException implements Transla
 		return new self(
 			new ExceptionTranslation(
 				'user.authentication',
-				'session_not_found',
+				'session_not_found_for_id',
 				['id' => $id]
 			),
 			sprintf('Session not found for id: "%s"', $id)
@@ -57,7 +57,7 @@ final class SessionNotFoundException extends RuntimeException implements Transla
 		return new self(
 			new ExceptionTranslation(
 				'user.authentication',
-				'session_not_found',
+				'session_not_found_for_access_token',
 				['token' => $token]
 			),
 			sprintf('Session not found for access token: "%s"', $token)
@@ -72,7 +72,7 @@ final class SessionNotFoundException extends RuntimeException implements Transla
 		return new self(
 			new ExceptionTranslation(
 				'user.authentication',
-				'session_not_found',
+				'session_not_found_for_refresh_token',
 				['token' => $token]
 			),
 			sprintf('Session not found for refresh token: "%s"', $token)
