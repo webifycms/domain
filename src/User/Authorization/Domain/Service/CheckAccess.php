@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\Service;
 
-use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizableSubjectInterface};
+use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface,
+	AuthorizableSubjectInterface,
+	Service\AuthorizationInterface};
+use Webify\Base\Domain\Contract\Authorization\Service\CheckAccessInterface;
 use Webify\Base\Domain\Exception\AccessDeniedException;
-use Webify\Base\Domain\Service\Authorization\{AuthorizationInterface, CheckAccessInterface};
 
 /**
  * CheckAccess is the implementation of the `CheckAccessInterface` that uses the
@@ -38,7 +40,7 @@ final readonly class CheckAccess implements CheckAccessInterface
 		AuthorizableSubjectInterface $subject,
 		AuthorizableResourceInterface $resource
 	): bool {
-		return $this->authorization->check($action, $subject, $resource);
+		return $this->authorization->authorize($action, $subject, $resource);
 	}
 
 	/**
@@ -49,7 +51,7 @@ final readonly class CheckAccess implements CheckAccessInterface
 		AuthorizableSubjectInterface $subject,
 		AuthorizableResourceInterface $resource
 	): void {
-		if (!$this->authorization->check($action, $subject, $resource)) {
+		if (!$this->authorization->authorize($action, $subject, $resource)) {
 			throw AccessDeniedException::deniedFor($action, $subject->subjectId(), $resource->resourceId());
 		}
 	}

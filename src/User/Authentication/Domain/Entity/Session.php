@@ -17,7 +17,12 @@ use Webify\Base\Domain\Entity\AggregateRoot;
 use Webify\Base\Domain\ValueObject\DateTime;
 use Webify\User\Authentication\Domain\Event\{SessionWasOpened, SessionWasRefreshed, SessionWasRevoked};
 use Webify\User\Authentication\Domain\Exception\CannotRefreshSessionException;
-use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, SessionId, UserId};
+use Webify\User\Authentication\Domain\ValueObject\{
+	AccessToken,
+	RefreshToken,
+	SessionId,
+	UserId
+};
 
 /**
  * Session aggregate root.
@@ -32,6 +37,7 @@ final class Session extends AggregateRoot
 	 * Private constructor enforces the use of the factory methods to initiate this aggregate root.
 	 *
 	 * @param SessionId    $id           unique session identifier
+	 * @param UserId       $userId       user's identifier
 	 * @param AccessToken  $accessToken  token used for accessing resources
 	 * @param RefreshToken $refreshToken token used to refresh expired access tokens
 	 * @param DateTime     $expiresAt    date and time when the session expires

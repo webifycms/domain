@@ -45,7 +45,7 @@ final class InvalidUserIdException extends InvalidArgumentException implements T
 				'invalid_user_id',
 				['id' => $id]
 			),
-			sprintf('The user ID "%s" is invalid.', $id)
+			sprintf('The authentication user ID "%s" is invalid.', $id)
 		);
 	}
 }

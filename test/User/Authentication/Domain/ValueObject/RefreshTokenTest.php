@@ -26,7 +26,7 @@ use Webify\User\Authentication\Domain\ValueObject\RefreshToken;
 #[CoversClass(RefreshToken::class)]
 #[CoversMethod(RefreshToken::class, '__toString')]
 #[CoversMethod(RefreshToken::class, 'generate')]
-#[CoversMethod(RefreshToken::class, 'throwException')]
+#[CoversMethod(RefreshToken::class, 'throwExceptionWhenInvalid')]
 final class RefreshTokenTest extends TestCase
 {
 	/**

@@ -17,7 +17,7 @@ use InvalidArgumentException;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Exception thrown when an invalid access token is encountered.
+ * Exception thrown when an invalid challenge token is encountered.
  */
 final class InvalidChallengeTokenException extends InvalidArgumentException implements TranslatableExceptionInterface
 {

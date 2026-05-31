@@ -17,7 +17,7 @@ use Webify\Base\Domain\ValueObject\AggregateId;
 use Webify\User\Authentication\Domain\Exception\InvalidUserIdException;
 
 /**
- * Thrown when an invalid user ID is encountered.
+ * User ID value object.
  */
 final readonly class UserId extends AggregateId
 {

@@ -16,8 +16,8 @@ namespace Webify\Test\User\Authorization\Domain\Service;
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizableSubjectInterface};
+use Webify\Base\Domain\Contract\Authorization\Service\AuthorizationInterface;
 use Webify\Base\Domain\Exception\AccessDeniedException;
-use Webify\Base\Domain\Service\Authorization\AuthorizationInterface;
 use Webify\User\Authorization\Domain\Service\CheckAccess;
 
 /**
@@ -39,7 +39,7 @@ final class CheckAccessTest extends TestCase
 	{
 		$authorization = $this->createStub(AuthorizationInterface::class);
 
-		$authorization->method('check')
+		$authorization->method('authorize')
 			->willReturn(true)
 		;
 
@@ -68,7 +68,7 @@ final class CheckAccessTest extends TestCase
 	{
 		$authorization = $this->createStub(AuthorizationInterface::class);
 
-		$authorization->method('check')
+		$authorization->method('authorize')
 			->willReturn(false)
 		;
 
@@ -100,7 +100,7 @@ final class CheckAccessTest extends TestCase
 		$authorization = $this->createMock(AuthorizationInterface::class);
 
 		$authorization->expects($this->once())
-			->method('check')
+			->method('authorize')
 			->with(
 				'update',
 				$this->isInstanceOf(AuthorizableSubjectInterface::class),
@@ -138,7 +138,7 @@ final class CheckAccessTest extends TestCase
 	{
 		$authorization = $this->createStub(AuthorizationInterface::class);
 
-		$authorization->method('check')
+		$authorization->method('authorize')
 			->willReturn(true)
 		;
 
@@ -171,7 +171,7 @@ final class CheckAccessTest extends TestCase
 	{
 		$authorization = $this->createStub(AuthorizationInterface::class);
 
-		$authorization->method('check')
+		$authorization->method('authorize')
 			->willReturn(false)
 		;
 
@@ -215,7 +215,7 @@ final class CheckAccessTest extends TestCase
 		$authorization = $this->createMock(AuthorizationInterface::class);
 
 		$authorization->expects($this->once())
-			->method('check')
+			->method('authorize')
 			->with(
 				'manage',
 				$this->isInstanceOf(AuthorizableSubjectInterface::class),

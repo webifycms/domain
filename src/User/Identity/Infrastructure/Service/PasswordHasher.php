@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Identity\Infrastructure\Service;
 
 use ValueError;
-use Webify\Base\Domain\Contract\Identity\PasswordHasherInterface;
+use Webify\Base\Domain\Contract\Identity\Service\PasswordHasherInterface;
 use Webify\User\Identity\Infrastructure\Exception\FailedToHashPasswordException;
 
 /**

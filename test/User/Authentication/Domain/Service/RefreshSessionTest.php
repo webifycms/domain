@@ -26,7 +26,7 @@ use Webify\User\Authentication\Domain\Service\RefreshSession;
 use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, SessionId, UserId};
 
 /**
- * RefreshSessionTest tests the RefreshSession domain service.
+ * Tests for the RefreshSession domain service.
  *
  * @internal
  */
@@ -34,24 +34,12 @@ use Webify\User\Authentication\Domain\ValueObject\{AccessToken, RefreshToken, Se
 #[CoversMethod(RefreshSession::class, 'refresh')]
 final class RefreshSessionTest extends TestCase
 {
-	/**
-	 * Repository instance.
-	 */
 	private MockObject&SessionRepositoryInterface $repository;
 
-	/**
-	 * Domain event publisher service instance.
-	 */
 	private DomainEventPublisherInterface&MockObject $eventPublisher;
 
-	/**
-	 * The RefreshSession instance.
-	 */
 	private RefreshSession $refreshSession;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	protected function setUp(): void
 	{
 		$this->repository     = $this->createMock(SessionRepositoryInterface::class);
@@ -63,20 +51,6 @@ final class RefreshSessionTest extends TestCase
 		);
 	}
 
-	/**
-	 * Tests that the session is successfully refreshed when a valid refresh token is provided.
-	 *
-	 * This method verifies that the refresh process is executed correctly by:
-	 * - Fetching the session using the provided refresh token.
-	 * - Invoking the refresh method on the session to rotate tokens and extend expiry.
-	 * - Persisting the updated session in the repository.
-	 * - Publishing the domain event for the refreshed session.
-	 *
-	 * It asserts that:
-	 * - The session's access and refresh tokens are rotated after the refresh.
-	 * - The session's expiration date is updated to the new expiry.
-	 * - The repository persist method is called with the updated session.
-	 */
 	#[Test]
 	public function testRefreshSessionSuccessfully(): void
 	{
@@ -113,9 +87,6 @@ final class RefreshSessionTest extends TestCase
 		$this->assertTrue($session->getExpiresAt()->equals(DateTime::fromNative($expiresAt)));
 	}
 
-	/**
-	 * Tests that the refresh method throws a SessionNotFoundException when the refresh token is not recognized.
-	 */
 	#[Test]
 	#[AllowMockObjectsWithoutExpectations]
 	public function testRefreshThrowsExceptionWhenTokenNotFound(): void
@@ -132,10 +103,6 @@ final class RefreshSessionTest extends TestCase
 		$this->refreshSession->refresh($token, new DateTimeImmutable('2099-01-01 00:00:00'));
 	}
 
-	/**
-	 * Tests that the refresh method throws a CannotRefreshSessionException when the session
-	 * is expired or has been revoked.
-	 */
 	#[Test]
 	#[AllowMockObjectsWithoutExpectations]
 	public function testRefreshThrowsExceptionWhenSessionCannotBeRefreshed(): void

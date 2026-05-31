@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Application\Query\Role;
 
-use Webify\Base\Domain\Collection\Collection;
+use Webify\Base\Contracts\Collection\Collection;
 
 /**
  * Collection class for Role-read models.

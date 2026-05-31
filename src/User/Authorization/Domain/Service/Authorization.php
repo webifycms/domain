@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\Service;
 
-use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizableSubjectInterface};
-use Webify\Base\Domain\Service\Authorization\{AuthorizationInterface, AuthorizationRuleRegistryInterface};
+use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface,
+	AuthorizableSubjectInterface,
+	Service\AuthorizationInterface};
+use Webify\Base\Domain\Contract\Authorization\Service\RuleRegistryInterface;
 use Webify\User\Authorization\Domain\Exception\RoleNotFoundException;
 use Webify\User\Authorization\Domain\Repository\{RoleAssignmentRepositoryInterface, RoleRepositoryInterface};
 use Webify\User\Authorization\Domain\ValueObject\{SubjectId, TenantId};
@@ -39,13 +41,13 @@ final class Authorization implements AuthorizationInterface
 	public function __construct(
 		private readonly RoleRepositoryInterface $roleRepository,
 		private readonly RoleAssignmentRepositoryInterface $assignmentRepository,
-		private readonly AuthorizationRuleRegistryInterface $ruleRegistry
+		private readonly RuleRegistryInterface $ruleRegistry
 	) {}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function check(
+	public function authorize(
 		string $action,
 		AuthorizableSubjectInterface $subject,
 		AuthorizableResourceInterface $resource
@@ -72,7 +74,10 @@ final class Authorization implements AuthorizationInterface
 			$rules       = $this->ruleRegistry->getAllApplicableTo($resource);
 
 			foreach ($assignments as $assignment) {
-				if ($assignment->isExpired() || !$assignment->isApplicableFor($this->getTenantId($subject->tenantId()))) {
+				if (
+					$assignment->isExpired()
+					|| !$assignment->isApplicableFor($this->getTenantId($subject->tenantId()))
+				) {
 					continue;
 				}
 

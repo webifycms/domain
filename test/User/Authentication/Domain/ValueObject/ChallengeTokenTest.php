@@ -26,7 +26,7 @@ use Webify\User\Authentication\Domain\ValueObject\ChallengeToken;
 #[CoversClass(ChallengeToken::class)]
 #[CoversMethod(ChallengeToken::class, '__toString')]
 #[CoversMethod(ChallengeToken::class, 'generate')]
-#[CoversMethod(ChallengeToken::class, 'throwException')]
+#[CoversMethod(ChallengeToken::class, 'throwExceptionWhenInvalid')]
 final class ChallengeTokenTest extends TestCase
 {
 	/**

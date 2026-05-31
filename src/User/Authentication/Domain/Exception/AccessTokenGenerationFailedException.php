@@ -13,42 +13,42 @@ declare(strict_types=1);
 
 namespace Webify\User\Authentication\Domain\Exception;
 
-use DomainException;
+use RuntimeException;
+use Throwable;
 use Webify\Base\Domain\Contract\Translation\{ExceptionTranslation, TranslatableExceptionInterface};
 
 /**
- * Thrown when a user is not eligible for authentication.
+ * Exception thrown when a access token generation fails.
  */
-final class UserNotEligibleForAuthenticationException extends DomainException implements TranslatableExceptionInterface
+final class AccessTokenGenerationFailedException extends RuntimeException implements TranslatableExceptionInterface
 {
 	/**
 	 * Private constructor enforces the use of the factory methods to initiate this exception.
 	 *
 	 * @param ExceptionTranslation $translation the translation object for this exception
 	 * @param string               $message     the exception message (optional)
+	 * @param Throwable            $previous    the previous throwable used for the exception chaining (optional)
 	 */
 	private function __construct(
+		public readonly Throwable $previous,
 		public readonly ExceptionTranslation $translation,
-		string $message = ''
+		string $message = '',
 	) {
-		parent::__construct($message);
+		parent::__construct($message, 0, $previous);
 	}
 
 	/**
-	 * Factory method to create an exception for cases where a user is not eligible for authentication
-	 * based on the given status.
-	 *
-	 * @param string $status the status indicating why the user is not eligible
+	 * Factory method to initiate this with a default message.
 	 */
-	public static function forStatus(string $status): UserNotEligibleForAuthenticationException
+	public static function create(Throwable $throwable): AccessTokenGenerationFailedException
 	{
 		return new self(
+			$throwable,
 			new ExceptionTranslation(
 				'user.authentication',
-				'user_not_eligible_for_authentication',
-				['status' => $status]
+				'access_token_generation_failed',
 			),
-			sprintf('User is not eligible for authentication with the status: %s', $status)
+			'Unable to generate access token.',
 		);
 	}
 }

@@ -15,15 +15,23 @@ namespace Webify\Test\User\Authorization\Domain\Service;
 
 use PHPUnit\Framework\Attributes\{CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\TestCase;
-use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface, AuthorizableSubjectInterface, AuthorizationRuleInterface};
-use Webify\Base\Domain\Service\Authorization\AuthorizationRuleRegistryInterface;
+use Webify\Base\Domain\Contract\Authorization\{AuthorizableResourceInterface,
+	AuthorizableSubjectInterface,
+	RuleInterface};
+use Webify\Base\Domain\Contract\Authorization\Service\RuleRegistryInterface;
 use Webify\Base\Domain\ValueObject\DateTime;
 use Webify\User\Authorization\Domain\Collection\{PermissionCollection, RoleAssignmentCollection};
 use Webify\User\Authorization\Domain\Entity\{Role, RoleAssignment};
 use Webify\User\Authorization\Domain\Exception\RoleNotFoundException;
 use Webify\User\Authorization\Domain\Repository\{RoleAssignmentRepositoryInterface, RoleRepositoryInterface};
 use Webify\User\Authorization\Domain\Service\Authorization;
-use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleAssignmentId, RoleId, RoleName, RoleSlug, SubjectId, TenantId};
+use Webify\User\Authorization\Domain\ValueObject\{Permission,
+	RoleAssignmentId,
+	RoleId,
+	RoleName,
+	RoleSlug,
+	SubjectId,
+	TenantId};
 
 /**
  * AuthorizationTest tests the functionality of the Authorization service.
@@ -32,7 +40,7 @@ use Webify\User\Authorization\Domain\ValueObject\{Permission, RoleAssignmentId, 
  */
 #[CoversClass(Authorization::class)]
 #[CoversMethod(Authorization::class, '__construct')]
-#[CoversMethod(Authorization::class, 'check')]
+#[CoversMethod(Authorization::class, 'authorize')]
 #[CoversMethod(Authorization::class, 'evaluate')]
 #[CoversMethod(Authorization::class, 'getTenantId')]
 #[CoversMethod(Authorization::class, 'generateCacheKey')]
@@ -108,7 +116,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -143,7 +151,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertTrue($service->check('read', $subject, $resource));
+		$this->assertTrue($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -160,7 +168,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -195,7 +203,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertFalse($service->check('read', $subject, $resource));
+		$this->assertFalse($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -242,7 +250,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -277,7 +285,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertFalse($service->check('delete', $subject, $resource));
+		$this->assertFalse($service->authorize('delete', $subject, $resource));
 	}
 
 	/**
@@ -307,7 +315,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -342,7 +350,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertFalse($service->check('read', $subject, $resource));
+		$this->assertFalse($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -391,7 +399,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -426,7 +434,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertFalse($service->check('read', $subject, $resource));
+		$this->assertFalse($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -475,7 +483,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -510,7 +518,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertFalse($service->check('read', $subject, $resource));
+		$this->assertFalse($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -557,7 +565,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -592,7 +600,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertTrue($service->check('read', $subject, $resource));
+		$this->assertTrue($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -640,7 +648,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -675,7 +683,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertFalse($service->check('read', $subject, $resource));
+		$this->assertFalse($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -724,7 +732,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -759,7 +767,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertTrue($service->check('read', $subject, $resource));
+		$this->assertTrue($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -794,7 +802,7 @@ final class AuthorizationTest extends TestCase
 			$this->subjectId
 		);
 
-		$rule = $this->createStub(AuthorizationRuleInterface::class);
+		$rule = $this->createStub(RuleInterface::class);
 
 		$rule->method('isSatisfied')
 			->willReturn(false)
@@ -812,7 +820,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([$rule])
@@ -847,7 +855,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertFalse($service->check('read', $subject, $resource));
+		$this->assertFalse($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -883,7 +891,7 @@ final class AuthorizationTest extends TestCase
 			$this->subjectId
 		);
 
-		$rule = $this->createStub(AuthorizationRuleInterface::class);
+		$rule = $this->createStub(RuleInterface::class);
 
 		$rule->method('isSatisfied')
 			->willReturn(true)
@@ -901,7 +909,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([$rule])
@@ -936,7 +944,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertTrue($service->check('read', $subject, $resource));
+		$this->assertTrue($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -986,7 +994,7 @@ final class AuthorizationTest extends TestCase
 			)
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -1021,8 +1029,8 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertTrue($service->check('read', $subject, $resource));
-		$this->assertTrue($service->check('read', $subject, $resource));
+		$this->assertTrue($service->authorize('read', $subject, $resource));
+		$this->assertTrue($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -1072,7 +1080,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -1107,7 +1115,7 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertTrue($service->check('read', $subject, $resource));
+		$this->assertTrue($service->authorize('read', $subject, $resource));
 	}
 
 	/**
@@ -1182,7 +1190,7 @@ final class AuthorizationTest extends TestCase
 			->willReturn(RoleAssignmentCollection::from([$assignment1, $assignment2]))
 		;
 
-		$ruleRegistry = $this->createStub(AuthorizationRuleRegistryInterface::class);
+		$ruleRegistry = $this->createStub(RuleRegistryInterface::class);
 
 		$ruleRegistry->method('getAllApplicableTo')
 			->willReturn([])
@@ -1217,8 +1225,8 @@ final class AuthorizationTest extends TestCase
 
 		$service = new Authorization($roleRepository, $assignmentRepository, $ruleRegistry);
 
-		$this->assertTrue($service->check('read', $subject, $resource));
-		$this->assertTrue($service->check('write', $subject, $resource));
-		$this->assertFalse($service->check('delete', $subject, $resource));
+		$this->assertTrue($service->authorize('read', $subject, $resource));
+		$this->assertTrue($service->authorize('write', $subject, $resource));
+		$this->assertFalse($service->authorize('delete', $subject, $resource));
 	}
 }

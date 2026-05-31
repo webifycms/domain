@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Domain\Collection;
 
-use Webify\Base\Domain\Collection\Collection;
+use Webify\Base\Contracts\Collection\Collection;
 use Webify\User\Authorization\Domain\Entity\RoleAssignment;
 
 /**
