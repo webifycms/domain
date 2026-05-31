@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\Test\Base\Domain\Collection\Fixture;
 
-use Webify\Base\Contracts\Collection\Collection;
+use Webify\Base\Contract\Collection\Collection;
 
 /**
  * @template T of Item

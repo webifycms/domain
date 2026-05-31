@@ -36,16 +36,15 @@ interface StrategyInterface
 	/**
 	 * Checks if the strategy supports the given credentials.
 	 */
-	public function isSupported(Request $credentials): bool;
+	public function isSupported(Credentials $credentials): bool;
 
 	/**
 	 * Initiate the authentication for the user based on the provided credentials.
 	 *
-	 * @param Request         $requestCredentials the credentials used for authentication request
-	 * @param UserCredentials $userCredentials    the user credentials to authenticate
+	 * @param Credentials $requestCredentials the credentials used for authentication request
 	 */
 	public function initiate(
-		Request $requestCredentials,
+		Credentials $requestCredentials,
 		UserCredentials $userCredentials
 	): void;
 }

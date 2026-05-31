@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Base\Contracts\Collection;
+namespace Webify\Base\Contract\Collection;
 
 use Countable;
 use Iterator;

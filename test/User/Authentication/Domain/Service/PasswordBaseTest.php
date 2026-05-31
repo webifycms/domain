@@ -18,7 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\Contract\Authentication\{
 	AuthenticatedUser,
-	Request,
+	Credentials,
 	UserCredentials,
 	UserCredentialsLookupInterface
 };
@@ -224,7 +224,7 @@ final class PasswordBaseTest extends TestCase
 	#[Test]
 	public function testAuthenticateThrowsExceptionWhenEmailMissing(): void
 	{
-		$request = $this->createMock(Request::class);
+		$request = $this->createMock(Credentials::class);
 
 		$request
 			->method('has')
@@ -241,7 +241,7 @@ final class PasswordBaseTest extends TestCase
 	#[Test]
 	public function testAuthenticateThrowsExceptionWhenPasswordMissing(): void
 	{
-		$request = $this->createMock(Request::class);
+		$request = $this->createMock(Credentials::class);
 
 		$request
 			->method('has')
@@ -339,8 +339,8 @@ final class PasswordBaseTest extends TestCase
 	private function createRequest(
 		?string $email = 'test@webifycms.com',
 		?string $password = 'correct_password'
-	): Request {
-		$request = $this->createStub(Request::class);
+	): Credentials {
+		$request = $this->createStub(Credentials::class);
 
 		$request
 			->method('has')

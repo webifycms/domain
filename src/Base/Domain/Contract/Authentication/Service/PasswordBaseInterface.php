@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\Base\Domain\Contract\Authentication\Service;
 
-use Webify\Base\Domain\Contract\Authentication\{AuthenticatedUser, Request};
+use Webify\Base\Domain\Contract\Authentication\{AuthenticatedUser, Credentials};
 
 /**
  * The service defines the contract for password base authentication,
@@ -30,9 +30,7 @@ interface PasswordBaseInterface
 	 * 1. It delegates to the matched strategy.
 	 * 2. It returns either a session (single-step) or a pending challenge descriptor (multistep).
 	 *
-	 * @param Request $request the credentials used for authentication request
-	 *
-	 * @return null|AuthenticatedUser the authenticated user or null if authentication process is not completed
+	 * @param Credentials $request the credentials used for authentication request
 	 */
-	public function authenticate(Request $request): ?AuthenticatedUser;
+	public function authenticate(Credentials $request): ?AuthenticatedUser;
 }
