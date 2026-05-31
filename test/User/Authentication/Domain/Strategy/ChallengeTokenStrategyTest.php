@@ -16,7 +16,7 @@ namespace Webify\Test\User\Authentication\Domain\Strategy;
 use PHPUnit\Framework\Attributes\{AllowMockObjectsWithoutExpectations, CoversClass, CoversMethod, Test};
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Webify\Base\Domain\Contract\Authentication\{Request, UserCredentials};
+use Webify\Base\Domain\Contract\Authentication\{Credentials, UserCredentials};
 use Webify\Base\Domain\Event\DomainEventPublisherInterface;
 use Webify\Base\Domain\Service\UlidGeneratorInterface;
 use Webify\User\Authentication\Domain\Entity\Challenge;
@@ -104,12 +104,12 @@ final class ChallengeTokenStrategyTest extends TestCase
 	#[Test]
 	public function testIsSupportedWithMatchingIdentifier(): void
 	{
-		$request = $this->createStub(Request::class);
-
+		$request = $this->createStub(Credentials::class);
 		$request
 			->method('getStrategyIdentifier')
 			->willReturn('challenge_token')
 		;
+
 		$this->assertTrue($this->strategy->isSupported($request));
 	}
 
@@ -119,8 +119,7 @@ final class ChallengeTokenStrategyTest extends TestCase
 	#[Test]
 	public function testIsSupportedWithNonMatchingIdentifier(): void
 	{
-		$request = $this->createStub(Request::class);
-
+		$request = $this->createStub(Credentials::class);
 		$request
 			->method('getStrategyIdentifier')
 			->willReturn('challenge_code')
@@ -143,7 +142,7 @@ final class ChallengeTokenStrategyTest extends TestCase
 			status: 'active',
 			isTwoFactorEnabled: true
 		);
-		$request = $this->createStub(Request::class);
+		$request = $this->createStub(Credentials::class);
 
 		$this->challengeRepository
 			->expects($this->once())

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authentication\Application\Query\Session;
 
-use Webify\Base\Contracts\Collection\Collection;
+use Webify\Base\Contract\Collection\Collection;
 
 /**
  * Collection class for Session's read models.

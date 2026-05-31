@@ -18,7 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Webify\Base\Domain\Contract\Authentication\{
 	AuthenticatedUser as AuthenticatedUserDTO,
-	Request,
+	Credentials,
 	StrategyInterface,
 	UserCredentials,
 	UserCredentialsLookupInterface
@@ -298,7 +298,7 @@ final class ChallengeBaseTest extends TestCase
 	#[Test]
 	public function testCompleteThrowsExceptionWhenSecretMissing(): void
 	{
-		$request = $this->createMock(Request::class);
+		$request = $this->createMock(Credentials::class);
 
 		$request
 			->method('has')
@@ -315,7 +315,7 @@ final class ChallengeBaseTest extends TestCase
 	#[Test]
 	public function testCompleteThrowsExceptionWhenEmailMissing(): void
 	{
-		$request = $this->createMock(Request::class);
+		$request = $this->createMock(Credentials::class);
 
 		$request
 			->method('has')
@@ -464,8 +464,8 @@ final class ChallengeBaseTest extends TestCase
 		string $strategy,
 		?string $secret = '123456',
 		?string $email = 'test@webifycms.com'
-	): Request {
-		$request = $this->createStub(Request::class);
+	): Credentials {
+		$request = $this->createStub(Credentials::class);
 
 		$request
 			->method('getStrategyIdentifier')

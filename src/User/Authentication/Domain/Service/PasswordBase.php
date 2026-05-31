@@ -17,7 +17,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Webify\Base\Domain\Contract\Authentication\{
 	AuthenticatedUser,
-	Request,
+	Credentials,
 	Service\PasswordBaseInterface,
 	UserCredentials,
 	UserCredentialsLookupInterface
@@ -62,7 +62,7 @@ final readonly class PasswordBase implements PasswordBaseInterface
 	 *
 	 * @throws AuthenticationFailedException if the authentication fails
 	 */
-	public function authenticate(Request $request): ?AuthenticatedUser
+	public function authenticate(Credentials $request): ?AuthenticatedUser
 	{
 		if (!$request->has('email')) {
 			throw AuthenticationFailedException::forMissingEmail();

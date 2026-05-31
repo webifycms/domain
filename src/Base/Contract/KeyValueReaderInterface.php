@@ -11,7 +11,7 @@
  */
 declare(strict_types=1);
 
-namespace Webify\Base\Contracts;
+namespace Webify\Base\Contract;
 
 /**
  * The KeyValueReaderInterface defines the contract for reading data from a key-value store.

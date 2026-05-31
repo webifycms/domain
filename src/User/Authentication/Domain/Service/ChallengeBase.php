@@ -17,7 +17,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Webify\Base\Domain\Contract\Authentication\{
 	AuthenticatedUser,
-	Request,
+	Credentials,
 	StrategyInterface,
 	UserCredentials,
 	UserCredentialsLookupInterface
@@ -67,7 +67,7 @@ final readonly class ChallengeBase implements ChallengeBasedInterface
 	 *
 	 * @throws AuthenticationFailedException if the authentication initiation fails
 	 */
-	public function initiate(Request $credentials): void
+	public function initiate(Credentials $credentials): void
 	{
 		$user = $this->userLookup($credentials);
 
@@ -83,7 +83,7 @@ final readonly class ChallengeBase implements ChallengeBasedInterface
 	 *
 	 * @throws AuthenticationFailedException if the authentication fails
 	 */
-	public function complete(Request $credentials): AuthenticatedUser
+	public function complete(Credentials $credentials): AuthenticatedUser
 	{
 		if (!$credentials->has('secret')) {
 			throw AuthenticationFailedException::forMissingSecret();
@@ -117,7 +117,7 @@ final readonly class ChallengeBase implements ChallengeBasedInterface
 	/**
 	 * Looks up the authentication strategy.
 	 */
-	private function strategyLookup(Request $credentials): StrategyInterface
+	private function strategyLookup(Credentials $credentials): StrategyInterface
 	{
 		$strategy = $this->strategyRegister->get($credentials->getStrategyIdentifier());
 
@@ -131,7 +131,7 @@ final readonly class ChallengeBase implements ChallengeBasedInterface
 	/**
 	 * Identifies the type of secret.
 	 */
-	private function identifySecretType(Request $credentials): ChallengeSecretInterface
+	private function identifySecretType(Credentials $credentials): ChallengeSecretInterface
 	{
 		$strategy = $this->strategyLookup($credentials);
 		$type     = ChallengeType::tryFrom(str_replace('challenge_', '', $strategy->getIdentifier()));
@@ -150,7 +150,7 @@ final readonly class ChallengeBase implements ChallengeBasedInterface
 	/**
 	 * Looks up the user credentials.
 	 */
-	private function userLookup(Request $credentials): UserCredentials
+	private function userLookup(Credentials $credentials): UserCredentials
 	{
 		if (!$credentials->has('email')) {
 			throw AuthenticationFailedException::forMissingEmail();

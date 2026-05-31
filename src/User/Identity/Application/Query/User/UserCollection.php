@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Identity\Application\Query\User;
 
-use Webify\Base\Contracts\Collection\Collection;
+use Webify\Base\Contract\Collection\Collection;
 
 /**
  * Collection class for User-read models.

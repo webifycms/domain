@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\User\Authorization\Application\Query\RoleAssignment;
 
-use Webify\Base\Contracts\Collection\Collection;
+use Webify\Base\Contract\Collection\Collection;
 
 /**
  * Collection class for RoleAssignment read model.

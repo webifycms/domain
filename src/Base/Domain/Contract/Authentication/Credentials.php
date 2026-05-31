@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Webify\Base\Domain\Contract\Authentication;
 
-use Webify\Base\Contracts\KeyValueReaderInterface;
+use Webify\Base\Contract\KeyValueReaderInterface;
 
 /**
- * RequestInterface defines the contract for authentication request credentials.
+ * Credentials defines the contract for authentication credentials.
  */
-interface Request extends KeyValueReaderInterface
+interface Credentials extends KeyValueReaderInterface
 {
 	/**
 	 * Returns the identifier of the authentication strategy.

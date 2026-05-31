@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Webify\User\Authentication\Domain\Strategy;
 
 use Webify\Base\Domain\Contract\Authentication\{
-	Request,
+	Credentials,
 	StrategyInterface,
 	UserCredentials
 };
@@ -45,7 +45,7 @@ final readonly class ChallengeTokenStrategy implements StrategyInterface
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isSupported(Request $credentials): bool
+	public function isSupported(Credentials $credentials): bool
 	{
 		return $this->getIdentifier() === $credentials->getStrategyIdentifier();
 	}
@@ -54,7 +54,7 @@ final readonly class ChallengeTokenStrategy implements StrategyInterface
 	 * {@inheritDoc}
 	 */
 	public function initiate(
-		Request $requestCredentials,
+		Credentials $requestCredentials,
 		UserCredentials $userCredentials
 	): void {
 		$type      = ChallengeType::Token;

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Webify\Base\Domain\Contract\Authentication\Service;
 
-use Webify\Base\Domain\Contract\Authentication\{AuthenticatedUser, Request};
+use Webify\Base\Domain\Contract\Authentication\{AuthenticatedUser, Credentials};
 
 /**
  * The service defines the contract for authenticating users.
@@ -38,16 +38,14 @@ interface ChallengeBasedInterface
 	/**
 	 * Initiate a passwordless (challenged-based) authentication flow. It delegates to the matched strategy.
 	 *
-	 * @param Request $credentials the credentials used for authentication request
+	 * @param Credentials $credentials the credentials used for authentication request
 	 */
-	public function initiate(Request $credentials): void;
+	public function initiate(Credentials $credentials): void;
 
 	/**
 	 * Completes a passwordless (challenged-based) authentication flow.
 	 *
-	 * @param Request $credentials the credentials used for authentication request
-	 *
-	 * @return AuthenticatedUser returns the successfully authenticated user
+	 * @param Credentials $credentials the credentials used for authentication request
 	 */
-	public function complete(Request $credentials): AuthenticatedUser;
+	public function complete(Credentials $credentials): AuthenticatedUser;
 }
